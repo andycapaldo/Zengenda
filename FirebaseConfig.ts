@@ -6,19 +6,21 @@ import { getFirestore } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDhxxHQ5d7enqn78RvCcsAxK_kLJEbRnNI",
-  authDomain: "productivity-app-cad8c.firebaseapp.com",
-  projectId: "productivity-app-cad8c",
-  storageBucket: "productivity-app-cad8c.appspot.com",
-  messagingSenderId: "260680147609",
-  appId: "1:260680147609:web:3ae7e13d095c9f50a08e08"
+  apiKey: "AIzaSyDcKmyy2msu0WrLnw1N5OASRHaEJfKO3Kk",
+  authDomain: "zengenda-b49fb.firebaseapp.com",
+  projectId: "zengenda-b49fb",
+  storageBucket: "zengenda-b49fb.appspot.com",
+  messagingSenderId: "174608411722",
+  appId: "1:174608411722:web:3e1e76d6f12f379a208ab3"
 };
 
 
-// Initialize Firebase
+
 export const FIREBASE_APP = initializeApp(firebaseConfig);
-export const auth = initializeAuth(FIREBASE_APP, {
+export const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
 });
-export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
 export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
+
+export { getAuth }
+

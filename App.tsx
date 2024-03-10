@@ -29,6 +29,8 @@ export default function App() {
       setUser(user);
     });
   }, [])
+
+  
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Login'>
