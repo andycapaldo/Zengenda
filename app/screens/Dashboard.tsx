@@ -9,7 +9,7 @@ interface RouterProps {
     navigation: NavigationProp<any, any>;
 }
 
-const List = ({ navigation }: RouterProps) => {
+const Dashboard = ({ navigation }: RouterProps) => {
 
   useEffect(() => {
   }, [])
@@ -28,4 +28,4 @@ const List = ({ navigation }: RouterProps) => {
     </View>
   )
 }
-export default List
+export default Dashboard
