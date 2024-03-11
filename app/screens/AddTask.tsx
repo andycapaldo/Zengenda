@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import CategorySelector from '../components/CategorySelector';
 import DueDateSelector from '../components/DueDateSelector';
+import Checkbox from 'expo-checkbox';
+
 
 export const styles = StyleSheet.create({
   totalView: {
@@ -75,11 +77,43 @@ export const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 16
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 10,
+    backgroundColor: '#FEFEFE',
+  },
+  subTaskButton: {
+    backgroundColor: '#E7E7E7', 
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  subTaskButtonText: {
+    color: '#111111', 
+    fontSize: 13,
+    textAlign: 'center',
+  },
+  taskButton: {
+    backgroundColor: '#111111',
+    borderRadius: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 100,
+  },
+  taskButtonText: {
+    color: '#E8E8E8',
+    fontSize: 20,
   }
 });
 
 
 const AddTask = () => {
+
+  const [isChecked, setChecked] = useState(false)
+  const buttonPressed = () => {
+    console.log('add task!')
+  }
 
   return (
     <View style={styles.totalView}>
@@ -112,13 +146,17 @@ const AddTask = () => {
       </View>
         <DueDateSelector />
       <View style={styles.taskNameContainer}>
-        <Text style={styles.taskName}>High Priority (checkbox go here)</Text>
+        <Text style={styles.taskName}>High Priority<Checkbox value={isChecked} onValueChange={setChecked}/></Text> 
       </View>
-      <View style={styles.taskNameContainer}>
-        <Text style={styles.taskName}>Add Subtask Button</Text>
+      <View style={styles.buttonContainer}>
+      <TouchableOpacity style={styles.subTaskButton}>
+        <Text style={styles.subTaskButtonText}>+ Add Subtask</Text>
+      </TouchableOpacity>
       </View>
-      <View style={styles.taskNameContainer}>
-        <Text style={styles.taskName}>Add Task Button</Text>
+      <View style={styles.buttonContainer}>
+      <TouchableOpacity style={styles.taskButton} onPress={buttonPressed}>
+        <Text style={styles.taskButtonText}>Add Task</Text>
+      </TouchableOpacity>
       </View>
     </View>
   )
