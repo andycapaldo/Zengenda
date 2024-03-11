@@ -1,6 +1,27 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native'
-import { styles } from '../screens/AddTask';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+
+const styles = StyleSheet.create ({ 
+  categoryContainer: {
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  justifyContent: 'flex-start',
+  padding: 10,
+},
+categoryButton: {
+  borderWidth: 1,
+  borderColor: '#E8E8E8',
+  borderRadius: 20,
+  paddingVertical: 5,
+  paddingHorizontal: 15,
+  marginRight: 10,
+  marginBottom: 10,
+  backgroundColor: '#F0F0F0',
+},
+categoryText: {
+  fontSize: 16
+}
+});
 
 const CategorySelector = () => {
     // Placeholder state for categories
