@@ -99,6 +99,21 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     textAlign: 'center',
   },
+  subTaskInputContainer: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
+  subTaskInput: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#E8E8E8',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    color: '#333',
+  },
   taskButton: {
     backgroundColor: '#111111',
     borderRadius: 20,
@@ -123,7 +138,13 @@ const AddTask = ( {navigation}: AddTaskProps ) => {
   const [taskDescription, setTaskDescription] = useState('')
   const [category, setCategory] = useState('');
   const [dueDate, setDueDate] = useState(''); // Still need to create functions for these two components
-  const [isChecked, setChecked] = useState(false)
+  const [isChecked, setChecked] = useState(false);
+  const [subTaskPressed, setSubTaskPressed] = useState(false);
+  const [subTask, setSubTask] = useState('');
+
+  const addSubTask = () => {
+    setSubTaskPressed(!subTaskPressed)
+  }
 
   const buttonPressed = async () => {
     if (!taskName || !taskDescription) {
@@ -138,6 +159,7 @@ const AddTask = ( {navigation}: AddTaskProps ) => {
         category: category,
         dueDate: dueDate,
         highPriority: isChecked,
+        subTask: subTask,
         userId: user!.uid,
       });
       console.log('Task added!');
@@ -189,10 +211,17 @@ const AddTask = ( {navigation}: AddTaskProps ) => {
         <Text style={styles.taskName}>High Priority<Checkbox value={isChecked} onValueChange={setChecked}/></Text> 
       </View>
       <View style={styles.buttonContainer}>
-      <TouchableOpacity style={styles.subTaskButton}>
+      <TouchableOpacity style={styles.subTaskButton} onPress={addSubTask}>
         <Text style={styles.subTaskButtonText}>+ Add Subtask</Text>
       </TouchableOpacity>
       </View>
+      {subTaskPressed &&
+      <View style={styles.subTaskInputContainer}> 
+        <TextInput 
+        style={styles.subTaskInput}
+        value={subTask}
+        onChangeText={setSubTask}/>
+      </View> }
       <View style={styles.buttonContainer}>
       <TouchableOpacity style={styles.taskButton} onPress={buttonPressed}>
         <Text style={styles.taskButtonText}>Add Task</Text>
