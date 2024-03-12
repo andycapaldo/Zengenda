@@ -1,11 +1,13 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './app/screens/Login';
-import List from './app/screens/List';
+import List from './app/screens/Dashboard';
 import Details from './app/screens/Details';
 import { useEffect, useState } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
+import Dashboard from './app/screens/Dashboard';
+import TaskInput from './app/screens/TaskInput';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,8 +16,9 @@ const InsideStack = createNativeStackNavigator();
 function InsideLayout() {
   return (
     <InsideStack.Navigator>
-      <InsideStack.Screen name="Zengenda" component={List} />
+      <InsideStack.Screen name="Dashboard" component={Dashboard} />
       <InsideStack.Screen name="details" component={Details} />
+      <InsideStack.Screen name='TaskInput' component={TaskInput} />
     </InsideStack.Navigator>
   )
 }
