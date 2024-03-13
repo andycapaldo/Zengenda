@@ -7,6 +7,7 @@ import { FIRESTORE_DB } from '../../FirebaseConfig';
 import { addDoc, collection } from 'firebase/firestore';
 import { NavigationProp } from '@react-navigation/native';
 import { getAuth } from '../../FirebaseConfig';
+import AddCategory from '../components/AddCategory';
 
 
 export const styles = StyleSheet.create({
@@ -135,9 +136,10 @@ const AddTask = ( {navigation}: AddTaskProps ) => {
   const auth = getAuth(); // Gets the authentication instance
   const user = auth.currentUser; // Gets the currently logged-in user
   const [taskName, setTaskName] = useState('');
-  const [taskDescription, setTaskDescription] = useState('')
+  const [taskDescription, setTaskDescription] = useState('');
   const [category, setCategory] = useState('');
-  const [dueDate, setDueDate] = useState(''); // Still need to create functions for these two components
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [dueDate, setDueDate] = useState(''); // Still need to create component for this
   const [isChecked, setChecked] = useState(false);
   const [subTaskPressed, setSubTaskPressed] = useState(false);
   const [subTask, setSubTask] = useState('');
@@ -146,7 +148,7 @@ const AddTask = ( {navigation}: AddTaskProps ) => {
     setSubTaskPressed(!subTaskPressed)
   }
 
-  const buttonPressed = async () => {
+  const taskAdded = async () => {
     if (!taskName || !taskDescription) {
       alert('Please fill in all fields');
       return;
@@ -202,7 +204,12 @@ const AddTask = ( {navigation}: AddTaskProps ) => {
       <View style={styles.taskNameContainer}>
         <Text style={styles.taskName}>Category</Text>
       </View>
-        <CategorySelector />
+        <CategorySelector></CategorySelector>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.subTaskButton} onPress={() => setModalVisible(true)}>
+            <Text>+</Text>
+          </TouchableOpacity>
+        </View>
       <View style={styles.taskNameContainer}>
         <Text style={styles.taskName}>Due Date</Text>
       </View>
@@ -223,10 +230,11 @@ const AddTask = ( {navigation}: AddTaskProps ) => {
         onChangeText={setSubTask}/>
       </View> }
       <View style={styles.buttonContainer}>
-      <TouchableOpacity style={styles.taskButton} onPress={buttonPressed}>
+      <TouchableOpacity style={styles.taskButton} onPress={taskAdded}>
         <Text style={styles.taskButtonText}>Add Task</Text>
       </TouchableOpacity>
       </View>
+      <AddCategory isVisible={isModalVisible} onClose={() => setModalVisible(false)}/>
     </View>
   )
 };
