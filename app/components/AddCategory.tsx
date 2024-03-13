@@ -61,6 +61,9 @@ const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
                 <TouchableOpacity style={styles.button} onPress={addCategory}>
                     <Text style={styles.buttonText}>Add Category</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={onClose}>
+                    <Text style={styles.buttonText}>Cancel</Text>
+                </TouchableOpacity>
             </View>
         </View>
     </Modal>
