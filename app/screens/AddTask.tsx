@@ -8,6 +8,7 @@ import { addDoc, collection } from 'firebase/firestore';
 import { NavigationProp } from '@react-navigation/native';
 import { getAuth } from '../../FirebaseConfig';
 import Dashboard from './Dashboard';
+import AddCategory from '../components/AddCategory';
 
 
 export const styles = StyleSheet.create({
@@ -100,6 +101,21 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     textAlign: 'center',
   },
+  subTaskInputContainer: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
+  subTaskInput: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#E8E8E8',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    color: '#333',
+  },
   taskButton: {
     backgroundColor: '#111111',
     borderRadius: 20,
@@ -117,16 +133,23 @@ interface AddTaskProps {
 }
 
 
-const AddTask = ( {navigation}: AddTaskProps, props ) => {
+const AddTask = ( {navigation}: AddTaskProps) => {
   const auth = getAuth(); // Gets the authentication instance
   const user = auth.currentUser; // Gets the currently logged-in user
   const [taskName, setTaskName] = useState('');
-  const [taskDescription, setTaskDescription] = useState('')
+  const [taskDescription, setTaskDescription] = useState('');
   const [category, setCategory] = useState('');
-  const [dueDate, setDueDate] = useState(''); // Still need to create functions for these two components
-  const [isChecked, setChecked] = useState(false)
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [dueDate, setDueDate] = useState(''); // Still need to create component for this
+  const [isChecked, setChecked] = useState(false);
+  const [subTaskPressed, setSubTaskPressed] = useState(false);
+  const [subTask, setSubTask] = useState('');
 
-  const buttonPressed = async () => {
+  const addSubTask = () => {
+    setSubTaskPressed(!subTaskPressed)
+  }
+
+  const taskAdded = async () => {
     if (!taskName || !taskDescription) {
       alert('Please fill in all fields');
       return;
@@ -139,6 +162,7 @@ const AddTask = ( {navigation}: AddTaskProps, props ) => {
         category: category,
         dueDate: dueDate,
         highPriority: isChecked,
+        subTask: subTask,
         userId: user!.uid,
       });
       console.log('Task added!');
@@ -181,7 +205,12 @@ const AddTask = ( {navigation}: AddTaskProps, props ) => {
       <View style={styles.taskNameContainer}>
         <Text style={styles.taskName}>Category</Text>
       </View>
-        <CategorySelector />
+        <CategorySelector></CategorySelector>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.subTaskButton} onPress={() => setModalVisible(true)}>
+            <Text>+</Text>
+          </TouchableOpacity>
+        </View>
       <View style={styles.taskNameContainer}>
         <Text style={styles.taskName}>Due Date</Text>
       </View>
@@ -190,16 +219,24 @@ const AddTask = ( {navigation}: AddTaskProps, props ) => {
         <Text style={styles.taskName}>High Priority<Checkbox value={isChecked} onValueChange={setChecked}/></Text> 
       </View>
       <View style={styles.buttonContainer}>
-      <TouchableOpacity style={styles.subTaskButton}>
+      <TouchableOpacity style={styles.subTaskButton} onPress={addSubTask}>
         <Text style={styles.subTaskButtonText}>+ Add Subtask</Text>
       </TouchableOpacity>
       </View>
+      {subTaskPressed &&
+      <View style={styles.subTaskInputContainer}> 
+        <TextInput 
+        style={styles.subTaskInput}
+        value={subTask}
+        onChangeText={setSubTask}/>
+      </View> }
       <View style={styles.buttonContainer}>
 
-      <TouchableOpacity style={styles.taskButton} onPress={buttonPressed}>
+      <TouchableOpacity style={styles.taskButton} onPress={taskAdded}>
         <Text style={styles.taskButtonText}>Add Task</Text>
       </TouchableOpacity>
       </View>
+      <AddCategory isVisible={isModalVisible} onClose={() => setModalVisible(false)}/>
     </View>
   )
 };

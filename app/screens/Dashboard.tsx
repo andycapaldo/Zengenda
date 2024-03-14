@@ -38,7 +38,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
   return (
     <>
       <View style={styles.dashboardView}>
-        <Text style={styles.headerText}>Today is your day, User ☀️</Text>
+        <Text style={styles.headerText}>Today is your day, Steve! ☀️</Text>
       </View>
       <View style={styles.todayCategoryToggle}>
         <TouchableOpacity style={styles.mainButton} onPress={() => {}}>
