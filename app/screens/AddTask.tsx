@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, Button } from 'react-native'
 import CategorySelector from '../components/CategorySelector';
 import DueDateSelector from '../components/DueDateSelector';
 import Checkbox from 'expo-checkbox';
@@ -7,6 +7,7 @@ import { FIRESTORE_DB } from '../../FirebaseConfig';
 import { addDoc, collection } from 'firebase/firestore';
 import { NavigationProp } from '@react-navigation/native';
 import { getAuth } from '../../FirebaseConfig';
+import Dashboard from './Dashboard';
 import AddCategory from '../components/AddCategory';
 
 
@@ -132,7 +133,7 @@ interface AddTaskProps {
 }
 
 
-const AddTask = ( {navigation}: AddTaskProps ) => {
+const AddTask = ( {navigation}: AddTaskProps) => {
   const auth = getAuth(); // Gets the authentication instance
   const user = auth.currentUser; // Gets the currently logged-in user
   const [taskName, setTaskName] = useState('');
@@ -230,6 +231,7 @@ const AddTask = ( {navigation}: AddTaskProps ) => {
         onChangeText={setSubTask}/>
       </View> }
       <View style={styles.buttonContainer}>
+
       <TouchableOpacity style={styles.taskButton} onPress={taskAdded}>
         <Text style={styles.taskButtonText}>Add Task</Text>
       </TouchableOpacity>
