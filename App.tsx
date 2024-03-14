@@ -6,7 +6,8 @@ import Details from './app/screens/Details';
 import { useEffect, useState } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
-import Task from './app/screens/AddTask';
+import AddTask from './app/screens/AddTask';
+import AddChoice from './app/screens/AddChoice';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +18,8 @@ function InsideLayout() {
     <InsideStack.Navigator>
       <InsideStack.Screen name="Dashboard" component={Dashboard} />
       <InsideStack.Screen name="details" component={Details} />
-      <InsideStack.Screen name="Add Task" component={Task} />
+      <InsideStack.Screen name="Add Task" component={AddTask} />
+      <InsideStack.Screen name="Add Choice" component={AddChoice} />
     </InsideStack.Navigator>
   )
 }
