@@ -6,6 +6,7 @@ import { FIRESTORE_DB, getAuth } from '../../FirebaseConfig';
 interface Category {
   name: string;
   color: string;
+  id: string;
 }
 
 
@@ -30,9 +31,9 @@ const CategorySelector = () => {
 
     return (
     <View style={styles.categoryContainer}>
-        {categories.map((category, index) => (
-        <TouchableOpacity key={index} style={styles.categoryButton}>
-            <Text style={styles.categoryText}>{category.name}</Text>
+        {categories.map((category) => (
+        <TouchableOpacity key={category.id} style={[styles.categoryButton, { backgroundColor: category.color }]}>
+            <Text style={[styles.categoryText, { color: '#FFF'}]}>{category.name}</Text>
         </TouchableOpacity>
         ))}
     </View>
