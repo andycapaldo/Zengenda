@@ -27,7 +27,7 @@ const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
             await addDoc(collection(FIRESTORE_DB, 'categories'), {
                 name: categoryName,
                 color: categoryColor,
-                userId: auth.currentUser!.uid
+                userId: auth.currentUser!.uid,
             });
             onClose();
             setCategoryName('')

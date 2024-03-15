@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, Button } from 'react-native'
-import CategorySelector from '../components/CategorySelector';
+import CategorySelector, { Category } from '../components/CategorySelector';
 import DueDateSelector from '../components/DueDateSelector';
 import Checkbox from 'expo-checkbox';
 import { FIRESTORE_DB } from '../../FirebaseConfig';
@@ -138,7 +138,7 @@ const AddTask = ( {navigation}: AddTaskProps) => {
   const user = auth.currentUser; // Gets the currently logged-in user
   const [taskName, setTaskName] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
-  const [category, setCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [dueDate, setDueDate] = useState(''); // Still need to create component for this
   const [isChecked, setChecked] = useState(false);
@@ -148,6 +148,11 @@ const AddTask = ( {navigation}: AddTaskProps) => {
   const addSubTask = () => {
     setSubTaskPressed(!subTaskPressed)
   }
+
+  const handleCategorySelect = (category: Category) => {
+    setSelectedCategory(category);
+  };
+  
 
   const taskAdded = async () => {
     if (!taskName || !taskDescription) {
@@ -159,7 +164,7 @@ const AddTask = ( {navigation}: AddTaskProps) => {
       await addDoc(collection(FIRESTORE_DB, 'tasks'), {
         taskName: taskName,
         taskDescription: taskDescription,
-        category: category,
+        category: selectedCategory,
         dueDate: dueDate,
         highPriority: isChecked,
         subTask: subTask,
@@ -205,7 +210,7 @@ const AddTask = ( {navigation}: AddTaskProps) => {
       <View style={styles.taskNameContainer}>
         <Text style={styles.taskName}>Category</Text>
       </View>
-        <CategorySelector></CategorySelector>
+        <CategorySelector onCategorySelect={handleCategorySelect} ></CategorySelector>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.subTaskButton} onPress={() => setModalVisible(true)}>
             <Text>+</Text>
