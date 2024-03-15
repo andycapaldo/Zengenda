@@ -10,7 +10,7 @@ import {
 import { NavigationProp } from "@react-navigation/native";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../FirebaseConfig";
 import { useEffect, useState } from "react";
-import AddChoice from "./AddChoice";
+import AddChoice from "../components/AddChoice";
 import '../'
 
 interface RouterProps {

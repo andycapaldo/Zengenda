@@ -1,8 +1,14 @@
 import { useState } from "react"
 import { Button, Modal, StyleSheet, View } from "react-native"
-import Dashboard from "./Dashboard"
+import Dashboard from "../screens/Dashboard"
 
-const AddChoice = (props) => {
+interface AddChoiceProps {
+    visible: boolean;
+    onAddTask: () => void;
+    onCancel: () => void;
+}
+
+const AddChoice = (props:AddChoiceProps) => {
 
   return (
 

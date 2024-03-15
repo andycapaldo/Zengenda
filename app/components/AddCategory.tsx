@@ -3,7 +3,8 @@ import { addDoc, collection } from 'firebase/firestore';
 import { useState } from 'react';
 import { Modal, View, Text, TextInput, Button, TouchableOpacity, StyleSheet} from 'react-native'
 import { FIRESTORE_DB } from '../../FirebaseConfig';
-import { Picker } from '@react-native-picker/picker';
+import ColorWheel from 'react-native-wheel-color-picker';
+
 
 interface AddCategoryProps {
     isVisible: boolean;
@@ -50,14 +51,8 @@ const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
                 placeholder='Category Name'
                 onChangeText={setCategoryName}
                 value={categoryName}/>
-                <Picker
-                    selectedValue={categoryColor}
-                    onValueChange={(itemValue) =>
-                    setCategoryColor(itemValue)}>
-                        <Picker.Item label="Red" value="#FF0000" />
-                        <Picker.Item label='Blue' value="#0000FF" />
-                        <Picker.Item label='Green' value='#00FF00' />
-                </Picker>
+                <ColorWheel // Still need to work on state management here in case a user wants to add multiple categories or if they exit out of and re-enter the Modal
+                onColorChangeComplete={setCategoryColor}/>
                 <TouchableOpacity style={styles.button} onPress={addCategory}>
                     <Text style={styles.buttonText}>Add Category</Text>
                 </TouchableOpacity>

@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import AddTask from './app/screens/AddTask';
-import AddChoice from './app/screens/AddChoice';
+import AddChoice from './app/components/AddChoice';
 
 const Stack = createNativeStackNavigator();
 

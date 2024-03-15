@@ -231,7 +231,6 @@ const AddTask = ( {navigation}: AddTaskProps) => {
         onChangeText={setSubTask}/>
       </View> }
       <View style={styles.buttonContainer}>
-
       <TouchableOpacity style={styles.taskButton} onPress={taskAdded}>
         <Text style={styles.taskButtonText}>Add Task</Text>
       </TouchableOpacity>
