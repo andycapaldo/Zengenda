@@ -12,9 +12,19 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from "../../FirebaseConfig";
 import { useEffect, useState } from "react";
 import AddChoice from "../components/AddChoice";
 import '../'
+import { Category } from "../components/CategorySelector";
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
+}
+
+interface Task {
+  id: string;
+  taskName: string;
+  dueDate: string;
+  category: Category;
+  highPriority: boolean;
+  isCompleted: boolean;
 }
 
 const Dashboard = ({ navigation }: RouterProps) => {
