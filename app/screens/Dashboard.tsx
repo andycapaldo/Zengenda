@@ -109,8 +109,8 @@ const Dashboard = ({ navigation }: RouterProps) => {
           <Text>Finances[1]</Text>
         </View>
         {tasks.map((task) => (
-        <View key={task.id}>
-          <Text>{task.taskName}</Text>
+        <View key={task.id} style={[styles.taskCard, { backgroundColor: task.category.color }]}>
+          <Text style={styles.taskName}>{task.taskName}</Text>
         </View>
       ))}
       </View>
@@ -197,10 +197,21 @@ const styles = StyleSheet.create({
     height: 100,
     shadowColor: 'black',
   },
-  taskItem: {
-
+  taskCard: {
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    padding: 16,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   taskName: {
-    
-  }
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 4,
+  },
 });
