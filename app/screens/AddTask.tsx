@@ -170,6 +170,7 @@ const AddTask = ( {navigation}: AddTaskProps) => {
         highPriority: isChecked,
         subTask: subTask,
         userId: user!.uid,
+        isCompleted: false,
       });
       console.log('Task added!');
       navigation.navigate('Dashboard')
