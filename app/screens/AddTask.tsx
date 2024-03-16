@@ -9,6 +9,7 @@ import { NavigationProp } from '@react-navigation/native';
 import { getAuth } from '../../FirebaseConfig';
 import Dashboard from './Dashboard';
 import AddCategory from '../components/AddCategory';
+import React from 'react';
 
 
 export const styles = StyleSheet.create({
