@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, Button } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, Button, ScrollView } from 'react-native'
 import CategorySelector, { Category } from '../components/CategorySelector';
 import DueDateSelector from '../components/DueDateSelector';
 import Checkbox from 'expo-checkbox';
@@ -181,6 +181,8 @@ const AddTask = ( {navigation}: AddTaskProps) => {
   }
 
   return (
+  <>
+  <ScrollView>
     <View style={styles.totalView}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Add Task</Text>
@@ -244,6 +246,8 @@ const AddTask = ( {navigation}: AddTaskProps) => {
       </View>
       <AddCategory isVisible={isModalVisible} onClose={() => setModalVisible(false)}/>
     </View>
+  </ScrollView>
+  </>
   )
 };
 

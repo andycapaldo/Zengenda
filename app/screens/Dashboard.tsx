@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Pressable,
   Image,
+  ScrollView,
 } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../../FirebaseConfig";
@@ -65,6 +66,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
 
   return (
     <>
+    <ScrollView>
       <View style={styles.dashboardView}>
         <Text style={styles.headerText}>Today is your day, Steve! ☀️</Text>
       </View>
@@ -130,6 +132,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
         />
         <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logout" />
       </View>
+    </ScrollView>
     </>
   );
 };
@@ -214,4 +217,7 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 4,
   },
+  container: {
+    
+  }
 });
