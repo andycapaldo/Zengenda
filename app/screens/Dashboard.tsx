@@ -8,11 +8,12 @@ import {
   Image,
 } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import { FIREBASE_AUTH, FIRESTORE_DB } from "../../FirebaseConfig";
+import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../../FirebaseConfig";
 import { useEffect, useState } from "react";
 import AddChoice from "../components/AddChoice";
 import '../'
 import { Category } from "../components/CategorySelector";
+import { collection, getDocs, query } from "firebase/firestore";
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -29,8 +30,25 @@ interface Task {
 
 const Dashboard = ({ navigation }: RouterProps) => {
   const [modalIsVisible, setModalIsVisible] = useState(false);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      const q = query(collection(FIRESTORE_DB, 'tasks'));
+      const querySnapshot = await getDocs(q);
+      const fetchedTasks = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Task[];
+
+      setTasks(fetchedTasks)
+    };
+
+    fetchTasks();
+  }, []);
 
   function addTask() {
     navigation.navigate("Add Task");
@@ -90,11 +108,11 @@ const Dashboard = ({ navigation }: RouterProps) => {
           <Text>School[2]</Text>
           <Text>Finances[1]</Text>
         </View>
-      </View>
-      <View>
-        <Text>
-          this is where a sorted list of the tasks will be shown vertically.
-        </Text>
+        {tasks.map((task) => (
+        <View key={task.id}>
+          <Text>{task.taskName}</Text>
+        </View>
+      ))}
       </View>
       <View>
         <Text>That's all for today. You go this!</Text>
@@ -179,5 +197,10 @@ const styles = StyleSheet.create({
     height: 100,
     shadowColor: 'black',
   },
-  container: {},
+  taskItem: {
+
+  },
+  taskName: {
+    
+  }
 });
