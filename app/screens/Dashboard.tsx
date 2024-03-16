@@ -66,7 +66,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
 
   return (
     <>
-    <ScrollView>
+    <ScrollView >
       <View style={styles.dashboardView}>
         <Text style={styles.headerText}>Today is your day, Steve! ☀️</Text>
       </View>
@@ -218,6 +218,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   container: {
-    
+
   }
 });

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, Button, ScrollView } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import CategorySelector, { Category } from '../components/CategorySelector';
 import DueDateSelector from '../components/DueDateSelector';
 import Checkbox from 'expo-checkbox';
@@ -7,9 +7,9 @@ import { FIRESTORE_DB } from '../../FirebaseConfig';
 import { addDoc, collection } from 'firebase/firestore';
 import { NavigationProp } from '@react-navigation/native';
 import { getAuth } from '../../FirebaseConfig';
-import Dashboard from './Dashboard';
 import AddCategory from '../components/AddCategory';
 import React from 'react';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
 export const styles = StyleSheet.create({
@@ -135,8 +135,8 @@ interface AddTaskProps {
 
 
 const AddTask = ( {navigation}: AddTaskProps) => {
-  const auth = getAuth(); // Gets the authentication instance
-  const user = auth.currentUser; // Gets the currently logged-in user
+  const auth = getAuth();
+  const user = auth.currentUser;
   const [taskName, setTaskName] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
@@ -182,7 +182,8 @@ const AddTask = ( {navigation}: AddTaskProps) => {
 
   return (
   <>
-  <ScrollView>
+  <KeyboardAwareScrollView>
+  <ScrollView scrollToOverflowEnabled={true}>
     <View style={styles.totalView}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Add Task</Text>
@@ -247,6 +248,7 @@ const AddTask = ( {navigation}: AddTaskProps) => {
       <AddCategory isVisible={isModalVisible} onClose={() => setModalVisible(false)}/>
     </View>
   </ScrollView>
+  </KeyboardAwareScrollView>
   </>
   )
 };
