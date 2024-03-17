@@ -156,7 +156,7 @@ const AddTask = ( {navigation}: AddTaskProps) => {
   
 
   const taskAdded = async () => {
-    if (!taskName || !taskDescription) {
+    if (!taskName || !taskDescription || !selectedCategory) {
       alert('Please fill in all fields');
       return;
     }
