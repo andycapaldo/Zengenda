@@ -1,9 +1,9 @@
 import { getAuth } from 'firebase/auth';
 import { addDoc, collection } from 'firebase/firestore';
 import { useState } from 'react';
-import { Modal, View, Text, TextInput, Button, TouchableOpacity, StyleSheet} from 'react-native'
+import { Modal, View, Text, TextInput, Button, TouchableOpacity, StyleSheet} from 'react-native';
 import { FIRESTORE_DB } from '../../FirebaseConfig';
-import ColorWheel from 'react-native-wheel-color-picker';
+
 
 
 interface AddCategoryProps {
@@ -15,7 +15,7 @@ interface AddCategoryProps {
 
 const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
     const [categoryName, setCategoryName] = useState('');
-    const [categoryColor, setCategoryColor] = useState('#000000');
+    const [categoryColor, setCategoryColor] = useState('#01A0B0');
 
     const addCategory = async () => {
         if (!categoryName) {
@@ -37,6 +37,21 @@ const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
         }
     };
 
+    const options = [
+        { label: "blue", value: '#01A0B0'},
+        { label: 'orange', value: '#F58021'},
+        { label: 'yellow', value: '#FDB814'},
+        { label: 'purple', value: '#593F98'},
+        { label: 'red', value: '#983F3F'},
+    ];
+
+    const renderColorOptions = () => options.map((option) => (
+        <TouchableOpacity
+        key={option.label}
+        style={[styles.colorSwatch, { backgroundColor: option.value }]}
+        onPress={ () => setCategoryColor(option.value)} />
+    ))
+
   return (
     <Modal
         visible={isVisible}
@@ -51,8 +66,12 @@ const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
                 placeholder='Category Name'
                 onChangeText={setCategoryName}
                 value={categoryName}/>
-                <ColorWheel // Still need to work on state management here in case a user wants to add multiple categories or if they exit out of and re-enter the Modal
-                onColorChangeComplete={setCategoryColor}/>
+                <View style={styles.colorOptionsContainer}>
+                    {renderColorOptions()}
+                </View>
+                <View style={[styles.categoryExample, { backgroundColor: categoryColor }]}>
+                    <Text style={styles.categoryExampleText}>{categoryName || 'Example'}</Text>
+                </View>
                 <TouchableOpacity style={styles.button} onPress={addCategory}>
                     <Text style={styles.buttonText}>Add Category</Text>
                 </TouchableOpacity>
@@ -105,5 +124,28 @@ const styles = StyleSheet.create({
         fontSize: 13,
         textAlign: 'center',
     },
+    colorOptionsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginVertical: 15,
+    },
+    colorSwatch: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        margin: 5,
+    },
+    categoryExample: {
+        alignSelf: 'stretch',
+        padding: 15,
+        borderRadius: 10,
+        marginVertical: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    categoryExampleText: {
+        color: '#FFF',
+        fontWeight: 'bold',
+    }
 })
 export default AddCategory
