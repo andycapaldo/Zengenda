@@ -72,12 +72,16 @@ const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
                 <View style={[styles.categoryExample, { backgroundColor: categoryColor }]}>
                     <Text style={styles.categoryExampleText}>{categoryName || 'Example'}</Text>
                 </View>
-                <TouchableOpacity style={styles.button} onPress={addCategory}>
-                    <Text style={styles.buttonText}>Add Category</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={onClose}>
-                    <Text style={styles.buttonText}>Cancel</Text>
-                </TouchableOpacity>
+                <View style={styles.addButtonContainer}>
+                    <TouchableOpacity style={styles.button} onPress={addCategory}>
+                        <Text style={styles.buttonText}>Add Category</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.cancelButtonContainer}>
+                    <TouchableOpacity style={styles.button} onPress={onClose}>
+                        <Text style={styles.buttonText}>Cancel</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     </Modal>
@@ -108,10 +112,12 @@ const styles = StyleSheet.create({
     },
     modalText: {
         marginBottom: 15,
-        textAlign: "center"
+        textAlign: "center",
+        fontSize: 15,
     },
     modalTextInput: {
         marginBottom: 15,
+        fontSize: 15,
     },
     button: {
         backgroundColor: '#E7E7E7',
@@ -121,7 +127,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: '#111111',
-        fontSize: 13,
+        fontSize: 15,
         textAlign: 'center',
     },
     colorOptionsContainer: {
@@ -146,6 +152,12 @@ const styles = StyleSheet.create({
     categoryExampleText: {
         color: '#FFF',
         fontWeight: 'bold',
+    },
+    addButtonContainer : {
+        marginTop: 10,
+    },
+    cancelButtonContainer : {
+        marginTop: 10,
     }
 })
 export default AddCategory
