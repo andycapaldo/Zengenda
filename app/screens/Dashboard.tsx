@@ -7,6 +7,9 @@ import {
   Pressable,
   Image,
   ScrollView,
+  LayoutAnimation,
+  UIManager,
+  Platform,
 } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../../FirebaseConfig";
@@ -15,6 +18,10 @@ import AddChoice from "../components/AddChoice";
 import '../'
 import { Category } from "../components/CategorySelector";
 import { collection, getDocs, onSnapshot, query, where } from "firebase/firestore";
+
+if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -29,9 +36,25 @@ interface Task {
   isCompleted: boolean;
 }
 
+enum ViewType {
+  Today,
+  Categories
+}
+
 const Dashboard = ({ navigation }: RouterProps) => {
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [activeView, setActiveView] = useState(ViewType.Today);
+
+  const showTodayView = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setActiveView(ViewType.Today);
+  };
+
+  const showCategoriesView = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setActiveView(ViewType.Categories);
+  };
 
   useEffect(() => {
     const auth = getAuth();
@@ -67,17 +90,14 @@ const Dashboard = ({ navigation }: RouterProps) => {
         <Text style={styles.headerText}>Today is your day, Steve! ☀️</Text>
       </View>
       <View style={styles.todayCategoryToggle}>
-        <TouchableOpacity style={styles.mainButton} onPress={() => {}}>
+        <TouchableOpacity 
+        style={[styles.mainButton, activeView === ViewType.Today ? styles.activeViewButton : styles.inactiveViewButton,]} onPress={showTodayView}>
           <Text style={styles.taskButtonText}>Today</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.sideButton} onPress={() => {}}>
+        <TouchableOpacity style={[styles.sideButton, activeView === ViewType.Categories ? styles.activeViewButton : styles.inactiveViewButton,]} onPress={showCategoriesView}>
           <Text style={styles.taskButtonText}>Categories</Text>
         </TouchableOpacity>
       </View>
-      <Text>
-        This is where the Today/Categories View gets toggled. The selected
-        option should take up 90% of the space available.
-      </Text>
       <View style={styles.dashboardButtons}>
         <View style={styles.inboxFlaggedSomeday}>
           <Pressable>
@@ -171,7 +191,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     paddingVertical: 20,
     paddingHorizontal: 100,
-    width: "90%",
+    width: "100%",
     height: 115,
   },
   sideButton: {
@@ -180,8 +200,26 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 10,
     paddingVertical: 20,
     paddingHorizontal: 100,
-    width: "10%",
+    width: "100%",
     height: 115,
+  },
+  activeViewButton: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 1,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    width: "90%",
+  },
+  inactiveViewButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: '10%',
+    zIndex: 0,
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
   },
   taskButtonText: {
     color: "black",
@@ -190,6 +228,8 @@ const styles = StyleSheet.create({
   todayCategoryToggle: {
     flexDirection: "row",
     width: "100%",
+    height: 115,
+    position: 'relative',
     padding: 10,
   },
   inboxFlaggedSomeday: {
