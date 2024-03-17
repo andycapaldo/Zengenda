@@ -118,7 +118,8 @@ const Dashboard = ({ navigation }: RouterProps) => {
           </Pressable>
         </View>
       </View>
-      <View>
+      {activeView === ViewType.Today ? (
+      <View> 
         <Text>Today</Text>
         <View style={styles.categoryList}>
           <Text>All[4]</Text>
@@ -139,9 +140,16 @@ const Dashboard = ({ navigation }: RouterProps) => {
         <Text>No Tasks Today</Text>
       )}
       </View>
-      <View>
-        <Text>That's all for today. You go this!</Text>
-      </View>
+      ) : (
+        <View>
+          <View style={styles.categoryList}>
+            <Text>All[4]</Text>
+            <Text>Home[1]</Text>
+            <Text>School[2]</Text>
+            <Text>Finances[1]</Text>
+          </View>
+        </View>
+        )}
       <View style={styles.container}>
         <Button onPress={startAddTask} title="Add Task" />
         <AddChoice
@@ -242,6 +250,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     shadowColor: 'black',
+    marginTop: 20,
   },
   taskCard: {
     backgroundColor: '#FFF',
