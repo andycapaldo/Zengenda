@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { addDoc, collection } from 'firebase/firestore';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { Modal, View, Text, TextInput, Button, TouchableOpacity, StyleSheet} from 'react-native';
 import { FIRESTORE_DB } from '../../FirebaseConfig';
@@ -24,7 +24,11 @@ const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
         }
         try {
             const auth = getAuth();
-            await addDoc(collection(FIRESTORE_DB, 'categories'), {
+            const docRef = doc(collection(FIRESTORE_DB, 'categories'));
+            const categoryId = docRef.id;
+
+            await setDoc(docRef, {
+                id: categoryId,
                 name: categoryName,
                 color: categoryColor,
                 userId: auth.currentUser!.uid,
@@ -34,7 +38,7 @@ const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
             setCategoryColor('#000000')
         } catch (error) {
             console.error('Error adding category: ', error);
-        }
+        };
     };
 
     const options = [
@@ -50,7 +54,7 @@ const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
         key={option.label}
         style={[styles.colorSwatch, { backgroundColor: option.value }]}
         onPress={ () => setCategoryColor(option.value)} />
-    ))
+    ));
 
   return (
     <Modal
