@@ -15,9 +15,9 @@ import { NavigationProp } from "@react-navigation/native";
 import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../../FirebaseConfig";
 import { useEffect, useState } from "react";
 import AddChoice from "../components/AddChoice";
-import '../'
+import Checkbox from 'expo-checkbox';
 import { Category } from "../components/CategorySelector";
-import { collection, getDocs, onSnapshot, query, where } from "firebase/firestore";
+import { collection, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -44,6 +44,7 @@ enum ViewType {
 const Dashboard = ({ navigation }: RouterProps) => {
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [activeView, setActiveView] = useState(ViewType.Today);
 
   const showTodayView = () => {
@@ -56,19 +57,48 @@ const Dashboard = ({ navigation }: RouterProps) => {
     setActiveView(ViewType.Categories);
   };
 
-  useEffect(() => {
+  useEffect(() => { // Fetches user tasks that have not been completed
     const auth = getAuth();
     const user = auth.currentUser;
 
-    const q = query(collection(FIRESTORE_DB, 'tasks'), where('userId', '==', user.uid));
+    if (!user) return;
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const q = query(collection(FIRESTORE_DB, 'tasks'), where('userId', '==', user.uid), where('isCompleted', '==', false));
+
+    const unsubscribeTasks = onSnapshot(q, (querySnapshot) => {
       const taskData: Task[] = querySnapshot.docs.map(doc => doc.data() as Task);
       setTasks(taskData);
     });
 
-    return () => unsubscribe();
+    return () => unsubscribeTasks();
   }, []);
+
+  useEffect(() => { // Fetches user categories if they exist
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) return;
+
+    const q = query(collection(FIRESTORE_DB, 'categories'), where('userId', '==', user.uid),);
+
+    const unsubscribeCategories = onSnapshot(q, (querySnapshot) => {
+      const categoryData: Category[] = querySnapshot.docs.map(doc => doc.data() as Category);
+      setCategories(categoryData);
+    });
+
+    return () => unsubscribeCategories();
+  }, []);
+
+  const handleCheckboxChange = async (taskId: string, currentValue: boolean) => {
+    try {
+    const taskRef = doc(FIRESTORE_DB, 'tasks', taskId);
+    await updateDoc(taskRef, {
+      isCompleted: !currentValue
+    });
+  } catch (error) {
+    console.error("Error updating document: ", error);
+  }
+};
 
   function addTask() {
     navigation.navigate("Add Task");
@@ -133,7 +163,10 @@ const Dashboard = ({ navigation }: RouterProps) => {
               <View style={styles.taskCategoryNameContainer}>
                 <Text style={styles.taskCategoryName}>{task.category.name}</Text>
               </View>
-              <Text style={styles.taskName}>{task.taskName}</Text>
+              <View style={styles.taskNameCheckbox}>
+                <Checkbox style={styles.checkBox} value={task.isCompleted} onValueChange={() => handleCheckboxChange(task.id, task.isCompleted)} />
+                <Text style={styles.taskName}>{task.taskName}</Text>
+              </View>
             </View>
           ))
       ) : (
@@ -148,6 +181,17 @@ const Dashboard = ({ navigation }: RouterProps) => {
             <Text>School[2]</Text>
             <Text>Finances[1]</Text>
           </View>
+          {categories.length > 0 ? (
+            <View>
+              {categories.map((category) => (
+                <View style={[styles.taskCard, { backgroundColor: category.color }]}>
+                  <Text style={styles.taskName} key={category.id}>{`${category.name}`}</Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <Text>No categories</Text>
+          )}
         </View>
         )}
       <View style={styles.container}>
@@ -194,7 +238,7 @@ const styles = StyleSheet.create({
     color: "#111111",
   },
   mainButton: {
-    backgroundColor: "pink",
+    backgroundColor: "#E9D4D4",
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     paddingVertical: 20,
@@ -203,7 +247,7 @@ const styles = StyleSheet.create({
     height: 115,
   },
   sideButton: {
-    backgroundColor: "yellow",
+    backgroundColor: "#FBEECC",
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
     paddingVertical: 20,
@@ -230,7 +274,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 10,
   },
   taskButtonText: {
-    color: "black",
+    color: "#111111",
     fontSize: 20,
   },
   todayCategoryToggle: {
@@ -285,6 +329,15 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 18,
     color: '#888'
+  },
+  taskNameCheckbox : {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  checkBox: {
+    borderRadius: 20,
+    borderColor: '#FEFEFE',
+    marginRight: 20,
   },
   container: {},
 });
