@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import AddChoice from "../components/AddChoice";
 import '../'
 import { Category } from "../components/CategorySelector";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, onSnapshot, query, where } from "firebase/firestore";
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -34,21 +34,17 @@ const Dashboard = ({ navigation }: RouterProps) => {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
+    const auth = getAuth();
+    const user = auth.currentUser;
 
-      const q = query(collection(FIRESTORE_DB, 'tasks'));
-      const querySnapshot = await getDocs(q);
-      const fetchedTasks = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Task[];
+    const q = query(collection(FIRESTORE_DB, 'tasks'), where('userId', '==', user.uid));
 
-      setTasks(fetchedTasks)
-    };
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const taskData: Task[] = querySnapshot.docs.map(doc => doc.data() as Task);
+      setTasks(taskData);
+    });
 
-    fetchTasks();
+    return () => unsubscribe();
   }, []);
 
   function addTask() {
@@ -110,11 +106,18 @@ const Dashboard = ({ navigation }: RouterProps) => {
           <Text>School[2]</Text>
           <Text>Finances[1]</Text>
         </View>
-        {tasks.map((task) => (
-        <View key={task.id} style={[styles.taskCard, { backgroundColor: task.category.color }]}>
-          <Text style={styles.taskName}>{task.taskName}</Text>
-        </View>
-      ))}
+        {tasks.length > 0 ? ( 
+          tasks.map((task) => (
+            <View key={task.id} style={[styles.taskCard, { backgroundColor: task.category.color }]}>
+              <View style={styles.taskCategoryNameContainer}>
+                <Text style={styles.taskCategoryName}>{task.category.name}</Text>
+              </View>
+              <Text style={styles.taskName}>{task.taskName}</Text>
+            </View>
+          ))
+      ) : (
+        <Text>No Tasks Today</Text>
+      )}
       </View>
       <View>
         <Text>That's all for today. You go this!</Text>
@@ -214,10 +217,25 @@ const styles = StyleSheet.create({
   taskName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#FEFEFE',
     marginBottom: 4,
   },
-  container: {
-
-  }
+  taskCategoryNameContainer: {
+    borderRadius: 10,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2},
+    shadowOpacity: 0.9,
+    shadowRadius: 5,
+  },
+  taskCategoryName: {
+    textAlign: 'right',
+    color: '#FEFEFE',
+  },
+  placeholderText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 18,
+    color: '#888'
+  },
+  container: {},
 });
