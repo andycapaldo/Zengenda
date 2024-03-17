@@ -7,6 +7,7 @@ export interface Category {
   name: string;
   color: string;
   id: string;
+  userId: string;
 }
 
 interface CategorySelectorProps {
