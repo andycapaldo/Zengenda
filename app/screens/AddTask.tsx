@@ -4,7 +4,7 @@ import CategorySelector, { Category } from '../components/CategorySelector';
 import DueDateSelector from '../components/DueDateSelector';
 import Checkbox from 'expo-checkbox';
 import { FIRESTORE_DB } from '../../FirebaseConfig';
-import { addDoc, collection } from 'firebase/firestore';
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { NavigationProp } from '@react-navigation/native';
 import { getAuth } from '../../FirebaseConfig';
 import AddCategory from '../components/AddCategory';
@@ -162,7 +162,11 @@ const AddTask = ( {navigation}: AddTaskProps) => {
     }
     console.log('Adding task!');
     try {
-      await addDoc(collection(FIRESTORE_DB, 'tasks'), {
+      const docRef = doc(collection(FIRESTORE_DB, 'tasks'));
+      const taskId = docRef.id;
+
+      await setDoc(docRef, {
+        id: taskId,
         taskName: taskName,
         taskDescription: taskDescription,
         category: selectedCategory,
