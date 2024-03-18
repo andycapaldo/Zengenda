@@ -135,8 +135,6 @@ interface AddTaskProps {
 
 
 const AddTask = ( {navigation}: AddTaskProps) => {
-  const auth = getAuth();
-  const user = auth.currentUser;
   const [taskName, setTaskName] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
@@ -160,29 +158,35 @@ const AddTask = ( {navigation}: AddTaskProps) => {
       alert('Please fill in all fields');
       return;
     }
-    console.log('Adding task!');
-    try {
-      const docRef = doc(collection(FIRESTORE_DB, 'tasks'));
-      const taskId = docRef.id;
 
-      await setDoc(docRef, {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) throw new Error('Not authenticated');
+
+      const categoryRef = doc(FIRESTORE_DB, 'categories', selectedCategory.id);
+
+      const taskRef = doc(collection(FIRESTORE_DB, 'tasks'));
+      const taskId = taskRef.id;
+
+      await setDoc(taskRef, {
         id: taskId,
         taskName: taskName,
         taskDescription: taskDescription,
-        category: selectedCategory,
+        category: categoryRef,
         dueDate: dueDate,
         highPriority: isChecked,
         subTask: subTask,
         userId: user!.uid,
         isCompleted: false,
       });
-      console.log('Task added!');
-      navigation.navigate('Dashboard')
-      alert('task added!')
+
+      navigation.navigate('Dashboard');
+      alert('task added!');
     } catch (error) {
       console.error('Error adding task: ', error);
-    }
-  }
+    };
+  };
 
   return (
   <>
