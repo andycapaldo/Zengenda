@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Button } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import CategorySelector, { Category } from '../components/CategorySelector';
 import DueDateSelector from '../components/DueDateSelector';
 import Checkbox from 'expo-checkbox';
@@ -103,14 +103,12 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   subTaskInputContainer: {
-    flex: 1,
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 15,
     paddingRight: 15,
   },
   subTaskInput: {
-    flex: 5,
     height: 50,
     borderWidth: 1,
     borderColor: '#E8E8E8',
@@ -128,10 +126,7 @@ export const styles = StyleSheet.create({
   taskButtonText: {
     color: '#E8E8E8',
     fontSize: 20,
-  },
-  removeSubTaskButton: {
-    flex: 1,
-  },
+  }
 });
 
 interface AddTaskProps {
@@ -147,30 +142,16 @@ const AddTask = ( {navigation}: AddTaskProps) => {
   const [dueDate, setDueDate] = useState(''); // Still need to create component for this
   const [isChecked, setChecked] = useState(false);
   const [subTaskPressed, setSubTaskPressed] = useState(false);
-  const [subTask, setSubTask] = useState(['']);
-  const [subTaskCounter, setSubTaskCounter] = useState(0);
+  const [subTask, setSubTask] = useState('');
 
   const addSubTask = () => {
-    setSubTaskPressed(true)
-    setSubTask([...subTask, ""]);
-    setSubTaskCounter(subTaskCounter + 1)
-  }
-
-  const removeSubTask = (index) => {
-    const newSubTask = [...subTask];
-    newSubTask.splice(index, 1);
-    setSubTask(newSubTask);
+    setSubTaskPressed(!subTaskPressed)
   }
 
   const handleCategorySelect = (category: Category) => {
     setSelectedCategory(category);
   };
-
-  const handleSubTaskInputChange = (text, index) => {
-    const newSubTask = [...subTask];
-    newSubTask[index] = text;
-    setSubTask(newSubTask);
-  }
+  
 
   const taskAdded = async () => {
     if (!taskName || !taskDescription || !selectedCategory) {
@@ -261,28 +242,12 @@ const AddTask = ( {navigation}: AddTaskProps) => {
       </TouchableOpacity>
       </View>
       {subTaskPressed &&
-      <View style={styles.subTaskInputContainer}>
-        {subTask.map((value, index) => (
-          <>
-            <TextInput
-              key={index.toString()}
-              style={styles.subTaskInput}
-              value={value}
-              onChangeText={(text) => handleSubTaskInputChange(text, index)}
-              placeholder={`Enter Subtask ${index + 1}`}
-            />
-            <View style={styles.removeSubTaskButton}>
-              <Button 
-                title='Remove subtask'
-                onPress={() => removeSubTask(index)}
-                disabled={subTask.length === 1}
-              />
-            </View>
-          </> 
-        ),
-        )}
-      </View> 
-      }
+      <View style={styles.subTaskInputContainer}> 
+        <TextInput 
+        style={styles.subTaskInput}
+        value={subTask}
+        onChangeText={setSubTask}/>
+      </View> }
       <View style={styles.buttonContainer}>
       <TouchableOpacity style={styles.taskButton} onPress={taskAdded}>
         <Text style={styles.taskButtonText}>Add Task</Text>

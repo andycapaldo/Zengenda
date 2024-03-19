@@ -14,11 +14,26 @@ import {
 import { NavigationProp } from "@react-navigation/native";
 import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../../FirebaseConfig";
 import { useEffect, useState } from "react";
-import Checkbox from 'expo-checkbox';
+import Checkbox from "expo-checkbox";
 import { Category } from "../components/CategorySelector";
-import { collection, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import {
+  useFonts,
+  Quicksand
+} from "@expo-google-fonts/quicksand"
+import AppLoading from "expo-app-loading";
 
-if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
@@ -37,7 +52,7 @@ interface Task {
 
 enum ViewType {
   Today,
-  Categories
+  Categories,
 }
 
 const Dashboard = ({ navigation }: RouterProps) => {
@@ -47,65 +62,83 @@ const Dashboard = ({ navigation }: RouterProps) => {
   const [activeView, setActiveView] = useState(ViewType.Today);
 
   const showTodayView = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setActiveView(ViewType.Today);
   };
 
   const showCategoriesView = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setActiveView(ViewType.Categories);
   };
 
-  useEffect(() => { // Fetches user tasks that have not been completed
+  const [fontsLoaded] = useFonts({
+    Quicksand
+  });
+
+
+
+  useEffect(() => {
+    // Fetches user tasks that have not been completed
     const auth = getAuth();
     const user = auth.currentUser;
 
     if (!user) return;
 
-    const q = query(collection(FIRESTORE_DB, 'tasks'), where('userId', '==', user.uid), where('isCompleted', '==', false));
+    const q = query(
+      collection(FIRESTORE_DB, "tasks"),
+      where("userId", "==", user.uid),
+      where("isCompleted", "==", false)
+    );
 
     const unsubscribeTasks = onSnapshot(q, (querySnapshot) => {
-      const taskData: Task[] = querySnapshot.docs.map(doc => doc.data() as Task);
+      const taskData: Task[] = querySnapshot.docs.map(
+        (doc) => doc.data() as Task
+      );
       setTasks(taskData);
     });
 
     return () => unsubscribeTasks();
   }, []);
 
-  useEffect(() => { // Fetches user categories if they exist
+  useEffect(() => {
+    // Fetches user categories if they exist
     const auth = getAuth();
     const user = auth.currentUser;
 
     if (!user) return;
 
-    const q = query(collection(FIRESTORE_DB, 'categories'), where('userId', '==', user.uid),);
+    const q = query(
+      collection(FIRESTORE_DB, "categories"),
+      where("userId", "==", user.uid)
+    );
 
     const unsubscribeCategories = onSnapshot(q, (querySnapshot) => {
-      const categoryData: Category[] = querySnapshot.docs.map(doc => doc.data() as Category);
+      const categoryData: Category[] = querySnapshot.docs.map(
+        (doc) => doc.data() as Category
+      );
       setCategories(categoryData);
     });
 
     return () => unsubscribeCategories();
   }, []);
 
-  const handleCheckboxChange = async (taskId: string, currentValue: boolean) => {
+  const handleCheckboxChange = async (
+    taskId: string,
+    currentValue: boolean
+  ) => {
     try {
-    const taskRef = doc(FIRESTORE_DB, 'tasks', taskId);
-    await updateDoc(taskRef, {
-      isCompleted: !currentValue
-    });
-  } catch (error) {
-    console.error("Error updating document: ", error);
-  }
-};
+      const taskRef = doc(FIRESTORE_DB, "tasks", taskId);
+      await updateDoc(taskRef, {
+        isCompleted: !currentValue,
+      });
+    } catch (error) {
+      console.error("Error updating document: ", error);
+    }
+  };
 
   function addTask() {
     navigation.navigate("Add Task");
     setModalIsVisible(false);
-  }
-
-  function startAddTask() {
-    setModalIsVisible(true);
   }
 
   function cancelAddTask() {
@@ -114,99 +147,162 @@ const Dashboard = ({ navigation }: RouterProps) => {
 
   return (
     <>
-    <ScrollView >
-      <View style={styles.dashboardView}>
-        <Text style={styles.headerText}>Today is your day, Steve! ☀️</Text>
-      </View>
-      <View style={styles.todayCategoryToggle}>
-        <TouchableOpacity 
-        style={[styles.mainButton, activeView === ViewType.Today ? styles.activeViewButton : styles.inactiveViewButton,]} onPress={showTodayView}>
-          <Text style={styles.taskButtonText}>Today</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.sideButton, activeView === ViewType.Categories ? styles.activeViewButton : styles.inactiveViewButton,]} onPress={showCategoriesView}>
-          <Text style={styles.taskButtonText}>Categories</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.dashboardButtons}>
-        <View style={styles.inboxFlaggedSomeday}>
-          <Pressable>
-              <Image style={styles.icons} source={require('../components/images2/inbox.png')} />
-            <Text>Inbox</Text>
-          </Pressable>
+      <ScrollView style={styles.component}>
+        <View style={styles.header}>
+          <Image
+            style={styles.headerIcons}
+            source={require("../components/images2/calendar.png")}
+          />
+          <Text style={styles.date}>March, 5, 2024</Text>
+          <Image
+            style={styles.headerIcons}
+            source={require("../components/images2/gear.png")}
+          />
         </View>
-        <View style={styles.inboxFlaggedSomeday}>
-          <Pressable>
-          <Image style={styles.icons} source={require('../components/images2/flag.png')} />
-            <Text>Flagged</Text>
-          </Pressable>
+        <View style={styles.dashboardView}>
+          <Text style={styles.headerText}>Today is your day, Steve! ☀️</Text>
         </View>
-        <View style={styles.inboxFlaggedSomeday}>
-          <Pressable>
-          <Image style={styles.icons} source={require('../components/images2/thought_bubble.png')} />
-            <Text>Someday</Text>
-          </Pressable>
-        </View>
-      </View>
-      {activeView === ViewType.Today ? (
-      <View> 
-        <Text>Today</Text>
-        <View style={styles.categoryList}>
-          <Text>All[4]</Text>
-          <Text>Home[1]</Text>
-          <Text>School[2]</Text>
-          <Text>Finances[1]</Text>
-        </View>
-        {tasks.length > 0 ? ( 
-          tasks.map((task) => (
-            <View key={task.id} style={[styles.taskCard, { backgroundColor: task.category.color }]}>
-              <View style={styles.taskCategoryNameContainer}>
-                <Text style={styles.taskCategoryName}>{task.category.name}</Text>
+        <View style={styles.todayCategoryToggle}>
+          <TouchableOpacity
+            style={[
+              styles.mainButton,
+              activeView === ViewType.Today
+                ? styles.activeViewButton
+                : styles.inactiveViewButton,
+            ]}
+            onPress={showTodayView}
+          >
+            <View style={styles.todayDashboard}>
+              <View>
+                <Image style={styles.dashboardIcon} source={require('../components/images2/tasklist.png')} />
               </View>
-              <View style={styles.taskNameCheckbox}>
-                <Checkbox style={styles.checkBox} value={task.isCompleted} onValueChange={() => handleCheckboxChange(task.id, task.isCompleted)} />
-                <Text style={styles.taskName}>{task.taskName}</Text>
+              <View style={styles.todayDashboardText}>
+                <Text style={styles.taskButtonText}>You've got</Text>
+                <Text style={styles.taskButtonText}>5 tasks due today</Text>
               </View>
             </View>
-          ))
-      ) : (
-        <Text>No Tasks Today</Text>
-      )}
-      </View>
-      ) : (
-        <View>
-          <View style={styles.categoryList}>
-            <Text>All[4]</Text>
-            <Text>Home[1]</Text>
-            <Text>School[2]</Text>
-            <Text>Finances[1]</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.sideButton,
+              activeView === ViewType.Categories
+                ? styles.activeViewButton
+                : styles.inactiveViewButton,
+            ]}
+            onPress={showCategoriesView}
+          >
+            <Text style={styles.taskButtonText}>Categories</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.dashboardButtons}>
+          <View style={styles.inboxFlaggedSomeday}>
+            <Pressable>
+              <Image
+                style={styles.icons}
+                source={require("../components/images2/inbox.png")}
+              />
+              <Text>Inbox</Text>
+            </Pressable>
           </View>
-          {categories.length > 0 ? (
-            <View>
-              {categories.map((category) => (
-                <View style={[styles.taskCard, { backgroundColor: category.color }]}>
-                  <Text style={styles.taskName} key={category.id}>{`${category.name}`}</Text>
-                </View>
-              ))}
-            </View>
-          ) : (
-            <Text>No categories</Text>
-          )}
+          <View style={styles.inboxFlaggedSomeday}>
+            <Pressable>
+              <Image
+                style={styles.icons}
+                source={require("../components/images2/flag.png")}
+              />
+              <Text>Flagged</Text>
+            </Pressable>
+          </View>
+          <View style={styles.inboxFlaggedSomeday}>
+            <Pressable>
+              <Image
+                style={styles.icons}
+                source={require("../components/images2/thought_bubble.png")}
+              />
+              <Text>Someday</Text>
+            </Pressable>
+          </View>
         </View>
+        {activeView === ViewType.Today ? (
+          <View>
+            <Text style={styles.today}>Today</Text>
+            <View style={styles.categoryList}>
+              <Text>All[4]</Text>
+              <Text>Home[1]</Text>
+              <Text>School[2]</Text>
+              <Text>Finances[1]</Text>
+            </View>
+            {tasks.length > 0 ? (
+              tasks.map((task) => (
+                <View
+                  key={task.id}
+                  style={[
+                    styles.taskCard,
+                    { backgroundColor: task.category.color },
+                  ]}
+                >
+                  <View style={styles.taskCategoryNameContainer}>
+                    <Text style={styles.taskCategoryName}>
+                      {task.category.name}
+                    </Text>
+                  </View>
+                  <View style={styles.taskNameCheckbox}>
+                    <Checkbox
+                      style={styles.checkBox}
+                      value={task.isCompleted}
+                      onValueChange={() =>
+                        handleCheckboxChange(task.id, task.isCompleted)
+                      }
+                    />
+                    <Text style={styles.taskName}>{task.taskName}</Text>
+                  </View>
+                </View>
+              ))
+            ) : (
+              <Text>No Tasks Today</Text>
+            )}
+          </View>
+        ) : (
+          <View>
+            <View style={styles.categoryList}>
+              <Text>All[4]</Text>
+              <Text>Home[1]</Text>
+              <Text>School[2]</Text>
+              <Text>Finances[1]</Text>
+            </View>
+            {categories.length > 0 ? (
+              <View>
+                {categories.map((category) => (
+                  <View
+                    style={[
+                      styles.taskCard,
+                      { backgroundColor: category.color },
+                    ]}
+                  >
+                    <Text
+                      style={styles.taskName}
+                      key={category.id}
+                    >{`${category.name}`}</Text>
+                  </View>
+                ))}
+              </View>
+            ) : (
+              <Text>No categories</Text>
+            )}
+          </View>
         )}
-      <View style={styles.container}>
-        <Button onPress={startAddTask} title="Add Task" />
-        <AddChoice
-          visible={modalIsVisible}
-          onAddTask={addTask}
-          onCancel={cancelAddTask}
-        />
-        <Button
-          onPress={() => navigation.navigate("details")}
-          title="Open Details"
-        />
-        <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logout" />
-      </View>
-    </ScrollView>
+        <View style={styles.container}>
+          <TouchableOpacity onPress={() => navigation.navigate("Add Task")}>
+            <Image
+              style={styles.addTask}
+              source={require("../components/images2/plus_button.png")}
+            />
+          </TouchableOpacity>
+        </View>
+        <View>
+          <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logout" />
+        </View>
+      </ScrollView>
     </>
   );
 };
@@ -214,6 +310,10 @@ const Dashboard = ({ navigation }: RouterProps) => {
 export default Dashboard;
 
 const styles = StyleSheet.create({
+  component: {
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
   dashboardView: {
     padding: 10,
   },
@@ -221,6 +321,29 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
+  },
+  dashboardIcon: {
+    flex: 1,
+    height: 25,
+    width: 25,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  headerIcons: {
+    height: 35,
+    width: 35,
+  },
+  date: {
+    fontSize: 40,
+    fontFamily: 'Quicksand'
+  },
+  todayDashboard: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   categoryList: {
     flexDirection: "row",
@@ -235,9 +358,12 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: "bold",
     color: "#111111",
+    fontFamily: 'Quicksand'
   },
   mainButton: {
     backgroundColor: "#E9D4D4",
+    borderColor: "#983F8F",
+    borderWidth: 1,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     paddingVertical: 20,
@@ -247,6 +373,8 @@ const styles = StyleSheet.create({
   },
   sideButton: {
     backgroundColor: "#FBEECC",
+    borderColor: "#FDB814",
+    borderWidth: 1,
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
     paddingVertical: 20,
@@ -255,7 +383,7 @@ const styles = StyleSheet.create({
     height: 115,
   },
   activeViewButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     zIndex: 1,
@@ -263,11 +391,14 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     width: "90%",
   },
+  today: {
+    fontSize: 30,
+  },
   inactiveViewButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     right: 0,
-    width: '10%',
+    width: "10%",
     zIndex: 0,
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
@@ -280,8 +411,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     height: 115,
-    position: 'relative',
-    padding: 10,
+    position: "relative",
+  },
+  todayDashboardText: {
+    flex: 5,
   },
   inboxFlaggedSomeday: {
     borderColor: "black",
@@ -292,51 +425,60 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 100,
     height: 100,
-    shadowColor: 'black',
+    shadowColor: "black",
     marginTop: 20,
   },
   taskCard: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 10,
     padding: 16,
     marginVertical: 8,
     marginHorizontal: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2},
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
   taskName: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FEFEFE',
+    fontWeight: "bold",
+    color: "#FEFEFE",
     marginBottom: 4,
   },
   taskCategoryNameContainer: {
     borderRadius: 10,
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2},
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.9,
     shadowRadius: 5,
   },
   taskCategoryName: {
-    textAlign: 'right',
-    color: '#FEFEFE',
+    textAlign: "right",
+    color: "#FEFEFE",
   },
   placeholderText: {
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 20,
     fontSize: 18,
-    color: '#888'
+    color: "#888",
   },
-  taskNameCheckbox : {
-    display: 'flex',
-    flexDirection: 'row',
+  taskNameCheckbox: {
+    display: "flex",
+    flexDirection: "row",
   },
   checkBox: {
     borderRadius: 20,
-    borderColor: '#FEFEFE',
+    borderColor: "#FEFEFE",
     marginRight: 20,
   },
-  container: {},
+  addTask: {
+    height: 85,
+    width: 85,
+    position: "absolute",
+    bottom: 1,
+    right: 1,
+  },
+  container: {
+    paddingTop: 100,
+  },
 });
