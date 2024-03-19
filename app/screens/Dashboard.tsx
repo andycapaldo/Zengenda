@@ -14,7 +14,6 @@ import {
 import { NavigationProp } from "@react-navigation/native";
 import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../../FirebaseConfig";
 import { useEffect, useState } from "react";
-import AddChoice from "../components/AddChoice";
 import Checkbox from 'expo-checkbox';
 import { Category } from "../components/CategorySelector";
 import { collection, doc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
