@@ -1,10 +1,11 @@
 {
   "expo": {
     "name": "Zengenda",
-    "slug": "Zengenda",
+    "slug": "zengenda",
+    "description": "Productivity App built for COLAB27",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/joincolab_logo.jpg",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -28,6 +29,18 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "02fa799b-28f7-470e-be36-6c0ef7e0f360"
+      }
+    },
+    "owner": "acaps23",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/02fa799b-28f7-470e-be36-6c0ef7e0f360"
+    }
   }
 }
