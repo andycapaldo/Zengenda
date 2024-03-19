@@ -26,7 +26,7 @@ import {
 } from "firebase/firestore";
 import {
   useFonts,
-  Quicksand
+  Quicksand_400Regular
 } from "@expo-google-fonts/quicksand"
 import AppLoading from "expo-app-loading";
 
@@ -72,10 +72,8 @@ const Dashboard = ({ navigation }: RouterProps) => {
   };
 
   const [fontsLoaded] = useFonts({
-    Quicksand
+    Quicksand_400Regular
   });
-
-
 
   useEffect(() => {
     // Fetches user tasks that have not been completed
@@ -143,6 +141,10 @@ const Dashboard = ({ navigation }: RouterProps) => {
 
   function cancelAddTask() {
     setModalIsVisible(false);
+  }
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
   }
 
   return (
@@ -274,7 +276,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
               <View>
                 {categories.map((category) => (
                   <View
-                    style={[
+                    key={category.id} style={[
                       styles.taskCard,
                       { backgroundColor: category.color },
                     ]}
@@ -338,7 +340,7 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 40,
-    fontFamily: 'Quicksand'
+    fontFamily: 'Quicksand_400Regular'
   },
   todayDashboard: {
     flex: 1,
@@ -358,7 +360,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: "bold",
     color: "#111111",
-    fontFamily: 'Quicksand'
+    fontFamily: 'Quicksand_400Regular'
   },
   mainButton: {
     backgroundColor: "#E9D4D4",
