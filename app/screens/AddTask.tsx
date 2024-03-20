@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Button } from 'react-native'
+import { useEffect, useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import CategorySelector, { Category } from '../components/CategorySelector';
 import DueDateSelector from '../components/DueDateSelector';
 import Checkbox from 'expo-checkbox';
@@ -10,7 +10,11 @@ import { getAuth } from '../../FirebaseConfig';
 import AddCategory from '../components/AddCategory';
 import React from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
+import {
+  useFonts,
+  Quicksand_400Regular
+} from "@expo-google-fonts/quicksand";
+import * as SplashScreen from 'expo-splash-screen';
 
 export const styles = StyleSheet.create({
   totalView: {
@@ -21,11 +25,13 @@ export const styles = StyleSheet.create({
     paddingBottom: 10,
     alignItems: 'center',
     fontSize: 25,
+    fontFamily: 'Quicksand_400Regular',
   },
   headerText: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#111111',
+    fontFamily: 'Quicksand_400Regular',
   },
   taskNameContainer: {
     paddingLeft: 15,
@@ -34,6 +40,7 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#111111',
+    fontFamily: 'Quicksand_400Regular',
   },
   nameInputContainer: {
     paddingTop: 10,
@@ -49,12 +56,13 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 16,
     color: '#333',
+    fontFamily: 'Quicksand_400Regular',
   },
   descriptionInputContainer: {
     paddingTop: 10,
     paddingBottom: 10,
     paddingHorizontal: 15,
-    backgroundColor: '#FEFEFE'
+    backgroundColor: '#FEFEFE',
   },
   descriptionInput: {
     minHeight: 100,
@@ -64,7 +72,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 16,
     textAlignVertical: 'top',
-    color: '#111111'
+    color: '#111111',
+    fontFamily: 'Quicksand_400Regular',
   },
   categoryContainer: {
     flexDirection: 'row',
@@ -83,7 +92,11 @@ export const styles = StyleSheet.create({
     backgroundColor: '#F0F0F0',
   },
   categoryText: {
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: 'Quicksand_400Regular',
+  },
+  categoryButtonText: {
+    fontFamily: 'Quicksand_400Regular',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -101,6 +114,7 @@ export const styles = StyleSheet.create({
     color: '#111111', 
     fontSize: 13,
     textAlign: 'center',
+    fontFamily: 'Quicksand_400Regular',
   },
   subTaskInputContainer: {
     flex: 1,
@@ -118,6 +132,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 16,
     color: '#333',
+    fontFamily: 'Quicksand_400Regular',
   },
   taskButton: {
     backgroundColor: '#111111',
@@ -128,6 +143,7 @@ export const styles = StyleSheet.create({
   taskButtonText: {
     color: '#E8E8E8',
     fontSize: 20,
+    fontFamily: 'Quicksand_400Regular',
   },
   removeSubTaskButton: {
     flex: 1,
@@ -140,6 +156,7 @@ interface AddTaskProps {
 
 
 const AddTask = ( {navigation}: AddTaskProps) => {
+
   const [taskName, setTaskName] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
@@ -199,13 +216,30 @@ const AddTask = ( {navigation}: AddTaskProps) => {
         userId: user!.uid,
         isCompleted: false,
       });
-
+      
       navigation.navigate('Dashboard');
       alert('task added!');
     } catch (error) {
       console.error('Error adding task: ', error);
     };
   };
+
+  const [fontsLoaded] = useFonts({
+    Quicksand_400Regular
+  });
+
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+    prepare();
+  }, [])
+
+  if (!fontsLoaded) {
+    return undefined;
+  } else {
+    SplashScreen.hideAsync();
+  }
 
   return (
   <>
@@ -216,7 +250,7 @@ const AddTask = ( {navigation}: AddTaskProps) => {
         <Text style={styles.headerText}>Add Task</Text>
       </View>
       <View style={styles.taskNameContainer}>
-        <Text style={styles.taskName}>Task Name</Text>
+        <Text style={styles.taskName}>Name</Text>
       </View>
       <View style={styles.nameInputContainer}>
         <TextInput 
@@ -227,7 +261,7 @@ const AddTask = ( {navigation}: AddTaskProps) => {
         onChangeText={setTaskName}/>
       </View>
       <View style={styles.taskNameContainer}>
-        <Text style={styles.taskName}>Task Description</Text>
+        <Text style={styles.taskName}>Description</Text>
       </View>
       <View style={styles.descriptionInputContainer}>
         <TextInput 
@@ -245,7 +279,7 @@ const AddTask = ( {navigation}: AddTaskProps) => {
         <CategorySelector onCategorySelect={handleCategorySelect} ></CategorySelector>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.subTaskButton} onPress={() => setModalVisible(true)}>
-            <Text>+</Text>
+            <Text style={styles.categoryButtonText}>Add New Category</Text>
           </TouchableOpacity>
         </View>
       <View style={styles.taskNameContainer}>
@@ -253,7 +287,7 @@ const AddTask = ( {navigation}: AddTaskProps) => {
       </View>
         <DueDateSelector />
       <View style={styles.taskNameContainer}>
-        <Text style={styles.taskName}>High Priority<Checkbox value={isChecked} onValueChange={setChecked}/></Text> 
+        <Text style={styles.taskName}>High Priority  <Checkbox value={isChecked} onValueChange={setChecked}/></Text> 
       </View>
       <View style={styles.buttonContainer}>
       <TouchableOpacity style={styles.subTaskButton} onPress={addSubTask}>
@@ -263,22 +297,20 @@ const AddTask = ( {navigation}: AddTaskProps) => {
       {subTaskPressed &&
       <View style={styles.subTaskInputContainer}>
         {subTask.map((value, index) => (
-          <>
+          <View key={index}>
             <TextInput
-              key={index.toString()}
               style={styles.subTaskInput}
               value={value}
               onChangeText={(text) => handleSubTaskInputChange(text, index)}
               placeholder={`Enter Subtask ${index + 1}`}
             />
-            <View style={styles.removeSubTaskButton}>
-              <Button 
-                title='Remove subtask'
+              <TouchableOpacity 
                 onPress={() => removeSubTask(index)}
-                disabled={subTask.length === 1}
-              />
-            </View>
-          </> 
+                disabled={subTask.length === 0}
+              >
+                <Text style={styles.subTaskButtonText}>Remove subtask</Text>
+              </TouchableOpacity>
+          </View>
         ),
         )}
       </View> 

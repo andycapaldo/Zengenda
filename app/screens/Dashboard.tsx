@@ -26,9 +26,9 @@ import {
 } from "firebase/firestore";
 import {
   useFonts,
-  Quicksand
-} from "@expo-google-fonts/quicksand"
-import AppLoading from "expo-app-loading";
+  Quicksand_400Regular
+} from "@expo-google-fonts/quicksand";
+import * as SplashScreen from 'expo-splash-screen';
 
 if (
   Platform.OS === "android" &&
@@ -56,7 +56,6 @@ enum ViewType {
 }
 
 const Dashboard = ({ navigation }: RouterProps) => {
-  const [modalIsVisible, setModalIsVisible] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeView, setActiveView] = useState(ViewType.Today);
@@ -72,7 +71,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
   };
 
   const [fontsLoaded] = useFonts({
-    Quicksand
+    Quicksand_400Regular
   });
 
 
@@ -99,6 +98,8 @@ const Dashboard = ({ navigation }: RouterProps) => {
 
     return () => unsubscribeTasks();
   }, []);
+
+
 
   useEffect(() => {
     // Fetches user categories if they exist
@@ -138,11 +139,19 @@ const Dashboard = ({ navigation }: RouterProps) => {
 
   function addTask() {
     navigation.navigate("Add Task");
-    setModalIsVisible(false);
   }
 
-  function cancelAddTask() {
-    setModalIsVisible(false);
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+    prepare();
+  })
+
+  if (!fontsLoaded) {
+    return undefined;
+  } else {
+    SplashScreen.hideAsync();
   }
 
   return (
@@ -201,7 +210,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
                 style={styles.icons}
                 source={require("../components/images2/inbox.png")}
               />
-              <Text>Inbox</Text>
+              <Text style={styles.mainButtonText}>Inbox</Text>
             </Pressable>
           </View>
           <View style={styles.inboxFlaggedSomeday}>
@@ -210,7 +219,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
                 style={styles.icons}
                 source={require("../components/images2/flag.png")}
               />
-              <Text>Flagged</Text>
+              <Text style={styles.mainButtonText}>Flagged</Text>
             </Pressable>
           </View>
           <View style={styles.inboxFlaggedSomeday}>
@@ -219,7 +228,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
                 style={styles.icons}
                 source={require("../components/images2/thought_bubble.png")}
               />
-              <Text>Someday</Text>
+              <Text style={styles.mainButtonText}>Someday</Text>
             </Pressable>
           </View>
         </View>
@@ -265,10 +274,10 @@ const Dashboard = ({ navigation }: RouterProps) => {
         ) : (
           <View>
             <View style={styles.categoryList}>
-              <Text>All[4]</Text>
-              <Text>Home[1]</Text>
-              <Text>School[2]</Text>
-              <Text>Finances[1]</Text>
+              <Text style={styles.smallText}>All[4]</Text>
+              <Text style={styles.smallText}>Home[1]</Text>
+              <Text style={styles.smallText}>School[2]</Text>
+              <Text style={styles.smallText}>Finances[1]</Text>
             </View>
             {categories.length > 0 ? (
               <View>
@@ -287,7 +296,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
                 ))}
               </View>
             ) : (
-              <Text>No categories</Text>
+              <Text style={styles.smallText}>No categories</Text>
             )}
           </View>
         )}
@@ -324,8 +333,8 @@ const styles = StyleSheet.create({
   },
   dashboardIcon: {
     flex: 1,
-    height: 25,
-    width: 25,
+    height: 30,
+    width: 30,
   },
   header: {
     flexDirection: "row",
@@ -338,17 +347,18 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 40,
-    fontFamily: 'Quicksand'
+    fontFamily: 'Quicksand_400Regular',
   },
   todayDashboard: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
   categoryList: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    fontFamily: 'Quicksand_400Regular',
   },
   icons: {
     height: 20,
@@ -358,7 +368,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: "bold",
     color: "#111111",
-    fontFamily: 'Quicksand'
+    fontFamily: 'Quicksand_400Regular',
   },
   mainButton: {
     backgroundColor: "#E9D4D4",
@@ -393,6 +403,7 @@ const styles = StyleSheet.create({
   },
   today: {
     fontSize: 30,
+    fontFamily: 'Quicksand_400Regular',
   },
   inactiveViewButton: {
     position: "absolute",
@@ -406,6 +417,10 @@ const styles = StyleSheet.create({
   taskButtonText: {
     color: "#111111",
     fontSize: 20,
+    fontFamily: 'Quicksand_400Regular',
+  },
+  mainButtonText: {
+    fontFamily: 'Quicksand_400Regular',
   },
   todayCategoryToggle: {
     flexDirection: "row",
@@ -415,6 +430,7 @@ const styles = StyleSheet.create({
   },
   todayDashboardText: {
     flex: 5,
+    fontFamily: 'Quicksand_400Regular',
   },
   inboxFlaggedSomeday: {
     borderColor: "black",
@@ -444,6 +460,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#FEFEFE",
     marginBottom: 4,
+    fontFamily: 'Quicksand_400Regular',
   },
   taskCategoryNameContainer: {
     borderRadius: 10,
@@ -452,19 +469,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.9,
     shadowRadius: 5,
   },
+  smallText: {
+    fontFamily: 'Quicksand_400Regular',
+  },
   taskCategoryName: {
     textAlign: "right",
     color: "#FEFEFE",
+    fontFamily: 'Quicksand_400Regular',
   },
   placeholderText: {
     textAlign: "center",
     marginTop: 20,
     fontSize: 18,
     color: "#888",
+    fontFamily: 'Quicksand_400Regular',
   },
   taskNameCheckbox: {
     display: "flex",
     flexDirection: "row",
+    fontFamily: 'Quicksand_400Regular',
   },
   checkBox: {
     borderRadius: 20,
