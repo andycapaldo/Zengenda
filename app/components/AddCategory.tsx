@@ -1,16 +1,20 @@
 import { getAuth } from "firebase/auth";
 import { collection, doc, setDoc } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Modal,
   View,
   Text,
   TextInput,
-  Button,
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
 import { FIRESTORE_DB } from "../../FirebaseConfig";
+import * as SplashScreen from 'expo-splash-screen';
+import {
+  useFonts,
+  Quicksand_400Regular
+} from "@expo-google-fonts/quicksand";
 
 interface AddCategoryProps {
   isVisible: boolean;
@@ -46,21 +50,43 @@ const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
   };
 
   const options = [
-    { label: "blue", value: "#01A0B0" },
     { label: "orange", value: "#F58021" },
-    { label: "yellow", value: "#FDB814" },
+    { label: "pink", value: "#D36C91" },
+    { label: "blue", value: "#01A0B0" },
+    { label: "olive", value: "#9EB861" },
     { label: "purple", value: "#593F98" },
     { label: "red", value: "#983F3F" },
+    { label: "navy", value: "#3F6398" },
+    { label: "violet", value: "#983F8F" },
+    { label: "green", value: "#3F9858" },
+    { label: "yellow", value: "#FDB814" },
   ];
 
   const renderColorOptions = () =>
     options.map((option) => (
-      <TouchableOpacity
-        key={option.label}
-        style={[styles.colorSwatch, { backgroundColor: option.value }]}
-        onPress={() => setCategoryColor(option.value)}
-      />
+        <TouchableOpacity
+          key={option.label}
+          style={[styles.colorSwatch, { backgroundColor: option.value }]}
+          onPress={() => setCategoryColor(option.value)}
+        />
     ));
+
+    const [fontsLoaded] = useFonts({
+      Quicksand_400Regular
+    });
+  
+    useEffect(() => {
+      async function prepare() {
+        await SplashScreen.preventAutoHideAsync();
+      }
+      prepare();
+    }, [])
+  
+    if (!fontsLoaded) {
+      return undefined;
+    } else {
+      SplashScreen.hideAsync();
+    }
 
   return (
     <Modal
@@ -72,12 +98,14 @@ const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={styles.modalText}>Add a New Category</Text>
-          <TextInput
-            style={styles.modalTextInput}
-            placeholder="Category Name"
-            onChangeText={setCategoryName}
-            value={categoryName}
-          />
+          <View style={styles.textInputBorder}>
+            <TextInput
+              style={styles.modalTextInput}
+              placeholder="Category Name"
+              onChangeText={setCategoryName}
+              value={categoryName}
+            />
+          </View>
           <View style={styles.colorOptionsContainer}>
             {renderColorOptions()}
           </View>
@@ -110,6 +138,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22,
+    overflow: 'hidden',
   },
   modalView: {
     margin: 20,
@@ -126,14 +155,20 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  textInputBorder: {
+    borderColor: '#111111',
+    borderWidth: 1,
+  },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
     fontSize: 15,
+    fontFamily: 'Quicksand_400Regular',
   },
   modalTextInput: {
     marginBottom: 15,
     fontSize: 15,
+    fontFamily: 'Quicksand_400Regular',
   },
   button: {
     backgroundColor: "#E7E7E7",
@@ -145,11 +180,15 @@ const styles = StyleSheet.create({
     color: "#111111",
     fontSize: 15,
     textAlign: "center",
+    fontFamily: 'Quicksand_400Regular',
   },
   colorOptionsContainer: {
+    display: 'flex',
     flexDirection: "row",
+    flexWrap: 'wrap',
     justifyContent: "center",
     marginVertical: 15,
+    overflow: 'hidden',    
   },
   colorSwatch: {
     width: 40,
@@ -164,10 +203,13 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     justifyContent: "center",
     alignItems: "center",
+    overflow: 'hidden',
+    display: 'flex',
   },
   categoryExampleText: {
     color: "#FFF",
     fontWeight: "bold",
+    fontFamily: 'Quicksand_400Regular',
   },
   addButtonContainer: {
     marginTop: 10,
