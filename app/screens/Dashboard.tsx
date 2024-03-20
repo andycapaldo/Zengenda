@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import Checkbox from "expo-checkbox";
 import { Category } from "../components/CategorySelector";
 import {
+  DocumentReference,
   collection,
   doc,
   onSnapshot,
@@ -46,7 +47,9 @@ interface Task {
   id: string;
   taskName: string;
   dueDate: string;
-  category: Category;
+  category: string; // stores a reference to the category object, not the object itself
+  categoryName?: string;
+  categoryColor?: string;
   highPriority: boolean;
   isCompleted: boolean;
 }
@@ -75,30 +78,19 @@ const Dashboard = ({ navigation }: RouterProps) => {
     Quicksand_400Regular
   });
 
-  useEffect(() => {
-    // Fetches user tasks that have not been completed
-    const auth = getAuth();
-    const user = auth.currentUser;
+  const extractCategoryId = (categoryPath) => categoryPath["_key"]["path"]["segments"][6];
 
-    if (!user) return;
-
-    const q = query(
-      collection(FIRESTORE_DB, "tasks"),
-      where("userId", "==", user.uid),
-      where("isCompleted", "==", false)
-    );
-
-    const unsubscribeTasks = onSnapshot(q, (querySnapshot) => {
-      const taskData: Task[] = querySnapshot.docs.map(
-        (doc) => doc.data() as Task
-      );
-      setTasks(taskData);
+  const assignCategoriesToTasks = (tasks, categories) => {
+    return tasks.map(task => {
+      const categoryId = extractCategoryId(task.category);
+      const category = categories.find(cat => cat.id === categoryId);
+      return {
+        ...task,
+        categoryName: category ? category.name : 'No Category',
+        categoryColor: category ? category.color : '#111111'
+      };
     });
-
-    return () => unsubscribeTasks();
-  }, []);
-
-
+  };
 
   useEffect(() => {
     // Fetches user categories if they exist
@@ -121,6 +113,32 @@ const Dashboard = ({ navigation }: RouterProps) => {
 
     return () => unsubscribeCategories();
   }, []);
+
+
+  useEffect(() => {
+    // Fetches user tasks that have not been completed
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) return;
+
+    const q = query(
+      collection(FIRESTORE_DB, "tasks"),
+      where("userId", "==", user.uid),
+      where("isCompleted", "==", false)
+    );
+
+    const unsubscribeTasks = onSnapshot(q, (querySnapshot) => {
+      const taskData: Task[] = querySnapshot.docs.map(
+        (doc) => doc.data() as Task
+      );
+      const updatedTasks = assignCategoriesToTasks(taskData, categories);
+      setTasks(updatedTasks);
+      console.log(updatedTasks)
+    });
+
+    return () => unsubscribeTasks();
+  }, [categories]);
 
   const handleCheckboxChange = async (
     taskId: string,
@@ -246,12 +264,12 @@ const Dashboard = ({ navigation }: RouterProps) => {
                   key={task.id}
                   style={[
                     styles.taskCard,
-                    { backgroundColor: task.category.color },
+                    { backgroundColor: task.categoryColor },
                   ]}
                 >
                   <View style={styles.taskCategoryNameContainer}>
                     <Text style={styles.taskCategoryName}>
-                      {task.category.name}
+                      {task.categoryName}
                     </Text>
                   </View>
                   <View style={styles.taskNameCheckbox}>
