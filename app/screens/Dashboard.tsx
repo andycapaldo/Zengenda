@@ -30,6 +30,7 @@ import {
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
 
+
 if (
   Platform.OS === "android" &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -73,8 +74,6 @@ const Dashboard = ({ navigation }: RouterProps) => {
   const [fontsLoaded] = useFonts({
     Quicksand_400Regular
   });
-
-
 
   useEffect(() => {
     // Fetches user tasks that have not been completed
@@ -152,6 +151,10 @@ const Dashboard = ({ navigation }: RouterProps) => {
     return undefined;
   } else {
     SplashScreen.hideAsync();
+  }
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
   }
 
   return (
@@ -283,7 +286,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
               <View>
                 {categories.map((category) => (
                   <View
-                    style={[
+                    key={category.id} style={[
                       styles.taskCard,
                       { backgroundColor: category.color },
                     ]}
