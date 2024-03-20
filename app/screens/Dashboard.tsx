@@ -153,10 +153,6 @@ const Dashboard = ({ navigation }: RouterProps) => {
     SplashScreen.hideAsync();
   }
 
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  }
-
   return (
     <>
       <ScrollView style={styles.component}>
