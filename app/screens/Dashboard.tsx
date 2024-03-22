@@ -175,10 +175,12 @@ const Dashboard = ({ navigation }: RouterProps) => {
     <>
       <ScrollView style={styles.component}>
         <View style={styles.header}>
-          <Image
-            style={styles.headerIcons}
-            source={require("../components/images2/calendar.png")}
-          />
+          <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
+            <Image
+              style={styles.headerIcons}
+              source={require("../components/images2/calendar.png")}
+            />
+          </TouchableOpacity>
           <Text style={styles.date}>March, 5, 2024</Text>
           <Image
             style={styles.headerIcons}
