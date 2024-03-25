@@ -15,6 +15,7 @@ import {
   Quicksand_400Regular
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
+import SegmentedControlTab from 'react-native-segmented-control-tab';
 
 export const styles = StyleSheet.create({
   totalView: {
@@ -148,6 +149,13 @@ export const styles = StyleSheet.create({
   removeSubTaskButton: {
     flex: 1,
   },
+  occurenceTabsView: {
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
+  occurenceTabs: {
+    padding: 10,
+  }
 });
 
 interface AddTaskProps {
@@ -162,6 +170,7 @@ const AddTask = ( {navigation}: AddTaskProps) => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [dueDate, setDueDate] = useState(''); // Still need to create component for this
+  const [occurence, setOccurence] = useState(0);
   const [isChecked, setChecked] = useState(false);
   const [subTaskPressed, setSubTaskPressed] = useState(false);
   const [subTask, setSubTask] = useState(['']);
@@ -274,6 +283,23 @@ const AddTask = ( {navigation}: AddTaskProps) => {
         onChangeText={setTaskDescription}/>
       </View>
       <View style={styles.taskNameContainer}>
+        <Text style={styles.taskName}>Due Date</Text>
+      </View>
+        <DueDateSelector />
+      <View style={styles.taskNameContainer}>
+          <Text style={styles.taskName}>Occurence</Text>
+      </View>
+      <View style={styles.occurenceTabsView} >
+        <SegmentedControlTab
+        values={['Once', 'Daily', 'Weekly', 'Monthly']}
+        selectedIndex={occurence}
+        onTabPress={setOccurence}
+        tabStyle={{backgroundColor: '#111111', borderColor: '#111111', }}
+        tabTextStyle={{ color: '#FEFEFE', fontFamily: 'Quicksand_400Regular'}}
+        activeTabStyle={{ backgroundColor: '#FEFEFE' }}
+        activeTabTextStyle={{ color: '#111111' }}/>
+      </View>
+      <View style={styles.taskNameContainer}>
         <Text style={styles.taskName}>Category</Text>
       </View>
         <CategorySelector onCategorySelect={handleCategorySelect} ></CategorySelector>
@@ -282,10 +308,6 @@ const AddTask = ( {navigation}: AddTaskProps) => {
             <Text style={styles.categoryButtonText}>Add New Category</Text>
           </TouchableOpacity>
         </View>
-      <View style={styles.taskNameContainer}>
-        <Text style={styles.taskName}>Due Date</Text>
-      </View>
-        <DueDateSelector />
       <View style={styles.taskNameContainer}>
         <Text style={styles.taskName}>High Priority  <Checkbox value={isChecked} onValueChange={setChecked}/></Text> 
       </View>
