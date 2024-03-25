@@ -15,7 +15,6 @@ import {
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
-import { useIsFocused } from '@react-navigation/native';
 
 
 export const styles = StyleSheet.create({
@@ -175,14 +174,14 @@ const AddTask = ( {navigation, route}: AddTaskProps) => {
   const [taskDescription, setTaskDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [dueDate, setDueDate] = useState('');
+  const [dueDate, setDueDate] = useState(new Date().toISOString().slice(0, 10));
   const [occurence, setOccurence] = useState(0);
   const [isChecked, setChecked] = useState(false);
   const [subTaskPressed, setSubTaskPressed] = useState(false);
   const [subTask, setSubTask] = useState(['']);
   const [subTaskCounter, setSubTaskCounter] = useState(0);
 
-  const isFocused = useIsFocused();
+  const currentDate = new Date().toISOString().slice(0, 10);
 
   useEffect(() => {
     if (route.params?.selectedDate) {
@@ -299,11 +298,25 @@ const AddTask = ( {navigation, route}: AddTaskProps) => {
       <View style={styles.taskNameContainer}>
         <Text style={styles.taskName}>Due Date</Text>
       </View>
+      {dueDate === currentDate ? (
       <View style={styles.categoryContainer}>
-        <TouchableOpacity style={styles.categoryButton} onPress={() => navigation.navigate('Calendar')}>
-            <Image style={styles.calendarIcon} source={require("../components/images2/calendar.png")}></Image>
+        <TouchableOpacity style={styles.categoryButton}>
+          <Text style={styles.categoryButtonText}>Today</Text>
         </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.categoryButton} onPress={() => navigation.navigate('Calendar')}>
+          <Image style={styles.calendarIcon} source={require("../components/images2/calendar.png")}></Image>
+        </TouchableOpacity>
+      </View>) : (
+      <View style={styles.categoryContainer}>
+        <TouchableOpacity style={styles.categoryButton}>
+          <Text style={styles.categoryButtonText}>{dueDate}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.categoryButton} onPress={() => navigation.navigate('Calendar')}>
+          <Image style={styles.calendarIcon} source={require("../components/images2/calendar.png")}></Image>
+        </TouchableOpacity>
+      </View>
+      )
+      }
       <View style={styles.taskNameContainer}>
           <Text style={styles.taskName}>Occurence</Text>
       </View>
