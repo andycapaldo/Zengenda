@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native'
 import CategorySelector, { Category } from '../components/CategorySelector';
-import DueDateSelector from '../components/DueDateSelector';
 import Checkbox from 'expo-checkbox';
 import { FIRESTORE_DB } from '../../FirebaseConfig';
 import { collection, doc, setDoc } from 'firebase/firestore';
-import { NavigationProp } from '@react-navigation/native';
+import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { getAuth } from '../../FirebaseConfig';
 import AddCategory from '../components/AddCategory';
 import React from 'react';
@@ -16,6 +15,8 @@ import {
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
+import { useIsFocused } from '@react-navigation/native';
+
 
 export const styles = StyleSheet.create({
   totalView: {
@@ -155,26 +156,39 @@ export const styles = StyleSheet.create({
   },
   occurenceTabs: {
     padding: 10,
-  }
+  },
+  calendarIcon: {
+    height: 35,
+    width: 35,
+  },
 });
 
 interface AddTaskProps {
   navigation: NavigationProp<any, any>;
+  route: RouteProp<{ params: { selectedDate: string } }, 'params'>
 }
 
 
-const AddTask = ( {navigation}: AddTaskProps) => {
+const AddTask = ( {navigation, route}: AddTaskProps) => {
 
   const [taskName, setTaskName] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [dueDate, setDueDate] = useState(''); // Still need to create component for this
+  const [dueDate, setDueDate] = useState('');
   const [occurence, setOccurence] = useState(0);
   const [isChecked, setChecked] = useState(false);
   const [subTaskPressed, setSubTaskPressed] = useState(false);
   const [subTask, setSubTask] = useState(['']);
   const [subTaskCounter, setSubTaskCounter] = useState(0);
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (route.params?.selectedDate) {
+      setDueDate(route.params.selectedDate);
+    }
+  }, [route.params?.selectedDate])
 
   const addSubTask = () => {
     setSubTaskPressed(true)
@@ -285,7 +299,11 @@ const AddTask = ( {navigation}: AddTaskProps) => {
       <View style={styles.taskNameContainer}>
         <Text style={styles.taskName}>Due Date</Text>
       </View>
-        <DueDateSelector />
+      <View style={styles.categoryContainer}>
+        <TouchableOpacity style={styles.categoryButton} onPress={() => navigation.navigate('Calendar')}>
+            <Image style={styles.calendarIcon} source={require("../components/images2/calendar.png")}></Image>
+        </TouchableOpacity>
+    </View>
       <View style={styles.taskNameContainer}>
           <Text style={styles.taskName}>Occurence</Text>
       </View>

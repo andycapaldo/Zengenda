@@ -17,7 +17,6 @@ import { useEffect, useState } from "react";
 import Checkbox from "expo-checkbox";
 import { Category } from "../components/CategorySelector";
 import {
-  DocumentReference,
   collection,
   doc,
   onSnapshot,
