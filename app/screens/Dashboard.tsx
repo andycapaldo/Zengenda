@@ -10,10 +10,11 @@ import {
   LayoutAnimation,
   UIManager,
   Platform,
+  Animated
 } from "react-native";
-import { NavigationProp } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../../FirebaseConfig";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Checkbox from "expo-checkbox";
 import { Category } from "../components/CategorySelector";
 import {
@@ -29,6 +30,7 @@ import {
   Quicksand_400Regular
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
+import Card from "../components/shared/card";
 
 if (
   Platform.OS === "android" &&
@@ -60,6 +62,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeView, setActiveView] = useState(ViewType.Today);
 
+
   const showTodayView = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setActiveView(ViewType.Today);
@@ -74,7 +77,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
     Quicksand_400Regular
   });
 
-
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     // Fetches user tasks that have not been completed
@@ -156,7 +159,14 @@ const Dashboard = ({ navigation }: RouterProps) => {
 
   return (
     <>
-      <ScrollView style={styles.component}>
+      <ScrollView 
+        style={styles.component}
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true }
+        )}
+      >
         <View style={styles.header}>
           <Image
             style={styles.headerIcons}
@@ -180,16 +190,20 @@ const Dashboard = ({ navigation }: RouterProps) => {
                 : styles.inactiveViewButton,
             ]}
             onPress={showTodayView}
-          >
-            <View style={styles.todayDashboard}>
-              <View>
-                <Image style={styles.dashboardIcon} source={require('../components/images2/tasklist.png')} />
+            >
+            <Card>
+
+              <View style={styles.todayDashboard}>
+                <View style={styles.dashboardIcon}>
+                  <Image style={styles.dashboardIcon} source={require('../components/images2/tasklist.png')} />
+                </View>
+                <View style={styles.todayDashboardText}>
+                  <Text style={styles.taskButtonText}>You've got</Text>
+                  <Text style={styles.taskButtonText}>5 tasks due today</Text>
+                </View>
               </View>
-              <View style={styles.todayDashboardText}>
-                <Text style={styles.taskButtonText}>You've got</Text>
-                <Text style={styles.taskButtonText}>5 tasks due today</Text>
-              </View>
-            </View>
+
+            </Card>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -200,7 +214,11 @@ const Dashboard = ({ navigation }: RouterProps) => {
             ]}
             onPress={showCategoriesView}
           >
-            <Text style={styles.taskButtonText}>Categories</Text>
+            <Card>
+              <View>
+                <Text style={styles.taskButtonText}>Categories</Text>
+              </View>
+            </Card>
           </TouchableOpacity>
         </View>
         <View style={styles.dashboardButtons}>
@@ -253,6 +271,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
                   <View style={styles.taskCategoryNameContainer}>
                     <Text style={styles.taskCategoryName}>
                       {task.category.name}
+                      {task.taskName}
                     </Text>
                   </View>
                   <View style={styles.taskNameCheckbox}>
@@ -301,12 +320,34 @@ const Dashboard = ({ navigation }: RouterProps) => {
           </View>
         )}
         <View style={styles.container}>
+        <Animated.View
+          style={{
+            position: 'absolute',
+            bottom: 20,
+            right: 20,
+            opacity: scrollY.interpolate({
+              inputRange: [0, 100],
+              outputRange: [1, 0],
+              extrapolate: 'clamp',
+            }),
+            transform: [
+              {
+                translateY: scrollY.interpolate({
+                  inputRange: [0, 100],
+                  outputRange: [0, 100],
+                  extrapolate: 'clamp',
+                }),
+              },
+            ],
+          }}
+        >
           <TouchableOpacity onPress={() => navigation.navigate("Add Task")}>
             <Image
               style={styles.addTask}
               source={require("../components/images2/plus_button.png")}
             />
           </TouchableOpacity>
+          </Animated.View>
         </View>
         <View>
           <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logout" />
@@ -419,13 +460,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'Quicksand_400Regular',
   },
+  sidewaysTaskButtonText: {
+    color: "#111111",
+    fontSize: 20,
+    fontFamily: 'Quicksand_400Regular',
+  },
   mainButtonText: {
     fontFamily: 'Quicksand_400Regular',
   },
   todayCategoryToggle: {
     flexDirection: "row",
     width: "100%",
-    height: 115,
+    height: 160,
     position: "relative",
   },
   todayDashboardText: {
@@ -434,7 +480,6 @@ const styles = StyleSheet.create({
   },
   inboxFlaggedSomeday: {
     borderColor: "black",
-    borderWidth: 1,
     borderRadius: 10,
     padding: 16,
     justifyContent: "space-between",
@@ -443,22 +488,32 @@ const styles = StyleSheet.create({
     height: 100,
     shadowColor: "black",
     marginTop: 20,
+    elevation: 3,
+    backgroundColor: '#fff',
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    marginHorizontal: 4,
+    marginVertical: 6,
   },
   taskCard: {
     backgroundColor: "#FFF",
+    borderWidth: 1,
     borderRadius: 10,
     padding: 16,
     marginVertical: 8,
     marginHorizontal: 16,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 1, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+    elevation: 3,
+    alignItems: 'flex-start',
   },
   taskName: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#FEFEFE",
+    color: "#111111",
     marginBottom: 4,
     fontFamily: 'Quicksand_400Regular',
   },
@@ -473,9 +528,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand_400Regular',
   },
   taskCategoryName: {
-    textAlign: "right",
-    color: "#FEFEFE",
+    color: "#111111",
     fontFamily: 'Quicksand_400Regular',
+    paddingLeft: 43,
   },
   placeholderText: {
     textAlign: "center",
@@ -497,11 +552,11 @@ const styles = StyleSheet.create({
   addTask: {
     height: 85,
     width: 85,
-    position: "absolute",
-    bottom: 1,
-    right: 1,
   },
   container: {
     paddingTop: 100,
+    bottom: 10,
+    right: 10,
+    position: "absolute",
   },
 });
