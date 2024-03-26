@@ -30,7 +30,7 @@ import {
   Quicksand_400Regular
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
-import Card from "../components/shared/card";
+
 
 if (
   Platform.OS === "android" &&
@@ -47,7 +47,9 @@ interface Task {
   id: string;
   taskName: string;
   dueDate: string;
-  category: Category;
+  category: string; // stores a reference to the category object, not the object itself
+  categoryName?: string;
+  categoryColor?: string;
   highPriority: boolean;
   isCompleted: boolean;
 }
@@ -61,7 +63,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeView, setActiveView] = useState(ViewType.Today);
-
+  const [tasksDueToday, setTasksDueToday] = useState(0);
 
   const showTodayView = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -77,32 +79,19 @@ const Dashboard = ({ navigation }: RouterProps) => {
     Quicksand_400Regular
   });
 
-  const scrollY = useRef(new Animated.Value(0)).current;
+  const extractCategoryId = (categoryPath) => categoryPath["_key"]["path"]["segments"][6];
 
-  useEffect(() => {
-    // Fetches user tasks that have not been completed
-    const auth = getAuth();
-    const user = auth.currentUser;
-
-    if (!user) return;
-
-    const q = query(
-      collection(FIRESTORE_DB, "tasks"),
-      where("userId", "==", user.uid),
-      where("isCompleted", "==", false)
-    );
-
-    const unsubscribeTasks = onSnapshot(q, (querySnapshot) => {
-      const taskData: Task[] = querySnapshot.docs.map(
-        (doc) => doc.data() as Task
-      );
-      setTasks(taskData);
+  const assignCategoriesToTasks = (tasks, categories) => {
+    return tasks.map(task => {
+      const categoryId = extractCategoryId(task.category);
+      const category = categories.find(cat => cat.id === categoryId);
+      return {
+        ...task,
+        categoryName: category ? category.name : 'No Category',
+        categoryColor: category ? category.color : '#111111'
+      };
     });
-
-    return () => unsubscribeTasks();
-  }, []);
-
-
+  };
 
   useEffect(() => {
     // Fetches user categories if they exist
@@ -126,6 +115,31 @@ const Dashboard = ({ navigation }: RouterProps) => {
     return () => unsubscribeCategories();
   }, []);
 
+
+  useEffect(() => {
+    // Fetches user tasks that have not been completed
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) return;
+
+    const q = query(
+      collection(FIRESTORE_DB, "tasks"),
+      where("userId", "==", user.uid),
+      where("isCompleted", "==", false)
+    );
+
+    const unsubscribeTasks = onSnapshot(q, (querySnapshot) => {
+      const taskData: Task[] = querySnapshot.docs.map(
+        (doc) => doc.data() as Task
+      );
+      const updatedTasks = assignCategoriesToTasks(taskData, categories);
+      setTasks(updatedTasks);
+    });
+
+    return () => unsubscribeTasks();
+  }, [categories]);
+
   const handleCheckboxChange = async (
     taskId: string,
     currentValue: boolean
@@ -140,9 +154,23 @@ const Dashboard = ({ navigation }: RouterProps) => {
     }
   };
 
-  function addTask() {
-    navigation.navigate("Add Task");
-  }
+  useEffect(() => {
+    async function getTasksDueToday(tasks) {
+      const date = new Date().toISOString().slice(0, 10);
+      let count = 0;
+      for (let i = 0; i < tasks.length; i++){
+        if (tasks[i]['dueDate'] === date) {
+          count++;
+        }
+      }
+      setTasksDueToday(count);
+    }
+    if (tasks.length > 0) {
+      getTasksDueToday(tasks);
+    } else {
+      setTasksDueToday(0)
+    }
+  }, [tasks])
 
   useEffect(() => {
     async function prepare() {
@@ -151,11 +179,14 @@ const Dashboard = ({ navigation }: RouterProps) => {
     prepare();
   })
 
+  const date = new Date().toLocaleDateString();
+
   if (!fontsLoaded) {
     return undefined;
   } else {
     SplashScreen.hideAsync();
   }
+
 
   return (
     <>
@@ -168,11 +199,13 @@ const Dashboard = ({ navigation }: RouterProps) => {
         )}
       >
         <View style={styles.header}>
-          <Image
-            style={styles.headerIcons}
-            source={require("../components/images2/calendar.png")}
-          />
-          <Text style={styles.date}>March, 5, 2024</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
+            <Image
+              style={styles.headerIcons}
+              source={require("../components/images2/calendar.png")}
+            />
+          </TouchableOpacity>
+            <Text style={styles.date}>{date}</Text>
           <Image
             style={styles.headerIcons}
             source={require("../components/images2/gear.png")}
@@ -190,20 +223,11 @@ const Dashboard = ({ navigation }: RouterProps) => {
                 : styles.inactiveViewButton,
             ]}
             onPress={showTodayView}
-            >
-            <Card>
-
-              <View style={styles.todayDashboard}>
-                <View style={styles.dashboardIcon}>
-                  <Image style={styles.dashboardIcon} source={require('../components/images2/tasklist.png')} />
-                </View>
-                <View style={styles.todayDashboardText}>
-                  <Text style={styles.taskButtonText}>You've got</Text>
-                  <Text style={styles.taskButtonText}>5 tasks due today</Text>
-                </View>
-              </View>
-
-            </Card>
+          >
+            <View style={styles.todayDashboard}>
+                <Image style={styles.dashboardIcon} source={require('../components/images2/tasklist.png')} />
+                <Text style={styles.todayDashboardText}>You've got {tasksDueToday} tasks due today</Text>
+            </View>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -265,13 +289,12 @@ const Dashboard = ({ navigation }: RouterProps) => {
                   key={task.id}
                   style={[
                     styles.taskCard,
-                    { backgroundColor: task.category.color },
+                    { backgroundColor: task.categoryColor },
                   ]}
                 >
                   <View style={styles.taskCategoryNameContainer}>
                     <Text style={styles.taskCategoryName}>
-                      {task.category.name}
-                      {task.taskName}
+                      {task.categoryName}
                     </Text>
                   </View>
                   <View style={styles.taskNameCheckbox}>
@@ -302,7 +325,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
               <View>
                 {categories.map((category) => (
                   <View
-                    style={[
+                    key={category.id} style={[
                       styles.taskCard,
                       { backgroundColor: category.color },
                     ]}
@@ -441,6 +464,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     width: "90%",
+    flex: 1,
   },
   today: {
     fontSize: 30,
