@@ -62,6 +62,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeView, setActiveView] = useState(ViewType.Today);
+  const [tasksDueToday, setTasksDueToday] = useState(0);
 
   const showTodayView = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -133,7 +134,6 @@ const Dashboard = ({ navigation }: RouterProps) => {
       );
       const updatedTasks = assignCategoriesToTasks(taskData, categories);
       setTasks(updatedTasks);
-      console.log(updatedTasks)
     });
 
     return () => unsubscribeTasks();
@@ -153,9 +153,23 @@ const Dashboard = ({ navigation }: RouterProps) => {
     }
   };
 
-  function addTask() {
-    navigation.navigate("Add Task");
-  }
+  useEffect(() => {
+    async function getTasksDueToday(tasks) {
+      const date = new Date().toISOString().slice(0, 10);
+      let count = 0;
+      for (let i = 0; i < tasks.length; i++){
+        if (tasks[i]['dueDate'] === date) {
+          count++;
+        }
+      }
+      setTasksDueToday(count);
+    }
+    if (tasks.length > 0) {
+      getTasksDueToday(tasks);
+    } else {
+      setTasksDueToday(0)
+    }
+  }, [tasks])
 
   useEffect(() => {
     async function prepare() {
@@ -171,6 +185,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
   } else {
     SplashScreen.hideAsync();
   }
+
 
   return (
     <>
@@ -202,9 +217,8 @@ const Dashboard = ({ navigation }: RouterProps) => {
             onPress={showTodayView}
           >
             <View style={styles.todayDashboard}>
-              <View>
                 <Image style={styles.dashboardIcon} source={require('../components/images2/tasklist.png')} />
-              </View>
+                <Text style={styles.todayDashboardText}>You've got {tasksDueToday} tasks due today</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -416,6 +430,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     width: "90%",
+    flex: 1,
   },
   today: {
     fontSize: 30,
