@@ -164,6 +164,8 @@ const Dashboard = ({ navigation }: RouterProps) => {
     prepare();
   })
 
+  const date = new Date().toLocaleDateString();
+
   if (!fontsLoaded) {
     return undefined;
   } else {
@@ -180,7 +182,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
               source={require("../components/images2/calendar.png")}
             />
           </TouchableOpacity>
-          <Text style={styles.date}>March, 5, 2024</Text>
+            <Text style={styles.date}>{date}</Text>
           <Image
             style={styles.headerIcons}
             source={require("../components/images2/gear.png")}
@@ -202,10 +204,6 @@ const Dashboard = ({ navigation }: RouterProps) => {
             <View style={styles.todayDashboard}>
               <View>
                 <Image style={styles.dashboardIcon} source={require('../components/images2/tasklist.png')} />
-              </View>
-              <View style={styles.todayDashboardText}>
-                <Text style={styles.taskButtonText}>You've got</Text>
-                <Text style={styles.taskButtonText}>5 tasks due today</Text>
               </View>
             </View>
           </TouchableOpacity>
