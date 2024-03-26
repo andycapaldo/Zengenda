@@ -30,6 +30,7 @@ import {
   Quicksand_400Regular
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
+import Card from "../components/shared/card";
 
 
 if (
@@ -190,14 +191,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
 
   return (
     <>
-      <ScrollView 
-        style={styles.component}
-        scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: true }
-        )}
-      >
+      <ScrollView style={styles.component}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
             <Image
@@ -343,34 +337,12 @@ const Dashboard = ({ navigation }: RouterProps) => {
           </View>
         )}
         <View style={styles.container}>
-        <Animated.View
-          style={{
-            position: 'absolute',
-            bottom: 20,
-            right: 20,
-            opacity: scrollY.interpolate({
-              inputRange: [0, 100],
-              outputRange: [1, 0],
-              extrapolate: 'clamp',
-            }),
-            transform: [
-              {
-                translateY: scrollY.interpolate({
-                  inputRange: [0, 100],
-                  outputRange: [0, 100],
-                  extrapolate: 'clamp',
-                }),
-              },
-            ],
-          }}
-        >
           <TouchableOpacity onPress={() => navigation.navigate("Add Task")}>
             <Image
               style={styles.addTask}
               source={require("../components/images2/plus_button.png")}
             />
           </TouchableOpacity>
-          </Animated.View>
         </View>
         <View>
           <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logout" />

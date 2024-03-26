@@ -381,5 +381,5 @@ const AddTask = ( {navigation, route}: AddTaskProps) => {
   </>
   )
 };
-
+}
 export default AddTask;
