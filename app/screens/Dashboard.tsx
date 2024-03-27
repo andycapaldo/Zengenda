@@ -29,6 +29,7 @@ import {
   Quicksand_400Regular
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
+import SegmentedControlTab from 'react-native-segmented-control-tab';
 
 
 if (
@@ -63,6 +64,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeView, setActiveView] = useState(ViewType.Today);
   const [tasksDueToday, setTasksDueToday] = useState(0);
+  const [categoryFilter, setCategoryFilter] = useState(0);
 
   const showTodayView = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -186,7 +188,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
     SplashScreen.hideAsync();
   }
 
-
+  
   return (
     <>
       <ScrollView style={styles.component}>
@@ -218,7 +220,9 @@ const Dashboard = ({ navigation }: RouterProps) => {
           >
             <View style={styles.todayDashboard}>
                 <Image style={styles.dashboardIcon} source={require('../components/images2/tasklist.png')} />
-                <Text style={styles.todayDashboardText}>You've got {tasksDueToday} tasks due today</Text>
+                {tasksDueToday > 1 ? (
+                <Text style={styles.todayDashboardText}>You've got {tasksDueToday} tasks due today</Text>)
+              : (<Text style={styles.todayDashboardText}>You've got {tasksDueToday} task due today</Text>)}
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -266,10 +270,14 @@ const Dashboard = ({ navigation }: RouterProps) => {
           <View>
             <Text style={styles.today}>Today</Text>
             <View style={styles.categoryList}>
-              <Text>All[4]</Text>
-              <Text>Home[1]</Text>
-              <Text>School[2]</Text>
-              <Text>Finances[1]</Text>
+              <SegmentedControlTab
+              values={['All', 'Category1', 'Category2', 'Category3']}
+              selectedIndex={categoryFilter}
+              onTabPress={setCategoryFilter}
+              tabStyle={{ borderColor: '#FEFEFE'}}
+              tabTextStyle={{ color: '#111111', fontFamily: 'Quicksand_400Regular'}}
+              activeTabStyle={{ backgroundColor: '#111111' }}
+              activeTabTextStyle={{ color: '#FEFEFE' }}/>
             </View>
             {tasks.length > 0 ? (
               tasks.map((task) => (
@@ -303,11 +311,16 @@ const Dashboard = ({ navigation }: RouterProps) => {
           </View>
         ) : (
           <View>
+            <Text style={styles.today}>Categories</Text>
             <View style={styles.categoryList}>
-              <Text style={styles.smallText}>All[4]</Text>
-              <Text style={styles.smallText}>Home[1]</Text>
-              <Text style={styles.smallText}>School[2]</Text>
-              <Text style={styles.smallText}>Finances[1]</Text>
+            <SegmentedControlTab
+              values={['All', 'Category1', 'Category2', 'Category3']}
+              selectedIndex={categoryFilter}
+              onTabPress={setCategoryFilter}
+              tabStyle={{ borderColor: '#FEFEFE'}}
+              tabTextStyle={{ color: '#111111', fontFamily: 'Quicksand_400Regular'}}
+              activeTabStyle={{ backgroundColor: '#111111' }}
+              activeTabTextStyle={{ color: '#FEFEFE' }}/>
             </View>
             {categories.length > 0 ? (
               <View>
