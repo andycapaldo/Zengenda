@@ -30,6 +30,7 @@ import {
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
+import isEqual from 'lodash/isEqual';
 
 
 if (
@@ -65,6 +66,8 @@ const Dashboard = ({ navigation }: RouterProps) => {
   const [activeView, setActiveView] = useState(ViewType.Today);
   const [tasksDueToday, setTasksDueToday] = useState(0);
   const [categoryFilter, setCategoryFilter] = useState(0);
+  const [segmentTitles, setSegmentTitles] = useState(['All']);
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
 
   const showTodayView = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -111,6 +114,9 @@ const Dashboard = ({ navigation }: RouterProps) => {
         (doc) => doc.data() as Category
       );
       setCategories(categoryData);
+
+      const titles = ['All', ...categoryData.map(category => category.name)];
+      setSegmentTitles(titles);
     });
 
     return () => unsubscribeCategories();
@@ -181,6 +187,43 @@ const Dashboard = ({ navigation }: RouterProps) => {
   })
 
   const date = new Date().toLocaleDateString();
+
+
+  useEffect(() => {
+    if (categoryFilter === 0) {
+      setFilteredTasks(tasks);
+    } else {
+      const selectedCategoryName = segmentTitles[categoryFilter].split(' [')[0];
+      const filtered = tasks.filter(task => task.categoryName === selectedCategoryName)
+      setFilteredTasks(filtered);
+    }
+  }, [categoryFilter, tasks, segmentTitles]);
+
+  const countTasksByCategory = (tasks, categories) => {
+    const count = categories.reduce((acc, category) => {
+      acc[category.name] = 0;
+      return acc;
+    }, {});
+
+    tasks.forEach((task) => {
+      if (count.hasOwnProperty(task.categoryName)) {
+        count[task.categoryName] += 1;
+      }
+    });
+
+    return count;
+  }
+
+  useEffect(() => {
+    const taskCounts = countTasksByCategory(tasks, categories);
+    const newSegmentTitles = [`All [${tasks.length}]`, ...categories.map(category => {const count = taskCounts[category.name] || 0;
+    return `${category.name} [${count}]`})];
+
+    if (!isEqual(segmentTitles, newSegmentTitles)) {
+      setSegmentTitles(newSegmentTitles)
+    }
+
+  }, [tasks, categories]);
 
   if (!fontsLoaded) {
     return undefined;
@@ -271,7 +314,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
             <Text style={styles.today}>Today</Text>
             <View style={styles.categoryList}>
               <SegmentedControlTab
-              values={['All', 'Category1', 'Category2', 'Category3']}
+              values={segmentTitles}
               selectedIndex={categoryFilter}
               onTabPress={setCategoryFilter}
               tabStyle={{ borderColor: '#FEFEFE'}}
@@ -280,7 +323,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
               activeTabTextStyle={{ color: '#FEFEFE' }}/>
             </View>
             {tasks.length > 0 ? (
-              tasks.map((task) => (
+              filteredTasks.map((task) => (
                 <View
                   key={task.id}
                   style={[
@@ -314,7 +357,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
             <Text style={styles.today}>Categories</Text>
             <View style={styles.categoryList}>
             <SegmentedControlTab
-              values={['All', 'Category1', 'Category2', 'Category3']}
+              values={segmentTitles}
               selectedIndex={categoryFilter}
               onTabPress={setCategoryFilter}
               tabStyle={{ borderColor: '#FEFEFE'}}
