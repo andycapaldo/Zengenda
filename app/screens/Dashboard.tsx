@@ -48,7 +48,7 @@ interface Task {
   id: string;
   taskName: string;
   dueDate: string;
-  category: string; // stores a reference to the category object, not the object itself
+  category: string;
   categoryName?: string;
   categoryColor?: string;
   highPriority: boolean;
@@ -263,9 +263,9 @@ const Dashboard = ({ navigation }: RouterProps) => {
           >
             <View style={styles.todayDashboard}>
                 <Image style={styles.dashboardIcon} source={require('../components/images2/tasklist.png')} />
-                {tasksDueToday > 1 ? (
-                <Text style={styles.todayDashboardText}>You've got {tasksDueToday} tasks due today</Text>)
-              : (<Text style={styles.todayDashboardText}>You've got {tasksDueToday} task due today</Text>)}
+                {tasksDueToday > 1 || tasksDueToday === 0 && (
+                <Text style={styles.todayDashboardText}>You've got {tasksDueToday} tasks due today</Text>)}
+              {tasksDueToday === 1 && (<Text style={styles.todayDashboardText}>You've got {tasksDueToday} task due today</Text>)}
             </View>
           </TouchableOpacity>
           <TouchableOpacity
