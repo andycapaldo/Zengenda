@@ -68,6 +68,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
   const [categoryFilter, setCategoryFilter] = useState(0);
   const [segmentTitles, setSegmentTitles] = useState(['All']);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+  const [highPriority, setHighPriority] = useState(0);
 
   const showTodayView = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -176,6 +177,24 @@ const Dashboard = ({ navigation }: RouterProps) => {
       getTasksDueToday(tasks);
     } else {
       setTasksDueToday(0)
+    }
+  }, [tasks])
+
+  useEffect(() => {
+    async function getHighPriorityTasks(tasks) {
+      let count = 0;
+      for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i]['highPriority']){
+          count++;
+        }
+      }
+
+      setHighPriority(count);
+    }
+    if (tasks.length > 0) {
+      getHighPriorityTasks(tasks);
+    } else {
+      setHighPriority(0)
     }
   }, [tasks])
 
@@ -297,6 +316,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
                 source={require("../components/images2/flag.png")}
               />
               <Text style={styles.mainButtonText}>Flagged</Text>
+              <Text>{highPriority}</Text>
             </Pressable>
           </View>
           <View style={styles.inboxFlaggedSomeday}>
