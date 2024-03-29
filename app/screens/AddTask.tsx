@@ -19,29 +19,29 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 
 export const styles = StyleSheet.create({
   totalView: {
-    backgroundColor: '#FEFEFE',
+    backgroundColor: "#FEFEFE",
   },
   headerContainer: {
     paddingTop: 20,
     paddingBottom: 10,
-    alignItems: 'center',
+    alignItems: "center",
     fontSize: 25,
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   headerText: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#111111',
-    fontFamily: 'Quicksand_400Regular',
+    fontWeight: "bold",
+    color: "#111111",
+    fontFamily: "Quicksand_400Regular",
   },
   taskNameContainer: {
     paddingLeft: 15,
   },
   taskName: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#111111',
-    fontFamily: 'Quicksand_400Regular',
+    fontWeight: "bold",
+    color: "#111111",
+    fontFamily: "Quicksand_400Regular",
   },
   nameInputContainer: {
     paddingTop: 10,
@@ -52,70 +52,70 @@ export const styles = StyleSheet.create({
   nameInput: {
     height: 50,
     borderWidth: 1,
-    borderColor: '#E8E8E8',
+    borderColor: "#E8E8E8",
     borderRadius: 10,
     paddingHorizontal: 10,
     fontSize: 16,
-    color: '#333',
-    fontFamily: 'Quicksand_400Regular',
+    color: "#333",
+    fontFamily: "Quicksand_400Regular",
   },
   descriptionInputContainer: {
     paddingTop: 10,
     paddingBottom: 10,
     paddingHorizontal: 15,
-    backgroundColor: '#FEFEFE',
+    backgroundColor: "#FEFEFE",
   },
   descriptionInput: {
     minHeight: 100,
     borderWidth: 1,
-    borderColor: '#E8E8E8',
+    borderColor: "#E8E8E8",
     borderRadius: 10,
     paddingHorizontal: 10,
     fontSize: 16,
-    textAlignVertical: 'top',
-    color: '#111111',
-    fontFamily: 'Quicksand_400Regular',
+    textAlignVertical: "top",
+    color: "#111111",
+    fontFamily: "Quicksand_400Regular",
   },
   categoryContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
     padding: 10,
   },
   categoryButton: {
     borderWidth: 1,
-    borderColor: '#E8E8E8',
+    borderColor: "#E8E8E8",
     borderRadius: 20,
     paddingVertical: 5,
     paddingHorizontal: 15,
     marginRight: 10,
     marginBottom: 10,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: "#F0F0F0",
   },
   categoryText: {
     fontSize: 16,
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   categoryButtonText: {
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     paddingVertical: 10,
-    backgroundColor: '#FEFEFE',
+    backgroundColor: "#FEFEFE",
   },
   subTaskButton: {
-    backgroundColor: '#E7E7E7', 
+    backgroundColor: "#E7E7E7",
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
   subTaskButtonText: {
-    color: '#111111', 
+    color: "#111111",
     fontSize: 13,
-    textAlign: 'center',
-    fontFamily: 'Quicksand_400Regular',
+    textAlign: "center",
+    fontFamily: "Quicksand_400Regular",
   },
   subTaskInputContainer: {
     flex: 1,
@@ -128,23 +128,23 @@ export const styles = StyleSheet.create({
     flex: 5,
     height: 50,
     borderWidth: 1,
-    borderColor: '#E8E8E8',
+    borderColor: "#E8E8E8",
     borderRadius: 10,
     paddingHorizontal: 10,
     fontSize: 16,
-    color: '#333',
-    fontFamily: 'Quicksand_400Regular',
+    color: "#333",
+    fontFamily: "Quicksand_400Regular",
   },
   taskButton: {
-    backgroundColor: '#111111',
+    backgroundColor: "#111111",
     borderRadius: 20,
     paddingVertical: 20,
     paddingHorizontal: 100,
   },
   taskButtonText: {
-    color: '#E8E8E8',
+    color: "#E8E8E8",
     fontSize: 20,
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   removeSubTaskButton: {
     flex: 1,
@@ -167,8 +167,7 @@ interface AddTaskProps {
   route: RouteProp<{ params: { selectedDate: string } }, 'params'>
 }
 
-
-const AddTask = ( {navigation, route}: AddTaskProps) => {
+const AddTask = ( {navigation, route}: AddTaskProps, {data, onSelect }) => {
 
   const [taskName, setTaskName] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
@@ -178,7 +177,7 @@ const AddTask = ( {navigation, route}: AddTaskProps) => {
   const [occurence, setOccurence] = useState(0);
   const [isChecked, setChecked] = useState(false);
   const [subTaskPressed, setSubTaskPressed] = useState(false);
-  const [subTask, setSubTask] = useState(['']);
+  const [subTask, setSubTask] = useState([""]);
   const [subTaskCounter, setSubTaskCounter] = useState(0);
 
   const currentDate = new Date().toISOString().slice(0, 10);
@@ -190,16 +189,16 @@ const AddTask = ( {navigation, route}: AddTaskProps) => {
   }, [route.params?.selectedDate])
 
   const addSubTask = () => {
-    setSubTaskPressed(true)
+    setSubTaskPressed(true);
     setSubTask([...subTask, ""]);
-    setSubTaskCounter(subTaskCounter + 1)
-  }
+    setSubTaskCounter(subTaskCounter + 1);
+  };
 
   const removeSubTask = (index) => {
     const newSubTask = [...subTask];
     newSubTask.splice(index, 1);
     setSubTask(newSubTask);
-  }
+  };
 
   const handleCategorySelect = (category: Category) => {
     setSelectedCategory(category);
@@ -209,22 +208,22 @@ const AddTask = ( {navigation, route}: AddTaskProps) => {
     const newSubTask = [...subTask];
     newSubTask[index] = text;
     setSubTask(newSubTask);
-  }
+  };
 
   const taskAdded = async () => {
     if (!taskName || !taskDescription || !selectedCategory) {
-      alert('Please fill in all fields');
+      alert("Please fill in all fields");
       return;
     }
 
     try {
       const auth = getAuth();
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated');
+      if (!user) throw new Error("Not authenticated");
 
-      const categoryRef = doc(FIRESTORE_DB, 'categories', selectedCategory.id);
+      const categoryRef = doc(FIRESTORE_DB, "categories", selectedCategory.id);
 
-      const taskRef = doc(collection(FIRESTORE_DB, 'tasks'));
+      const taskRef = doc(collection(FIRESTORE_DB, "tasks"));
       const taskId = taskRef.id;
 
       await setDoc(taskRef, {
@@ -238,16 +237,16 @@ const AddTask = ( {navigation, route}: AddTaskProps) => {
         userId: user!.uid,
         isCompleted: false,
       });
-      
-      navigation.navigate('Dashboard');
-      alert('task added!');
+
+      navigation.navigate("Dashboard");
+      alert("task added!");
     } catch (error) {
-      console.error('Error adding task: ', error);
-    };
+      console.error("Error adding task: ", error);
+    }
   };
 
   const [fontsLoaded] = useFonts({
-    Quicksand_400Regular
+    Quicksand_400Regular,
   });
 
   useEffect(() => {
@@ -255,7 +254,7 @@ const AddTask = ( {navigation, route}: AddTaskProps) => {
       await SplashScreen.preventAutoHideAsync();
     }
     prepare();
-  }, [])
+  }, []);
 
   if (!fontsLoaded) {
     return undefined;
@@ -380,5 +379,4 @@ const AddTask = ( {navigation, route}: AddTaskProps) => {
   </>
   )
 };
-
-export default AddTask
+export default AddTask;

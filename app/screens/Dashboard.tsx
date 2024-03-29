@@ -29,8 +29,12 @@ import {
   Quicksand_400Regular
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
+
+import Card from "../components/shared/card";
+=======
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import isEqual from 'lodash/isEqual';
+
 
 
 if (
@@ -268,6 +272,10 @@ const Dashboard = ({ navigation }: RouterProps) => {
           />
         </View>
         <View style={styles.dashboardView}>
+          <Image
+            style={styles.logo}
+            source={require('../components/images2/zwhitelogo.png')}
+          />
           <Text style={styles.headerText}>Today is your day, Steve! ☀️</Text>
         </View>
         <View style={styles.todayCategoryToggle}>
@@ -280,12 +288,49 @@ const Dashboard = ({ navigation }: RouterProps) => {
             ]}
             onPress={showTodayView}
           >
+
+            {activeView === ViewType.Today ? (              
+              <View style={styles.todayDashboard}>
+              <View style={styles.taskCounter}>
+                <Image 
+                  style={styles.dashboardIcon} 
+                  source={require('../components/images2/tasklist.png')}
+                />
+                <Text style={styles.todayDashboardText}>
+                  You've got {tasksDueToday} tasks due today
+                </Text>
+              </View>
+              <View style={styles.highPriorityButtons}>
+                <View style={styles.priorityButtonsSpacing}>
+                  <Image 
+                    style={styles.dashboardHighPriority} 
+                    source={require('../components/images2/redhighpriority1.png')} 
+                  />
+                </View>
+                <View>
+                  <Image 
+                    style={styles.dashboardHighPriority} 
+                    source={require('../components/images2/bluehighpriority3.png')} 
+                  />
+                </View>
+              </View>
+
             <View style={styles.todayDashboard}>
                 <Image style={styles.dashboardIcon} source={require('../components/images2/tasklist.png')} />
                 {tasksDueToday > 1 || tasksDueToday === 0 && (
                 <Text style={styles.todayDashboardText}>You've got {tasksDueToday} tasks due today</Text>)}
               {tasksDueToday === 1 && (<Text style={styles.todayDashboardText}>You've got {tasksDueToday} task due today</Text>)}
+
             </View>
+            ) : (
+              <View>
+                <Text style={styles.sidewaysButtons}>Y</Text>
+                <Text style={styles.sidewaysButtons}>A</Text>
+                <Text style={styles.sidewaysButtons}>D</Text>
+                <Text style={styles.sidewaysButtons}>O</Text>
+                <Text style={styles.sidewaysButtons}>T</Text>
+              </View>
+            )}
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -296,7 +341,35 @@ const Dashboard = ({ navigation }: RouterProps) => {
             ]}
             onPress={showCategoriesView}
           >
-            <Text style={styles.taskButtonText}>Categories</Text>
+            {activeView === ViewType.Categories ? (              
+            <View style={styles.todayDashboard}>
+              <View style={styles.taskCounter}>
+                <Image style={styles.dashboardIcon} source={require('../components/images2/categoryicon.png')} />
+                <Text style={styles.todayDashboardText}>3 of your categories have tasks due today</Text>
+              </View>
+              <View style={styles.highPriorityButtons}>
+                <View style={styles.priorityButtonsSpacing}>
+                  <Image style={styles.dashboardHighPriority} source={require('../components/images2/schoolsubtaskgreen.png')} />
+                </View>
+                <View>
+                  <Image style={styles.dashboardHighPriority} source={require('../components/images2/pluscategoryyellow.png')} />
+                </View>
+              </View>
+            </View>
+            ) : (
+              <View>
+                <Text style={styles.sidewaysButtons}>S</Text>
+                <Text style={styles.sidewaysButtons}>E</Text>
+                <Text style={styles.sidewaysButtons}>I</Text>
+                <Text style={styles.sidewaysButtons}>R</Text>
+                <Text style={styles.sidewaysButtons}>O</Text>
+                <Text style={styles.sidewaysButtons}>G</Text>
+                <Text style={styles.sidewaysButtons}>E</Text>
+                <Text style={styles.sidewaysButtons}>T</Text>
+                <Text style={styles.sidewaysButtons}>A</Text>
+                <Text style={styles.sidewaysButtons}>C</Text>
+              </View>
+            )}
           </TouchableOpacity>
         </View>
         <View style={styles.dashboardButtons}>
@@ -429,18 +502,39 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
   },
-  dashboardView: {
-    padding: 10,
-  },
   dashboardButtons: {
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
   },
-  dashboardIcon: {
+  dashboardView: {
     flex: 1,
-    height: 30,
-    width: 30,
+    flexDirection: 'row',
+    padding: 10,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  dashboardIcon: {
+    flex: 2,
+    height: 45,
+    width: 45,
+  },
+  logo: {
+    flex: 1,
+    height: 80,
+    width: 80,
+  },
+  headerText: {
+    flex: 3,
+    fontSize: 35,
+    fontWeight: "bold",
+    color: "#111111",
+    fontFamily: 'Quicksand_400Regular',
+  },
+  todayDashboardText: {
+    flex: 9,
+    fontFamily: 'Quicksand_400Regular',
+    fontSize: 20,
   },
   header: {
     flexDirection: "row",
@@ -457,8 +551,11 @@ const styles = StyleSheet.create({
   },
   todayDashboard: {
     flex: 1,
-    justifyContent: 'flex-start',
     alignItems: 'flex-start',
+  },
+  taskCounter: {
+    flex: 1,
+    flexDirection: 'row',
   },
   categoryList: {
     flexDirection: "row",
@@ -470,33 +567,48 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
   },
-  headerText: {
-    fontSize: 40,
-    fontWeight: "bold",
-    color: "#111111",
-    fontFamily: 'Quicksand_400Regular',
-  },
   mainButton: {
+    flex: 1,
     backgroundColor: "#E9D4D4",
     borderColor: "#983F8F",
     borderWidth: 1,
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
     paddingVertical: 20,
-    paddingHorizontal: 100,
+    paddingHorizontal: 15,
     width: "100%",
-    height: 115,
+    height: 160,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    
   },
   sideButton: {
+    flex: 1,
     backgroundColor: "#FBEECC",
     borderColor: "#FDB814",
     borderWidth: 1,
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
     paddingVertical: 20,
-    paddingHorizontal: 100,
+    paddingHorizontal: 15,
     width: "100%",
-    height: 115,
+    height: 160,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  highPriorityButtons: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 1,
+  },
+  sidewaysButtons: {
+    flex:1,
+    fontFamily: 'Quicksand_400Regular',
+    transform: [{ rotate: '270deg' }],
+    fontSize: 8,
+  },
+  priorityButtonsSpacing: {
+    flex: 1,
+  },
+  dashboardHighPriority: {
+    padding: 1,
   },
   activeViewButton: {
     position: "absolute",
@@ -526,22 +638,31 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'Quicksand_400Regular',
   },
+  sidewaysTaskButtonText: {
+    color: "#111111",
+    fontSize: 20,
+    fontFamily: 'Quicksand_400Regular',
+  },
   mainButtonText: {
     fontFamily: 'Quicksand_400Regular',
   },
   todayCategoryToggle: {
-    flexDirection: "row",
+    flex: 1,
     width: "100%",
-    height: 115,
+    height: 160,
     position: "relative",
-  },
-  todayDashboardText: {
-    flex: 5,
-    fontFamily: 'Quicksand_400Regular',
+    borderRadius: 10,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    shadowColor: "black",
+    marginTop: 20,
+    elevation: 3,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
   },
   inboxFlaggedSomeday: {
     borderColor: "black",
-    borderWidth: 1,
     borderRadius: 10,
     padding: 16,
     justifyContent: "space-between",
@@ -550,22 +671,34 @@ const styles = StyleSheet.create({
     height: 100,
     shadowColor: "black",
     marginTop: 20,
+    elevation: 3,
+    backgroundColor: '#fff',
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    marginHorizontal: 4,
+    marginVertical: 6,
   },
   taskCard: {
     backgroundColor: "#FFF",
+    borderWidth: 1,
     borderRadius: 10,
     padding: 16,
     marginVertical: 8,
     marginHorizontal: 16,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.4,
     shadowRadius: 4,
+    elevation: 3,
+    alignItems: 'flex-start',
+    borderColor: "black",
+    justifyContent: "space-between",
   },
   taskName: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#FEFEFE",
+    color: "#111111",
     marginBottom: 4,
     fontFamily: 'Quicksand_400Regular',
   },
@@ -580,9 +713,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand_400Regular',
   },
   taskCategoryName: {
-    textAlign: "right",
-    color: "#FEFEFE",
+    color: "#111111",
     fontFamily: 'Quicksand_400Regular',
+    paddingLeft: 43,
   },
   placeholderText: {
     textAlign: "center",
@@ -604,11 +737,12 @@ const styles = StyleSheet.create({
   addTask: {
     height: 85,
     width: 85,
-    position: "absolute",
-    bottom: 1,
-    right: 1,
   },
   container: {
     paddingTop: 100,
+    bottom: 10,
+    right: 10,
+    position: "absolute",
+    elevation: 3,
   },
 });

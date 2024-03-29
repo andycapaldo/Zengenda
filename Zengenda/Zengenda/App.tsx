@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import AddTask from './app/screens/AddTask';
-import CalendarComp from './app/components/CalendarComp';
+import AddChoice from './app/components/AddChoice';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +19,7 @@ function InsideLayout() {
       <InsideStack.Screen name="Dashboard" component={Dashboard} />
       <InsideStack.Screen name="details" component={Details} />
       <InsideStack.Screen name="Add Task" component={AddTask} />
-      <InsideStack.Screen name="Calendar" component={CalendarComp} />
+      <InsideStack.Screen name="Add Choice" component={AddChoice} />
     </InsideStack.Navigator>
   )
 }
