@@ -29,11 +29,11 @@ import {
   Quicksand_400Regular
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
-
 import Card from "../components/shared/card";
-=======
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import isEqual from 'lodash/isEqual';
+import ChangeCategory from "../components/ChangeCategory";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 
@@ -73,6 +73,8 @@ const Dashboard = ({ navigation }: RouterProps) => {
   const [segmentTitles, setSegmentTitles] = useState(['All']);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [highPriority, setHighPriority] = useState(0);
+  const [activeCategoryId, setActiveCategoryId] = useState(null);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
   const showTodayView = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -254,7 +256,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
     SplashScreen.hideAsync();
   }
 
-  
+
   return (
     <>
       <ScrollView style={styles.component}>
@@ -288,9 +290,8 @@ const Dashboard = ({ navigation }: RouterProps) => {
             ]}
             onPress={showTodayView}
           >
-
-            {activeView === ViewType.Today ? (              
-              <View style={styles.todayDashboard}>
+            {activeView === ViewType.Today ? (        
+            <View style={styles.todayDashboard}>
               <View style={styles.taskCounter}>
                 <Image 
                   style={styles.dashboardIcon} 
@@ -314,13 +315,6 @@ const Dashboard = ({ navigation }: RouterProps) => {
                   />
                 </View>
               </View>
-
-            <View style={styles.todayDashboard}>
-                <Image style={styles.dashboardIcon} source={require('../components/images2/tasklist.png')} />
-                {tasksDueToday > 1 || tasksDueToday === 0 && (
-                <Text style={styles.todayDashboardText}>You've got {tasksDueToday} tasks due today</Text>)}
-              {tasksDueToday === 1 && (<Text style={styles.todayDashboardText}>You've got {tasksDueToday} task due today</Text>)}
-
             </View>
             ) : (
               <View>
@@ -467,10 +461,17 @@ const Dashboard = ({ navigation }: RouterProps) => {
                       { backgroundColor: category.color },
                     ]}
                   >
-                    <Text
-                      style={styles.taskName}
-                      key={category.id}
-                    >{`${category.name}`}</Text>
+                    <Text style={styles.taskName}>{`${category.name}`}</Text>
+                    <TouchableOpacity
+                    style={styles.ellipsisIcon}
+                    onLayout={(event) => {const layout = event.nativeEvent.layout; 
+                    setMenuPosition({ x: layout.x, y: layout.y });
+                  }}
+                    onPress={() => setActiveCategoryId(category.id)}
+                    >
+                      <Icon name='ellipsis-v' size={20} color='#000' />
+                    </TouchableOpacity>
+                    {activeCategoryId === category.id && (<ChangeCategory category={category} onClose={() => setActiveCategoryId(null)} position={menuPosition} />)}
                   </View>
                 ))}
               </View>
@@ -744,5 +745,11 @@ const styles = StyleSheet.create({
     right: 10,
     position: "absolute",
     elevation: 3,
+  },
+  ellipsisIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    padding: 10,
   },
 });
