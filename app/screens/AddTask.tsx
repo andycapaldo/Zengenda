@@ -167,9 +167,7 @@ interface AddTaskProps {
   route: RouteProp<{ params: { selectedDate: string } }, 'params'>
 }
 
-const AddTask = ({ navigation }: AddTaskProps, { data, onSelect }) => {
-
-const AddTask = ( {navigation, route}: AddTaskProps) => {
+const AddTask = ( {navigation, route}: AddTaskProps, {data, onSelect }) => {
 
   const [taskName, setTaskName] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
@@ -381,5 +379,4 @@ const AddTask = ( {navigation, route}: AddTaskProps) => {
   </>
   )
 };
-}
 export default AddTask;
