@@ -454,12 +454,17 @@ const Dashboard = ({ navigation }: RouterProps) => {
                 {categories.map((category) => (
                   <View
                     key={category.id} style={[
-                      styles.taskCard,
+                      styles.categoryCard,
                       { backgroundColor: category.color },
                     ]}
                   >
-                    <Text style={styles.taskName}>{`${category.name}`}</Text>
-                    <ChangeCategory category={category} />
+                    <View style={styles.ellipsisContainer}>
+                      <ChangeCategory category={category} />
+                    </View>
+                    <View style={styles.categoryContent}>
+                      <Text style={styles.categoryName}>{`${category.name}`}</Text>
+                      <Image style={styles.dotStyle} source={require('../components/images2/black circle.png')} />
+                    </View>
                   </View>
                 ))}
               </View>
@@ -698,6 +703,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.9,
     shadowRadius: 5,
   },
+  categoryCard : {
+    backgroundColor: "#FFF",
+    borderWidth: 1,
+    borderRadius: 10,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 3,
+    borderColor: "black",
+    justifyContent: 'center',
+  },
   smallText: {
     fontFamily: 'Quicksand_400Regular',
   },
@@ -734,4 +753,30 @@ const styles = StyleSheet.create({
     position: "absolute",
     elevation: 3,
   },
+  dotStyle : {
+    width: 30,
+    height: 30,
+    marginLeft: 24,
+  },
+  categoryContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    padding: 16,
+  },
+  categoryName: {
+    fontSize: 24,
+    fontFamily: 'Quicksand_400Regular',
+    color: '#111111'
+  },
+  ellipsisContainer: {
+    position: 'relative',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    top: 0,
+    right: 0,
+    padding: 8,
+    zIndex: 1,
+  }
 });

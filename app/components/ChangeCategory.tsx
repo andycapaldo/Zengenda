@@ -14,14 +14,14 @@ export default function ChangeCategory({ category }) {
 
 
 return (
-    <View style={{ flex: 1, alignItems: 'flex-end' }}>
+    <View>
         <Menu>
             <MenuTrigger>
                 <Entypo name='dots-three-horizontal' size={20} color='#111111'></Entypo>
             </MenuTrigger>
             <MenuOptions>
-                <MenuOption onSelect={() => console.log('Edit button pressed!')} text='Edit' />
-                <MenuOption onSelect={() => console.log('Delete button pressed!')} text='Delete' />
+                <MenuOption onSelect={() => console.log(`Edit button pressed for ${category.name}`)} text='Edit' />
+                <MenuOption onSelect={() => console.log(`Delete button pressed for ${category.name}`)} text='Delete' />
             </MenuOptions>
         </Menu>
     </View>
