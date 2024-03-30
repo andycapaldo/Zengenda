@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Alert } from 'react-native'
 import {
     Menu,
     MenuOptions,
@@ -37,6 +37,14 @@ export default function ChangeCategory({ category }) {
         } 
     };
 
+    const confirmDelete = () => {
+        Alert.alert(
+            "Delete Category",
+            `Are you sure you want to delete the ${category.name} category and all it's associated tasks?`,
+            [{ text: "Cancel", style: "cancel" }, { text: "OK", onPress: deleteCategory }]
+        )
+    }
+
 
 return (
     <View>
@@ -46,7 +54,7 @@ return (
             </MenuTrigger>
             <MenuOptions>
                 <MenuOption onSelect={() => console.log(`Edit button pressed for ${category.name}`)} text='Edit' />
-                <MenuOption onSelect={() => deleteCategory()} text='Delete' />
+                <MenuOption onSelect={confirmDelete} text='Delete' />
             </MenuOptions>
         </Menu>
     </View>
