@@ -4,32 +4,26 @@ import {
     MenuOptions,
     MenuOption,
     MenuTrigger,
-    withMenuContext
 } from 'react-native-popup-menu';
-import { useEffect, useRef } from 'react';
+import { Entypo } from '@expo/vector-icons';
 
 
 
-function ChangeCategoryComponent({ category, onClose, position, ctx }) {
+export default function ChangeCategory({ category }) {
 
-    useEffect(() => {
-        ctx.menuActions.openMenu(category.id)
-    }, [ctx.menuActions, category])
+
 
 return (
-    <View>
-        <Menu name={category.id}>
-            <MenuTrigger />
-            <MenuOptions optionsContainerStyle={{ top: position.y, left: position.x }}>
+    <View style={{ flex: 1, alignItems: 'flex-end' }}>
+        <Menu>
+            <MenuTrigger>
+                <Entypo name='dots-three-horizontal' size={20} color='#111111'></Entypo>
+            </MenuTrigger>
+            <MenuOptions>
                 <MenuOption onSelect={() => console.log('Edit button pressed!')} text='Edit' />
-                <MenuOption onSelect={() => console.log('Edit button pressed!')} text='Delete' />
-                <MenuOption onSelect={onClose} text='Cancel' />
+                <MenuOption onSelect={() => console.log('Delete button pressed!')} text='Delete' />
             </MenuOptions>
         </Menu>
     </View>
     )
 }
-
-const ChangeCategory = withMenuContext(ChangeCategoryComponent)
-
-export default ChangeCategory

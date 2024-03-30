@@ -33,7 +33,6 @@ import Card from "../components/shared/card";
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import isEqual from 'lodash/isEqual';
 import ChangeCategory from "../components/ChangeCategory";
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 
@@ -73,8 +72,6 @@ const Dashboard = ({ navigation }: RouterProps) => {
   const [segmentTitles, setSegmentTitles] = useState(['All']);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [highPriority, setHighPriority] = useState(0);
-  const [activeCategoryId, setActiveCategoryId] = useState(null);
-  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
   const showTodayView = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -462,16 +459,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
                     ]}
                   >
                     <Text style={styles.taskName}>{`${category.name}`}</Text>
-                    <TouchableOpacity
-                    style={styles.ellipsisIcon}
-                    onLayout={(event) => {const layout = event.nativeEvent.layout; 
-                    setMenuPosition({ x: layout.x, y: layout.y });
-                  }}
-                    onPress={() => setActiveCategoryId(category.id)}
-                    >
-                      <Icon name='ellipsis-v' size={20} color='#000' />
-                    </TouchableOpacity>
-                    {activeCategoryId === category.id && (<ChangeCategory category={category} onClose={() => setActiveCategoryId(null)} position={menuPosition} />)}
+                    <ChangeCategory category={category} />
                   </View>
                 ))}
               </View>
@@ -745,11 +733,5 @@ const styles = StyleSheet.create({
     right: 10,
     position: "absolute",
     elevation: 3,
-  },
-  ellipsisIcon: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    padding: 10,
   },
 });
