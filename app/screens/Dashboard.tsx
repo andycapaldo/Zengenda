@@ -10,10 +10,11 @@ import {
   LayoutAnimation,
   UIManager,
   Platform,
+  Animated
 } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../../FirebaseConfig";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Checkbox from "expo-checkbox";
 import { Category } from "../components/CategorySelector";
 import {
@@ -29,7 +30,6 @@ import {
   Quicksand_400Regular
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
-import Card from "../components/shared/card";
 
 
 if (
@@ -187,6 +187,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
     SplashScreen.hideAsync();
   }
 
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   return (
     <>
@@ -395,7 +396,10 @@ const Dashboard = ({ navigation }: RouterProps) => {
           </View>
         )}
         <View style={styles.container}>
-          <TouchableOpacity onPress={() => navigation.navigate("Add Task")}>
+          <TouchableOpacity
+            style={styles.movableButton} 
+            onPress={() => navigation.navigate("Add Task")}
+          >
             <Image
               style={styles.addTask}
               source={require("../components/images2/plus_button.png")}
@@ -414,6 +418,7 @@ export default Dashboard;
 
 const styles = StyleSheet.create({
   component: {
+    flex: 1,
     paddingLeft: 10,
     paddingRight: 10,
   },
@@ -659,5 +664,12 @@ const styles = StyleSheet.create({
     right: 10,
     position: "absolute",
     elevation: 3,
+  },
+  movableButton: {
+    position: 'absolute',
+    bottom: 40,
+    right: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
