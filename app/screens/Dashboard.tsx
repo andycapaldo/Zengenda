@@ -13,7 +13,7 @@ import {
   Animated
 } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../../FirebaseConfig";
+import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../FirebaseConfig";
 import { useEffect, useRef, useState } from "react";
 import Checkbox from "expo-checkbox";
 import { Category } from "../components/CategorySelector";
@@ -576,7 +576,9 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 160,
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'center', 
+  },
+  movableButton: {
     
   },
   sideButton: {

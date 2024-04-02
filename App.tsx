@@ -5,7 +5,7 @@ import Dashboard from './app/screens/Dashboard';
 import Details from './app/screens/Details';
 import { useEffect, useState } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
-import { FIREBASE_AUTH } from './FirebaseConfig';
+import { FIREBASE_AUTH } from './app/FirebaseConfig';
 import AddTask from './app/screens/AddTask';
 import CalendarComp from './app/components/CalendarComp';
 import { MenuProvider } from 'react-native-popup-menu';

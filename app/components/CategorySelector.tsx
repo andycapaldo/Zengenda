@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
-import { FIRESTORE_DB, getAuth } from '../../FirebaseConfig';
+import { FIRESTORE_DB, getAuth } from '../FirebaseConfig';
 
 export interface Category {
   name: string;
