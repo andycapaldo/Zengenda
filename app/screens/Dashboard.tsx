@@ -265,10 +265,12 @@ const Dashboard = ({ navigation }: RouterProps) => {
             />
           </TouchableOpacity>
             <Text style={styles.date}>{date}</Text>
-          <Image
+          <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+            <Image
             style={styles.headerIcons}
             source={require("../components/images2/gear.png")}
           />
+          </TouchableOpacity>
         </View>
         <View style={styles.dashboardView}>
           <Image
