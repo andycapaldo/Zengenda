@@ -30,6 +30,10 @@ import {
   Quicksand_400Regular
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
+import SegmentedControlTab from 'react-native-segmented-control-tab';
+import isEqual from 'lodash/isEqual';
+import ChangeCategory from "../components/ChangeCategory";
+
 
 
 if (
@@ -47,7 +51,7 @@ interface Task {
   id: string;
   taskName: string;
   dueDate: string;
-  category: string; // stores a reference to the category object, not the object itself
+  category: string;
   categoryName?: string;
   categoryColor?: string;
   highPriority: boolean;
@@ -64,6 +68,10 @@ const Dashboard = ({ navigation }: RouterProps) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeView, setActiveView] = useState(ViewType.Today);
   const [tasksDueToday, setTasksDueToday] = useState(0);
+  const [categoryFilter, setCategoryFilter] = useState(0);
+  const [segmentTitles, setSegmentTitles] = useState(['All']);
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
+  const [highPriority, setHighPriority] = useState(0);
 
   const showTodayView = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -110,6 +118,9 @@ const Dashboard = ({ navigation }: RouterProps) => {
         (doc) => doc.data() as Category
       );
       setCategories(categoryData);
+
+      const titles = ['All', ...categoryData.map(category => category.name)];
+      setSegmentTitles(titles);
     });
 
     return () => unsubscribeCategories();
@@ -173,6 +184,24 @@ const Dashboard = ({ navigation }: RouterProps) => {
   }, [tasks])
 
   useEffect(() => {
+    async function getHighPriorityTasks(tasks) {
+      let count = 0;
+      for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i]['highPriority']){
+          count++;
+        }
+      }
+
+      setHighPriority(count);
+    }
+    if (tasks.length > 0) {
+      getHighPriorityTasks(tasks);
+    } else {
+      setHighPriority(0)
+    }
+  }, [tasks])
+
+  useEffect(() => {
     async function prepare() {
       await SplashScreen.preventAutoHideAsync();
     }
@@ -180,6 +209,43 @@ const Dashboard = ({ navigation }: RouterProps) => {
   })
 
   const date = new Date().toLocaleDateString();
+
+
+  useEffect(() => {
+    if (categoryFilter === 0) {
+      setFilteredTasks(tasks);
+    } else {
+      const selectedCategoryName = segmentTitles[categoryFilter].split(' [')[0];
+      const filtered = tasks.filter(task => task.categoryName === selectedCategoryName)
+      setFilteredTasks(filtered);
+    }
+  }, [categoryFilter, tasks, segmentTitles]);
+
+  const countTasksByCategory = (tasks, categories) => {
+    const count = categories.reduce((acc, category) => {
+      acc[category.name] = 0;
+      return acc;
+    }, {});
+
+    tasks.forEach((task) => {
+      if (count.hasOwnProperty(task.categoryName)) {
+        count[task.categoryName] += 1;
+      }
+    });
+
+    return count;
+  }
+
+  useEffect(() => {
+    const taskCounts = countTasksByCategory(tasks, categories);
+    const newSegmentTitles = [`All [${tasks.length}]`, ...categories.map(category => {const count = taskCounts[category.name] || 0;
+    return `${category.name} [${count}]`})];
+
+    if (!isEqual(segmentTitles, newSegmentTitles)) {
+      setSegmentTitles(newSegmentTitles)
+    }
+
+  }, [tasks, categories]);
 
   if (!fontsLoaded) {
     return undefined;
@@ -222,8 +288,8 @@ const Dashboard = ({ navigation }: RouterProps) => {
             ]}
             onPress={showTodayView}
           >
-            {activeView === ViewType.Today ? (              
-              <View style={styles.todayDashboard}>
+            {activeView === ViewType.Today ? (        
+            <View style={styles.todayDashboard}>
               <View style={styles.taskCounter}>
                 <Image 
                   style={styles.dashboardIcon} 
@@ -315,6 +381,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
                 source={require("../components/images2/flag.png")}
               />
               <Text style={styles.mainButtonText}>Flagged</Text>
+              <Text>{highPriority}</Text>
             </Pressable>
           </View>
           <View style={styles.inboxFlaggedSomeday}>
@@ -331,13 +398,17 @@ const Dashboard = ({ navigation }: RouterProps) => {
           <View>
             <Text style={styles.today}>Today</Text>
             <View style={styles.categoryList}>
-              <Text>All[4]</Text>
-              <Text>Home[1]</Text>
-              <Text>School[2]</Text>
-              <Text>Finances[1]</Text>
+              <SegmentedControlTab
+              values={segmentTitles}
+              selectedIndex={categoryFilter}
+              onTabPress={setCategoryFilter}
+              tabStyle={{ borderColor: '#FEFEFE'}}
+              tabTextStyle={{ color: '#111111', fontFamily: 'Quicksand_400Regular'}}
+              activeTabStyle={{ backgroundColor: '#111111' }}
+              activeTabTextStyle={{ color: '#FEFEFE' }}/>
             </View>
             {tasks.length > 0 ? (
-              tasks.map((task) => (
+              filteredTasks.map((task) => (
                 <View
                   key={task.id}
                   style={[
@@ -368,25 +439,33 @@ const Dashboard = ({ navigation }: RouterProps) => {
           </View>
         ) : (
           <View>
+            <Text style={styles.today}>Categories</Text>
             <View style={styles.categoryList}>
-              <Text style={styles.smallText}>All[4]</Text>
-              <Text style={styles.smallText}>Home[1]</Text>
-              <Text style={styles.smallText}>School[2]</Text>
-              <Text style={styles.smallText}>Finances[1]</Text>
+            <SegmentedControlTab
+              values={segmentTitles}
+              selectedIndex={categoryFilter}
+              onTabPress={setCategoryFilter}
+              tabStyle={{ borderColor: '#FEFEFE'}}
+              tabTextStyle={{ color: '#111111', fontFamily: 'Quicksand_400Regular'}}
+              activeTabStyle={{ backgroundColor: '#111111' }}
+              activeTabTextStyle={{ color: '#FEFEFE' }}/>
             </View>
             {categories.length > 0 ? (
               <View>
                 {categories.map((category) => (
                   <View
                     key={category.id} style={[
-                      styles.taskCard,
+                      styles.categoryCard,
                       { backgroundColor: category.color },
                     ]}
                   >
-                    <Text
-                      style={styles.taskName}
-                      key={category.id}
-                    >{`${category.name}`}</Text>
+                    <View style={styles.ellipsisContainer}>
+                      <ChangeCategory category={category} />
+                    </View>
+                    <View style={styles.categoryContent}>
+                      <Text style={styles.categoryName}>{`${category.name}`}</Text>
+                      <Image style={styles.dotStyle} source={require('../components/images2/black circle.png')} />
+                    </View>
                   </View>
                 ))}
               </View>
@@ -629,6 +708,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.9,
     shadowRadius: 5,
   },
+  categoryCard : {
+    backgroundColor: "#FFF",
+    borderWidth: 1,
+    borderRadius: 10,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 3,
+    borderColor: "black",
+    justifyContent: 'center',
+  },
   smallText: {
     fontFamily: 'Quicksand_400Regular',
   },
@@ -665,11 +758,30 @@ const styles = StyleSheet.create({
     position: "absolute",
     elevation: 3,
   },
-  movableButton: {
-    position: 'absolute',
-    bottom: 40,
-    right: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+  dotStyle : {
+    width: 30,
+    height: 30,
+    marginLeft: 24,
   },
+  categoryContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    padding: 16,
+  },
+  categoryName: {
+    fontSize: 24,
+    fontFamily: 'Quicksand_400Regular',
+    color: '#111111'
+  },
+  ellipsisContainer: {
+    position: 'relative',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    top: 0,
+    right: 0,
+    padding: 8,
+    zIndex: 1,
+  }
 });

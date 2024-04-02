@@ -8,6 +8,7 @@ import { User, onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import AddTask from './app/screens/AddTask';
 import CalendarComp from './app/components/CalendarComp';
+import { MenuProvider } from 'react-native-popup-menu';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,16 +37,18 @@ export default function App() {
 
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login' >
-        {user ? (
-          <Stack.Screen name='Login' component={InsideLayout} options={ { headerShown: false }} />
-        ) : (
-          <Stack.Screen name='Login' component={Login} options={ { headerShown: false }} />
-        )}
+    <MenuProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='Login' >
+          {user ? (
+            <Stack.Screen name='Login' component={InsideLayout} options={ { headerShown: false }} />
+          ) : (
+            <Stack.Screen name='Login' component={Login} options={ { headerShown: false }} />
+          )}
         
-      </Stack.Navigator>
-    </NavigationContainer>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </MenuProvider>
   );
 }
 
