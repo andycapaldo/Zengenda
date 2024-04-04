@@ -4,12 +4,14 @@ import Login from './app/screens/Login';
 import Dashboard from './app/screens/Dashboard';
 import { useEffect, useState } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
-import { FIREBASE_AUTH } from './FirebaseConfig';
+import { FIREBASE_AUTH } from './app/FirebaseConfig';
 import AddTask from './app/screens/AddTask';
 import CalendarComp from './app/components/CalendarComp';
 import { MenuProvider } from 'react-native-popup-menu';
 import SettingsScreen from './app/screens/SettingsScreen';
 import CreateAccount from './app/components/CreateAccount';
+import WelcomeScreen from './app/screens/WelcomeScreen';
+import WelcomeBack from './app/screens/WelcomeBack';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +25,8 @@ function InsideLayout() {
       <InsideStack.Screen name="Calendar" component={CalendarComp} />
       <InsideStack.Screen name="Settings" component={SettingsScreen} />
       <InsideStack.Screen name="CreateAccount" component={CreateAccount} />
+      <InsideStack.Screen name="WelcomeScreen" component={WelcomeScreen} />
+      <InsideStack.Screen name="WelcomeBack" component={WelcomeBack} />
     </InsideStack.Navigator>
   )
 }
@@ -37,17 +41,18 @@ export default function App() {
     });
   }, [])
 
-
   return (
     <MenuProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName='Login' >
+        <Stack.Navigator 
+          initialRouteName='Login'
+          screenOptions={{ headerShown: false }} 
+        >
           {user ? (
             <Stack.Screen name='Login' component={InsideLayout} options={ { headerShown: false }} />
           ) : (
             <Stack.Screen name='Login' component={Login} options={ { headerShown: false }} />
           )}
-        
         </Stack.Navigator>
       </NavigationContainer>
     </MenuProvider>

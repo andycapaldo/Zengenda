@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { FIRESTORE_DB } from "../../FirebaseConfig";
+import { FIRESTORE_DB } from "../FirebaseConfig";
 import * as SplashScreen from 'expo-splash-screen';
 import {
   useFonts,

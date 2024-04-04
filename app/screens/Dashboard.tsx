@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  Button,
   StyleSheet,
   TouchableOpacity,
   Pressable,
@@ -10,10 +9,11 @@ import {
   LayoutAnimation,
   UIManager,
   Platform,
+  Animated
 } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../../FirebaseConfig";
-import { useEffect, useState } from "react";
+import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../FirebaseConfig";
+import { useEffect, useRef, useState } from "react";
 import Checkbox from "expo-checkbox";
 import { Category } from "../components/CategorySelector";
 import {
@@ -29,7 +29,6 @@ import {
   Quicksand_400Regular
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
-import Card from "../components/shared/card";
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import isEqual from 'lodash/isEqual';
 import ChangeCategory from "../components/ChangeCategory";
@@ -119,7 +118,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
       );
       setCategories(categoryData);
 
-      const titles = ['All', ...categoryData.map(category => category.name)];
+    const titles = ['All', ...categoryData.map(category => category.name)];
       setSegmentTitles(titles);
     });
 
@@ -144,17 +143,17 @@ const Dashboard = ({ navigation }: RouterProps) => {
       const taskData: Task[] = querySnapshot.docs.map(
         (doc) => doc.data() as Task
       );
-      const updatedTasks = assignCategoriesToTasks(taskData, categories);
+    const updatedTasks = assignCategoriesToTasks(taskData, categories);
       setTasks(updatedTasks);
     });
 
     return () => unsubscribeTasks();
   }, [categories]);
 
-  const handleCheckboxChange = async (
-    taskId: string,
-    currentValue: boolean
-  ) => {
+    const handleCheckboxChange = async (
+      taskId: string,
+      currentValue: boolean
+    ) => {
     try {
       const taskRef = doc(FIRESTORE_DB, "tasks", taskId);
       await updateDoc(taskRef, {
@@ -168,12 +167,12 @@ const Dashboard = ({ navigation }: RouterProps) => {
   useEffect(() => {
     async function getTasksDueToday(tasks) {
       const date = new Date().toISOString().slice(0, 10);
-      let count = 0;
-      for (let i = 0; i < tasks.length; i++){
-        if (tasks[i]['dueDate'] === date) {
-          count++;
-        }
+    let count = 0;
+    for (let i = 0; i < tasks.length; i++){
+      if (tasks[i]['dueDate'] === date) {
+        count++;
       }
+    }
       setTasksDueToday(count);
     }
     if (tasks.length > 0) {
@@ -206,7 +205,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
       await SplashScreen.preventAutoHideAsync();
     }
     prepare();
-  })
+  }, [])
 
   const date = new Date().toLocaleDateString();
 
@@ -247,12 +246,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
 
   }, [tasks, categories]);
 
-  if (!fontsLoaded) {
-    return undefined;
-  } else {
-    SplashScreen.hideAsync();
-  }
-
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   return (
     <>
@@ -476,7 +470,10 @@ const Dashboard = ({ navigation }: RouterProps) => {
           </View>
         )}
         <View style={styles.container}>
-          <TouchableOpacity onPress={() => navigation.navigate("Add Task")}>
+          <TouchableOpacity
+            style={styles.movableButton} 
+            onPress={() => navigation.navigate("Add Task")}
+          >
             <Image
               style={styles.addTask}
               source={require("../components/images2/plus_button.png")}
@@ -484,7 +481,20 @@ const Dashboard = ({ navigation }: RouterProps) => {
           </TouchableOpacity>
         </View>
         <View>
-          <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logout" />
+          <View>
+            <TouchableOpacity onPress={() => navigation.navigate('WelcomeScreen')}>
+              <Text>
+                Welcome Screen
+              </Text>
+            </TouchableOpacity>
+          <View>
+            <TouchableOpacity onPress={() => navigation.navigate('WelcomeBack')}>
+              <Text>
+                Welcome Back Screen
+              </Text>
+            </TouchableOpacity>
+          </View>
+          </View>
         </View>
       </ScrollView>
     </>
@@ -495,6 +505,7 @@ export default Dashboard;
 
 const styles = StyleSheet.create({
   component: {
+    flex: 1,
     paddingLeft: 10,
     paddingRight: 10,
   },
@@ -573,7 +584,9 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 160,
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'center', 
+  },
+  movableButton: {
     
   },
   sideButton: {
