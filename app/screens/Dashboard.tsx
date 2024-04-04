@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  Button,
   StyleSheet,
   TouchableOpacity,
   Pressable,
@@ -119,7 +118,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
       );
       setCategories(categoryData);
 
-      const titles = ['All', ...categoryData.map(category => category.name)];
+    const titles = ['All', ...categoryData.map(category => category.name)];
       setSegmentTitles(titles);
     });
 
@@ -144,17 +143,17 @@ const Dashboard = ({ navigation }: RouterProps) => {
       const taskData: Task[] = querySnapshot.docs.map(
         (doc) => doc.data() as Task
       );
-      const updatedTasks = assignCategoriesToTasks(taskData, categories);
+    const updatedTasks = assignCategoriesToTasks(taskData, categories);
       setTasks(updatedTasks);
     });
 
     return () => unsubscribeTasks();
   }, [categories]);
 
-  const handleCheckboxChange = async (
-    taskId: string,
-    currentValue: boolean
-  ) => {
+    const handleCheckboxChange = async (
+      taskId: string,
+      currentValue: boolean
+    ) => {
     try {
       const taskRef = doc(FIRESTORE_DB, "tasks", taskId);
       await updateDoc(taskRef, {
@@ -168,12 +167,12 @@ const Dashboard = ({ navigation }: RouterProps) => {
   useEffect(() => {
     async function getTasksDueToday(tasks) {
       const date = new Date().toISOString().slice(0, 10);
-      let count = 0;
-      for (let i = 0; i < tasks.length; i++){
-        if (tasks[i]['dueDate'] === date) {
-          count++;
-        }
+    let count = 0;
+    for (let i = 0; i < tasks.length; i++){
+      if (tasks[i]['dueDate'] === date) {
+        count++;
       }
+    }
       setTasksDueToday(count);
     }
     if (tasks.length > 0) {
@@ -206,7 +205,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
       await SplashScreen.preventAutoHideAsync();
     }
     prepare();
-  })
+  }, [])
 
   const date = new Date().toLocaleDateString();
 
@@ -246,12 +245,6 @@ const Dashboard = ({ navigation }: RouterProps) => {
     }
 
   }, [tasks, categories]);
-
-  if (!fontsLoaded) {
-    return undefined;
-  } else {
-    SplashScreen.hideAsync();
-  }
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -488,7 +481,20 @@ const Dashboard = ({ navigation }: RouterProps) => {
           </TouchableOpacity>
         </View>
         <View>
-          <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logout" />
+          <View>
+            <TouchableOpacity onPress={() => navigation.navigate('WelcomeScreen')}>
+              <Text>
+                Welcome Screen
+              </Text>
+            </TouchableOpacity>
+          <View>
+            <TouchableOpacity onPress={() => navigation.navigate('WelcomeBack')}>
+              <Text>
+                Welcome Back Screen
+              </Text>
+            </TouchableOpacity>
+          </View>
+          </View>
         </View>
       </ScrollView>
     </>
