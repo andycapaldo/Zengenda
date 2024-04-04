@@ -2,13 +2,28 @@ import { StyleSheet, View, ImageBackground, Image, Pressable, Text } from "react
 import {
     useFonts,
     Quicksand_400Regular
-  } from "@expo-google-fonts/quicksand";
+} from "@expo-google-fonts/quicksand";
+  import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from "react";
 
 const WelcomeBack = () => {
 
     const [fontsLoaded] = useFonts({
         Quicksand_400Regular
         });
+
+    useEffect(() => {
+        async function prepare() {
+        await SplashScreen.preventAutoHideAsync();
+        }
+        prepare();
+    });
+    
+    if (!fontsLoaded) {
+        return undefined;
+    } else {
+        SplashScreen.hideAsync();
+    };
 
   return (
 
