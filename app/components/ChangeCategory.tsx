@@ -7,7 +7,7 @@ import {
 } from 'react-native-popup-menu';
 import { Entypo } from '@expo/vector-icons';
 import { collection, deleteDoc, doc, getDocs, query, where, writeBatch } from 'firebase/firestore';
-import { FIRESTORE_DB } from '../FirebaseConfig';
+import { FIRESTORE_DB } from '../../FirebaseConfig';
 
 
 

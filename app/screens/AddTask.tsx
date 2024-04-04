@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native'
 import CategorySelector, { Category } from '../components/CategorySelector';
 import Checkbox from 'expo-checkbox';
-import { FIRESTORE_DB } from '../FirebaseConfig';
+import { FIRESTORE_DB, getAuth } from '../../FirebaseConfig';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
-import { getAuth } from '../FirebaseConfig';
 import AddCategory from '../components/AddCategory';
 import React from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';

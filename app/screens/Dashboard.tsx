@@ -12,7 +12,7 @@ import {
   Animated
 } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../FirebaseConfig";
+import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from '../../FirebaseConfig';
 import { useEffect, useRef, useState } from "react";
 import Checkbox from "expo-checkbox";
 import { Category } from "../components/CategorySelector";
