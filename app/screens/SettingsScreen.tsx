@@ -7,6 +7,7 @@ import {
 } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
+import { FIREBASE_AUTH } from '../../FirebaseConfig';
 
 
 
@@ -149,10 +150,11 @@ return (
             <Text style={styles.footerText}>Version COLAB27</Text>
             <Text style={styles.footerText}>Manshi | Jesse | Andrew | Jordan © 2024</Text>
         </View>
-
-        <TouchableOpacity style={styles.logoutButton}>
-            <Text style={styles.logoutText}>Log Out</Text>
-        </TouchableOpacity>
+        <View style={styles.logoutContainer}>
+            <TouchableOpacity onPress={() => FIREBASE_AUTH.signOut()} style={styles.logoutButton}>
+                <Text style={styles.logoutText}>Log Out</Text>
+            </TouchableOpacity>
+        </View>
     </ScrollView>
     )
 };
@@ -202,11 +204,28 @@ const styles = StyleSheet.create({
     itemText: {
         fontFamily: 'Quicksand_400Regular',
     },
+    logoutContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+        paddingBottom: 100,
+    },
     logoutButton: {
-      // ...your styles
+        backgroundColor: '#983F3F',
+        maxWidth: 300,
+        height: 50,
+        borderRadius: 10,
+        borderColor: '#111111',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     logoutText: {
-      // ...your styles
+        fontFamily: 'Quicksand_400Regular',
+        fontSize: 30,
+        color: '#FEFEFE'
     },
     footer: {
         alignItems: 'center',
