@@ -100,7 +100,6 @@ const Dashboard = ({ navigation }: RouterProps) => {
   useEffect(() => {
     const date = new Date();
     const dateOptions: Intl.DateTimeFormatOptions = {
-      weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",

@@ -22,22 +22,34 @@ import SegmentedControlTab from "react-native-segmented-control-tab";
 
 export const styles = StyleSheet.create({
   totalView: {
+    flex: 1,
     backgroundColor: "#FEFEFE",
   },
+  backButton: {
+    flex: 1,
+    height: 25,
+    width: 25,
+  },
   headerContainer: {
+    flex: 1,
+    flexDirection: 'row',
     paddingTop: 20,
     paddingBottom: 10,
+    paddingLeft: 10,
     alignItems: "center",
     fontSize: 25,
     fontFamily: "Quicksand_400Regular",
   },
   headerText: {
+    flex: 1,
     fontSize: 24,
     fontWeight: "bold",
     color: "#111111",
     fontFamily: "Quicksand_400Regular",
+    paddingLeft: 110,
   },
   taskNameContainer: {
+    paddingTop: 20,
     paddingLeft: 15,
   },
   taskName: {
@@ -272,10 +284,15 @@ const AddTask = ({ navigation, route }: AddTaskProps, { data, onSelect }) => {
         <ScrollView scrollToOverflowEnabled={true}>
           <View style={styles.totalView}>
             <View style={styles.headerContainer}>
-              <Text style={styles.headerText}>Add Task</Text>
+              <View>
+                <Image style={styles.backButton} source={require('../components/images2/backarrow.png')} />
+              </View>
+              <View>
+                <Text style={styles.headerText}>Add Task</Text>
+              </View>
             </View>
             <View style={styles.taskNameContainer}>
-              <Text style={styles.taskName}>Name</Text>
+              <Text style={styles.taskName}>Title</Text>
             </View>
             <View style={styles.nameInputContainer}>
               <TextInput

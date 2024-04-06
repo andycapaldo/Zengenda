@@ -37,6 +37,14 @@ const Settings = () => {
   return (
     <ScrollView style={styles.container}>
       {/* Profile Section */}
+      <View style={styles.headerContainer}>
+              <View>
+                <Image style={styles.backButton} source={require('../components/images2/backarrow.png')} />
+              </View>
+              <View>
+                <Text style={styles.headerText}>Settings</Text>
+              </View>
+            </View>
       <View style={styles.sectionHeader}>
         <Image
           style={styles.icon}
@@ -200,6 +208,29 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     marginLeft: 10,
+  },
+  headerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    paddingTop: 20,
+    paddingBottom: 10,
+    paddingLeft: 5,
+    alignItems: "center",
+    fontSize: 25,
+    fontFamily: "Quicksand_400Regular",
+  },
+  headerText: {
+    flex: 1,
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#111111",
+    fontFamily: "Quicksand_400Regular",
+    paddingLeft: 100,
+  },
+  backButton: {
+    flex: 1,
+    height: 25,
+    width: 25,
   },
   sectionItemContainer: {
     marginTop: 10,
