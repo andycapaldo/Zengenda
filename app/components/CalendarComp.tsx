@@ -1,9 +1,15 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
 import { Calendar } from "react-native-calendars";
 import { NavigationProp } from "@react-navigation/native";
 import { useLayoutEffect } from "react";
 import { useFonts, Quicksand_400Regular } from "@expo-google-fonts/quicksand";
-
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -22,8 +28,6 @@ const CalendarComp = ({ navigation }: RouterProps) => {
     Quicksand_400Regular,
   });
 
-  
-
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -31,15 +35,17 @@ const CalendarComp = ({ navigation }: RouterProps) => {
   });
 
   return (
-    <View style={styles.centeredView}>
+    <>
+      <View style={styles.invertedBar}>
+      <StatusBar backgroundColor="#FEFEFE" barStyle="dark-content" />
+      </View>
+      <View style={styles.centeredView}>
         <View style={styles.headerContainer}>
           <View style={styles.backButtonView}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Dashboard')}
-            >
-              <Image 
-                style={styles.backButton} 
-                source={require('../components/images2/backarrow.png')} 
+            <TouchableOpacity onPress={() => navigation.navigate("Dashboard")}>
+              <Image
+                style={styles.backButton}
+                source={require("../components/images2/backarrow.png")}
               />
             </TouchableOpacity>
           </View>
@@ -47,20 +53,21 @@ const CalendarComp = ({ navigation }: RouterProps) => {
             <Text style={styles.headerText}>Calendar</Text>
           </View>
         </View>
-      <Calendar
-        onDayPress={handleDayPress}
-        style={{ height: 650, width: 400 }}
-        theme={{
-          backgroundColor: "#111111",
-          calendarBackground: "#111111",
-          textSectionTitleColor: "#FEFEFE",
-          dayTextColor: "#FEFEFE",
-          monthTextColor: "#FEFEFE",
-          indicatorColor: "black",
-          textDayFontFamily: 'Quicksand_400Regular',
-        }}
-      />
-    </View>
+        <Calendar
+          onDayPress={handleDayPress}
+          style={{ height: 650, width: 400 }}
+          theme={{
+            backgroundColor: "#111111",
+            calendarBackground: "#111111",
+            textSectionTitleColor: "#FEFEFE",
+            dayTextColor: "#FEFEFE",
+            monthTextColor: "#FEFEFE",
+            indicatorColor: "black",
+            textDayFontFamily: "Quicksand_400Regular",
+          }}
+        />
+      </View>
+    </>
   );
 };
 
@@ -68,12 +75,16 @@ const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "center",
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     backgroundColor: "#111111",
   },
+  invertedBar: {
+    flex: 0.041,
+    backgroundColor: "FEFEFE"
+  },
   backButton: {
-    height: 50,
-    width: 50,
+    height: 40,
+    width: 40,
   },
   backButtonView: {
     flex: 1,
@@ -82,19 +93,19 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingLeft: 30,
     alignItems: "center",
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   headerText: {
     flex: 3,
-    fontSize: 40,
+    fontSize: 50,
     fontWeight: "bold",
     color: "#FEFEFE",
     fontFamily: "Quicksand_400Regular",
-    paddingRight: 105,
-    paddingTop: 75,
+    paddingRight: 80,
+    paddingTop: 45,
   },
 });
 export default CalendarComp;
