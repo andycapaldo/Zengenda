@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { NavigationProp } from "@react-navigation/native";
 import { useLayoutEffect } from "react";
@@ -34,10 +34,14 @@ const CalendarComp = ({ navigation }: RouterProps) => {
     <View style={styles.centeredView}>
         <View style={styles.headerContainer}>
           <View style={styles.backButtonView}>
-            <Image 
-              style={styles.backButton} 
-              source={require('../components/images2/backarrow.png')} 
-            />
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Dashboard')}
+            >
+              <Image 
+                style={styles.backButton} 
+                source={require('../components/images2/backarrow.png')} 
+              />
+            </TouchableOpacity>
           </View>
           <View>
             <Text style={styles.headerText}>Calendar</Text>

@@ -54,7 +54,10 @@ const Settings = ({ navigation }: SettingsProps) => {
       {/* Profile Section */}
       <View style={styles.headerContainer}>
               <View>
-                <Image style={styles.backButton} source={require('../components/images2/backarrow.png')} />
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Dashboard')}>
+                    <Image style={styles.backButton} source={require('../components/images2/backarrow.png')} />
+                  </TouchableOpacity>
               </View>
               <View>
                 <Text style={styles.headerText}>Settings</Text>
