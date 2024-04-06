@@ -489,22 +489,6 @@ const Dashboard = ({ navigation }: RouterProps) => {
         <View style={styles.footerImageContainer}>
           <Image style={styles.thatsAllForToday} source={require("../components/images2/That's All - Message.png")} />
         </View>
-        <View>
-          <View>
-            <TouchableOpacity onPress={() => navigation.navigate('WelcomeScreen')}>
-              <Text>
-                Welcome Screen
-              </Text>
-            </TouchableOpacity>
-          <View>
-            <TouchableOpacity onPress={() => navigation.navigate('WelcomeBack')}>
-              <Text>
-                Welcome Back Screen
-              </Text>
-            </TouchableOpacity>
-          </View>
-          </View>
-        </View>
       </ScrollView>
     </>
   );
@@ -716,7 +700,7 @@ const styles = StyleSheet.create({
   taskName: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#111111",
+    color: "#FEFEFE",
     marginBottom: 4,
     fontFamily: 'Quicksand_400Regular',
   },
@@ -747,7 +731,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Quicksand_400Regular',
   },
   taskCategoryName: {
-    color: "#111111",
+    color: "#FEFEFE",
     fontFamily: 'Quicksand_400Regular',
     paddingLeft: 43,
     fontSize: 24,
@@ -794,7 +778,7 @@ const styles = StyleSheet.create({
   categoryName: {
     fontSize: 24,
     fontFamily: 'Quicksand_400Regular',
-    color: '#111111'
+    color: '#FEFEFE'
   },
   ellipsisContainer: {
     position: 'relative',

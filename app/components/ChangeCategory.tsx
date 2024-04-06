@@ -50,7 +50,7 @@ return (
     <View>
         <Menu>
             <MenuTrigger>
-                <Entypo name='dots-three-horizontal' size={20} color='#111111'></Entypo>
+                <Entypo name='dots-three-horizontal' size={20} color='#FEFEFE'></Entypo>
             </MenuTrigger>
             <MenuOptions>
                 <MenuOption onSelect={() => console.log(`Edit button pressed for ${category.name}`)} text='Edit' />
