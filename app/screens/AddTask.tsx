@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
   headerContainer: {
     flex: 1,
     flexDirection: 'row',
-    paddingTop: 20,
+    paddingTop: 70,
     paddingBottom: 10,
     paddingLeft: 10,
     alignItems: "center",
@@ -271,6 +271,12 @@ const AddTask = ({ navigation, route }: AddTaskProps, { data, onSelect }) => {
     }
     prepare();
   }, []);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  });
 
   if (!fontsLoaded) {
     return undefined;

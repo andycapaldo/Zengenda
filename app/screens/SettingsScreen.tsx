@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts, Quicksand_400Regular } from "@expo-google-fonts/quicksand";
 
@@ -35,6 +35,12 @@ const Settings = ({ navigation }: SettingsProps) => {
       await SplashScreen.preventAutoHideAsync();
     }
     prepare();
+  }), [];
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
   });
 
   if (!fontsLoaded) {
@@ -210,113 +216,6 @@ const Settings = ({ navigation }: SettingsProps) => {
 };
 
 const styles = StyleSheet.create({
-<<<<<<< HEAD
-  container: {
-    flex: 1,
-    fontFamily: "Quicksand_400Regular",
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-  },
-  headerTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginLeft: 10,
-  },
-  headerContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    paddingTop: 20,
-    paddingBottom: 10,
-    paddingLeft: 5,
-    alignItems: "center",
-    fontSize: 25,
-    fontFamily: "Quicksand_400Regular",
-  },
-  headerText: {
-    flex: 1,
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#111111",
-    fontFamily: "Quicksand_400Regular",
-    paddingLeft: 100,
-  },
-  backButton: {
-    flex: 1,
-    height: 25,
-    width: 25,
-  },
-  sectionItemContainer: {
-    marginTop: 10,
-  },
-  itemSection: {
-    paddingLeft: 20,
-    marginTop: 20,
-  },
-  sectionHeader: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    marginTop: 20,
-  },
-  sectionTitle: {
-    fontSize: 25,
-    fontFamily: "Quicksand_400Regular",
-    marginLeft: 10,
-  },
-  item: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    // ...your styles
-  },
-  itemText: {
-    fontFamily: "Quicksand_400Regular",
-  },
-  logoutContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 20,
-    paddingBottom: 100,
-  },
-  logoutButton: {
-    backgroundColor: "#983F3F",
-    maxWidth: 300,
-    height: 50,
-    borderRadius: 10,
-    borderColor: "#111111",
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  logoutText: {
-    fontFamily: "Quicksand_400Regular",
-    fontSize: 30,
-    color: "#FEFEFE",
-  },
-  footer: {
-    alignItems: "center",
-    padding: 20,
-  },
-  footerText: {
-    // ...your styles
-  },
-  icon: {
-    height: 35,
-    width: 35,
-  },
-  deleteAccountText: {
-    fontFamily: "Quicksand_400Regular",
-    color: "red",
-  },
-=======
     container: {
         flex: 1,
         fontFamily: 'Quicksand_400Regular',
@@ -332,6 +231,29 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: 'bold',
         marginLeft: 10,
+    },
+    backButton: {
+      flex: 1,
+      height: 25,
+      width: 25,
+    },
+    headerContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      paddingTop: 60,
+      paddingBottom: 10,
+      paddingLeft: 10,
+      alignItems: "center",
+      fontSize: 25,
+      fontFamily: "Quicksand_400Regular",
+    },
+    headerText: {
+      flex: 1,
+      fontSize: 24,
+      fontWeight: "bold",
+      color: "#111111",
+      fontFamily: "Quicksand_400Regular",
+      paddingLeft: 100,
     },
     sectionItemContainer: {
         marginTop: 10,
@@ -400,7 +322,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Quicksand_400Regular',
         color: 'red',
     },
->>>>>>> f0024c12489f54ed10f8bed6e7cfbe0ebbe0102d
 });
 
 export default Settings;
