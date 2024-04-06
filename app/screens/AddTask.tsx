@@ -299,9 +299,10 @@ export const styles = StyleSheet.create({
   },
   backButton: {
     flex: 1,
-    height: 25,
-    width: 25,
+    height: 40,
+    width: 40,
   },
+
   headerContainer: {
     flex: 1,
     flexDirection: 'row',
@@ -314,11 +315,11 @@ export const styles = StyleSheet.create({
   },
   headerText: {
     flex: 1,
-    fontSize: 24,
+    fontSize: 40,
     fontWeight: "bold",
     color: "#111111",
     fontFamily: "Quicksand_400Regular",
-    paddingLeft: 110,
+    paddingLeft: 65,
   },
   taskNameContainer: {
     paddingTop: 20,

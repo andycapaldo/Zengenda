@@ -1,5 +1,4 @@
 import {
-
   View,
   Text,
   ScrollView,
@@ -11,7 +10,6 @@ import {
 import { useEffect, useLayoutEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts, Quicksand_400Regular } from "@expo-google-fonts/quicksand";
-
 import * as SplashScreen from 'expo-splash-screen';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
@@ -20,7 +18,6 @@ import { NavigationProp } from '@react-navigation/native';
 interface SettingsProps {
     navigation: NavigationProp<any, any>;
 }
-
 
 const Settings = ({ navigation }: SettingsProps) => {
 
@@ -237,8 +234,8 @@ const styles = StyleSheet.create({
     },
     backButton: {
       flex: 1,
-      height: 25,
-      width: 25,
+      height: 40,
+      width: 40,
     },
     headerContainer: {
       flex: 1,
@@ -252,11 +249,11 @@ const styles = StyleSheet.create({
     },
     headerText: {
       flex: 1,
-      fontSize: 24,
+      fontSize: 40,
       fontWeight: "bold",
       color: "#111111",
       fontFamily: "Quicksand_400Regular",
-      paddingLeft: 100,
+      paddingLeft: 55,
     },
     sectionItemContainer: {
         marginTop: 10,

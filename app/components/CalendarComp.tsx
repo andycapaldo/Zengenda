@@ -83,9 +83,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flex: 1,
     flexDirection: 'row',
-    paddingTop: 90,
-    paddingBottom: 10,
-    paddingLeft: 2,
+    paddingLeft: 30,
     alignItems: "center",
     justifyContent: 'center',
   },
@@ -96,7 +94,7 @@ const styles = StyleSheet.create({
     color: "#FEFEFE",
     fontFamily: "Quicksand_400Regular",
     paddingRight: 105,
-    paddingTop: 25,
+    paddingTop: 75,
   },
 });
 export default CalendarComp;
