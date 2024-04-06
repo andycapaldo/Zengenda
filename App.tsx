@@ -18,9 +18,10 @@ const Stack = createNativeStackNavigator();
 
 const InsideStack = createNativeStackNavigator();
 
-function InsideLayout() {
+function InsideLayout( { route }) {
+  const { userId } = route.params;
   return (
-    <InsideStack.Navigator>
+    <InsideStack.Navigator initialRouteName={userId ? "WelcomeBack" : "Dashboard"}>
       <InsideStack.Screen name="Dashboard" component={Dashboard} />
       <InsideStack.Screen name="Add Task" component={AddTask} />
       <InsideStack.Screen name="Calendar" component={CalendarComp} />
@@ -56,7 +57,7 @@ export default function App() {
           screenOptions={{ headerShown: false }} 
         >
           {user ? (
-            <Stack.Screen name='InsideLayout' component={InsideLayout} />
+            <Stack.Screen name='InsideLayout' component={InsideLayout} initialParams={{ userId: user?.uid }} />
           ) : (
             <Stack.Screen name='WelcomeScreen' component={WelcomeScreen} />
           )}
