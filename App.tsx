@@ -57,12 +57,12 @@ export default function App() {
           screenOptions={{ headerShown: false }} 
         >
           {user ? (
-            <Stack.Screen name="WelcomeBack" component={WelcomeBack} />
+            <Stack.Screen name='InsideLayout' component={InsideLayout} />
           ) : (
             <Stack.Screen name='WelcomeScreen' component={WelcomeScreen} />
           )}
-          <Stack.Screen name='InsideLayout' component={InsideLayout} />
           <Stack.Screen name='Login' component={Login} />
+          <Stack.Screen name="WelcomeBack" component={WelcomeBack} />
         </Stack.Navigator>
       </NavigationContainer>
     </MenuProvider>

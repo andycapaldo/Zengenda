@@ -2,8 +2,13 @@ import { View, Text, StyleSheet, TextInput, ActivityIndicator, Button, KeyboardA
 import { useState } from 'react';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-const Login = () => {
+interface LoginProps {
+    navigation: NativeStackNavigationProp<any, any>;
+}
+
+const Login = ({ navigation }: LoginProps) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -12,8 +17,8 @@ const Login = () => {
     const signIn = async () => {
         setLoading(true);
         try {
-            const response = await signInWithEmailAndPassword(auth, email, password);
-            console.log(response);
+            await signInWithEmailAndPassword(auth, email, password);
+            navigation.replace('InsideLayout')
         } catch (error: any) {
             console.log(error);
             alert('Sign in failed: ' + error.message)
