@@ -99,15 +99,16 @@ const Dashboard = ({ navigation }: RouterProps) => {
 
   useEffect(() => {
     const date = new Date();
-    const dateOptions = {
-      weekdays: "long",
+    const dateOptions: Intl.DateTimeFormatOptions = {
+      weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
     };
     const formattedDate = date.toLocaleDateString("en-US", dateOptions);
-    setFormattedDate(formattedDate)
-  }), [];
+    setFormattedDate(formattedDate);
+  }),
+    [];
 
   useEffect(() => {
     // Fetches user categories if they exist
