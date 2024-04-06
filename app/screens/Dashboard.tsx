@@ -9,11 +9,11 @@ import {
   LayoutAnimation,
   UIManager,
   Platform,
-  Animated
+  Animated,
 } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from '../../FirebaseConfig';
-import { useEffect, useRef, useState } from "react";
+import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../../FirebaseConfig";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Checkbox from "expo-checkbox";
 import { Category } from "../components/CategorySelector";
 import {
@@ -24,16 +24,11 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import {
-  useFonts,
-  Quicksand_400Regular
-} from "@expo-google-fonts/quicksand";
-import * as SplashScreen from 'expo-splash-screen';
-import SegmentedControlTab from 'react-native-segmented-control-tab';
-import isEqual from 'lodash/isEqual';
+import { useFonts, Quicksand_400Regular } from "@expo-google-fonts/quicksand";
+import * as SplashScreen from "expo-splash-screen";
+import SegmentedControlTab from "react-native-segmented-control-tab";
+import isEqual from "lodash/isEqual";
 import ChangeCategory from "../components/ChangeCategory";
-
-
 
 if (
   Platform.OS === "android" &&
@@ -68,9 +63,10 @@ const Dashboard = ({ navigation }: RouterProps) => {
   const [activeView, setActiveView] = useState(ViewType.Today);
   const [tasksDueToday, setTasksDueToday] = useState(0);
   const [categoryFilter, setCategoryFilter] = useState(0);
-  const [segmentTitles, setSegmentTitles] = useState(['All']);
+  const [segmentTitles, setSegmentTitles] = useState(["All"]);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [highPriority, setHighPriority] = useState(0);
+  const [formattedDate, setFormattedDate] = useState("");
 
   const showTodayView = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -83,22 +79,36 @@ const Dashboard = ({ navigation }: RouterProps) => {
   };
 
   const [fontsLoaded] = useFonts({
-    Quicksand_400Regular
+    Quicksand_400Regular,
   });
 
-  const extractCategoryId = (categoryPath) => categoryPath["_key"]["path"]["segments"][6];
+  const extractCategoryId = (categoryPath) =>
+    categoryPath["_key"]["path"]["segments"][6];
 
   const assignCategoriesToTasks = (tasks, categories) => {
-    return tasks.map(task => {
+    return tasks.map((task) => {
       const categoryId = extractCategoryId(task.category);
-      const category = categories.find(cat => cat.id === categoryId);
+      const category = categories.find((cat) => cat.id === categoryId);
       return {
         ...task,
-        categoryName: category ? category.name : 'No Category',
-        categoryColor: category ? category.color : '#111111'
+        categoryName: category ? category.name : "No Category",
+        categoryColor: category ? category.color : "#111111",
       };
     });
   };
+
+  useEffect(() => {
+    const date = new Date();
+    const dateOptions: Intl.DateTimeFormatOptions = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    const formattedDate = date.toLocaleDateString("en-US", dateOptions);
+    setFormattedDate(formattedDate);
+  }),
+    [];
 
   useEffect(() => {
     // Fetches user categories if they exist
@@ -118,13 +128,12 @@ const Dashboard = ({ navigation }: RouterProps) => {
       );
       setCategories(categoryData);
 
-    const titles = ['All', ...categoryData.map(category => category.name)];
+      const titles = ["All", ...categoryData.map((category) => category.name)];
       setSegmentTitles(titles);
     });
 
     return () => unsubscribeCategories();
   }, []);
-
 
   useEffect(() => {
     // Fetches user tasks that have not been completed
@@ -143,17 +152,17 @@ const Dashboard = ({ navigation }: RouterProps) => {
       const taskData: Task[] = querySnapshot.docs.map(
         (doc) => doc.data() as Task
       );
-    const updatedTasks = assignCategoriesToTasks(taskData, categories);
+      const updatedTasks = assignCategoriesToTasks(taskData, categories);
       setTasks(updatedTasks);
     });
 
     return () => unsubscribeTasks();
   }, [categories]);
 
-    const handleCheckboxChange = async (
-      taskId: string,
-      currentValue: boolean
-    ) => {
+  const handleCheckboxChange = async (
+    taskId: string,
+    currentValue: boolean
+  ) => {
     try {
       const taskRef = doc(FIRESTORE_DB, "tasks", taskId);
       await updateDoc(taskRef, {
@@ -167,26 +176,26 @@ const Dashboard = ({ navigation }: RouterProps) => {
   useEffect(() => {
     async function getTasksDueToday(tasks) {
       const date = new Date().toISOString().slice(0, 10);
-    let count = 0;
-    for (let i = 0; i < tasks.length; i++){
-      if (tasks[i]['dueDate'] === date) {
-        count++;
+      let count = 0;
+      for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i]["dueDate"] === date) {
+          count++;
+        }
       }
-    }
       setTasksDueToday(count);
     }
     if (tasks.length > 0) {
       getTasksDueToday(tasks);
     } else {
-      setTasksDueToday(0)
+      setTasksDueToday(0);
     }
-  }, [tasks])
+  }, [tasks]);
 
   useEffect(() => {
     async function getHighPriorityTasks(tasks) {
       let count = 0;
       for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i]['highPriority']){
+        if (tasks[i]["highPriority"]) {
           count++;
         }
       }
@@ -196,26 +205,25 @@ const Dashboard = ({ navigation }: RouterProps) => {
     if (tasks.length > 0) {
       getHighPriorityTasks(tasks);
     } else {
-      setHighPriority(0)
+      setHighPriority(0);
     }
-  }, [tasks])
+  }, [tasks]);
 
   useEffect(() => {
     async function prepare() {
       await SplashScreen.preventAutoHideAsync();
     }
     prepare();
-  }, [])
+  }, []);
 
-  const date = new Date().toLocaleDateString();
-
-
-  useEffect(() => {
+  const options = useEffect(() => {
     if (categoryFilter === 0) {
       setFilteredTasks(tasks);
     } else {
-      const selectedCategoryName = segmentTitles[categoryFilter].split(' [')[0];
-      const filtered = tasks.filter(task => task.categoryName === selectedCategoryName)
+      const selectedCategoryName = segmentTitles[categoryFilter].split(" [")[0];
+      const filtered = tasks.filter(
+        (task) => task.categoryName === selectedCategoryName
+      );
       setFilteredTasks(filtered);
     }
   }, [categoryFilter, tasks, segmentTitles]);
@@ -233,21 +241,31 @@ const Dashboard = ({ navigation }: RouterProps) => {
     });
 
     return count;
-  }
+  };
 
   useEffect(() => {
     const taskCounts = countTasksByCategory(tasks, categories);
-    const newSegmentTitles = [`All [${tasks.length}]`, ...categories.map(category => {const count = taskCounts[category.name] || 0;
-    return `${category.name} [${count}]`})];
+    const newSegmentTitles = [
+      `All [${tasks.length}]`,
+      ...categories.map((category) => {
+        const count = taskCounts[category.name] || 0;
+        return `${category.name} [${count}]`;
+      }),
+    ];
 
     if (!isEqual(segmentTitles, newSegmentTitles)) {
-      setSegmentTitles(newSegmentTitles)
+      setSegmentTitles(newSegmentTitles);
     }
-
   }, [tasks, categories]);
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  });
+    
   if (!fontsLoaded) {
     return undefined;
   } else {
@@ -258,24 +276,24 @@ const Dashboard = ({ navigation }: RouterProps) => {
     <>
       <ScrollView style={styles.component}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
+          <TouchableOpacity onPress={() => navigation.navigate("Calendar")}>
             <Image
               style={styles.headerIcons}
               source={require("../components/images2/calendar.png")}
             />
           </TouchableOpacity>
-            <Text style={styles.date}>{date}</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+          <Text style={styles.date}>{formattedDate}</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
             <Image
-            style={styles.headerIcons}
-            source={require("../components/images2/gear.png")}
-          />
+              style={styles.headerIcons}
+              source={require("../components/images2/gear.png")}
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.dashboardView}>
           <Image
             style={styles.logo}
-            source={require('../components/images2/zwhitelogo.png')}
+            source={require("../components/images2/zengendalogo.png")}
           />
           <Text style={styles.headerText}>Today is your day, Steve! ☀️</Text>
         </View>
@@ -289,32 +307,32 @@ const Dashboard = ({ navigation }: RouterProps) => {
             ]}
             onPress={showTodayView}
           >
-            {activeView === ViewType.Today ? (        
-            <View style={styles.todayDashboard}>
-              <View style={styles.taskCounter}>
-                <Image 
-                  style={styles.dashboardIcon} 
-                  source={require('../components/images2/tasklist.png')}
-                />
-                <Text style={styles.todayDashboardText}>
-                  You've got {tasksDueToday} tasks due today
-                </Text>
-              </View>
-              <View style={styles.highPriorityButtons}>
-                <View style={styles.priorityButtonsSpacing}>
-                  <Image 
-                    style={styles.dashboardHighPriority} 
-                    source={require('../components/images2/redhighpriority1.png')} 
+            {activeView === ViewType.Today ? (
+              <View style={styles.todayDashboard}>
+                <View style={styles.taskCounter}>
+                  <Image
+                    style={styles.dashboardIcon}
+                    source={require("../components/images2/tasklist.png")}
                   />
+                  <Text style={styles.todayDashboardText}>
+                    You've got {tasksDueToday} tasks due today
+                  </Text>
                 </View>
-                <View>
-                  <Image 
-                    style={styles.dashboardHighPriority} 
-                    source={require('../components/images2/bluehighpriority3.png')} 
-                  />
+                <View style={styles.highPriorityButtons}>
+                  <View style={styles.priorityButtonsSpacing}>
+                    <Image
+                      style={styles.dashboardHighPriority}
+                      source={require("../components/images2/redhighpriority1.png")}
+                    />
+                  </View>
+                  <View>
+                    <Image
+                      style={styles.dashboardHighPriority}
+                      source={require("../components/images2/bluehighpriority3.png")}
+                    />
+                  </View>
                 </View>
               </View>
-            </View>
             ) : (
               <View>
                 <Text style={styles.sidewaysButtons}>Y</Text>
@@ -334,21 +352,32 @@ const Dashboard = ({ navigation }: RouterProps) => {
             ]}
             onPress={showCategoriesView}
           >
-            {activeView === ViewType.Categories ? (              
-            <View style={styles.todayDashboard}>
-              <View style={styles.taskCounter}>
-                <Image style={styles.dashboardIcon} source={require('../components/images2/categoryicon.png')} />
-                <Text style={styles.todayDashboardText}>3 of your categories have tasks due today</Text>
-              </View>
-              <View style={styles.highPriorityButtons}>
-                <View style={styles.priorityButtonsSpacing}>
-                  <Image style={styles.dashboardHighPriority} source={require('../components/images2/schoolsubtaskgreen.png')} />
+            {activeView === ViewType.Categories ? (
+              <View style={styles.todayDashboard}>
+                <View style={styles.taskCounter}>
+                  <Image
+                    style={styles.dashboardIcon}
+                    source={require("../components/images2/categoryicon.png")}
+                  />
+                  <Text style={styles.todayDashboardText}>
+                    3 of your categories have tasks due today
+                  </Text>
                 </View>
-                <View>
-                  <Image style={styles.dashboardHighPriority} source={require('../components/images2/pluscategoryyellow.png')} />
+                <View style={styles.highPriorityButtons}>
+                  <View style={styles.priorityButtonsSpacing}>
+                    <Image
+                      style={styles.dashboardHighPriority}
+                      source={require("../components/images2/schoolsubtaskgreen.png")}
+                    />
+                  </View>
+                  <View>
+                    <Image
+                      style={styles.dashboardHighPriority}
+                      source={require("../components/images2/pluscategoryyellow.png")}
+                    />
+                  </View>
                 </View>
               </View>
-            </View>
             ) : (
               <View>
                 <Text style={styles.sidewaysButtons}>S</Text>
@@ -400,13 +429,17 @@ const Dashboard = ({ navigation }: RouterProps) => {
             <Text style={styles.today}>Today</Text>
             <View style={styles.categoryList}>
               <SegmentedControlTab
-              values={segmentTitles}
-              selectedIndex={categoryFilter}
-              onTabPress={setCategoryFilter}
-              tabStyle={{ borderColor: '#FEFEFE'}}
-              tabTextStyle={{ color: '#111111', fontFamily: 'Quicksand_400Regular'}}
-              activeTabStyle={{ backgroundColor: '#111111' }}
-              activeTabTextStyle={{ color: '#FEFEFE' }}/>
+                values={segmentTitles}
+                selectedIndex={categoryFilter}
+                onTabPress={setCategoryFilter}
+                tabStyle={{ borderColor: "#FEFEFE" }}
+                tabTextStyle={{
+                  color: "#111111",
+                  fontFamily: "Quicksand_400Regular",
+                }}
+                activeTabStyle={{ backgroundColor: "#111111" }}
+                activeTabTextStyle={{ color: "#FEFEFE" }}
+              />
             </View>
             {tasks.length > 0 ? (
               filteredTasks.map((task) => (
@@ -442,20 +475,25 @@ const Dashboard = ({ navigation }: RouterProps) => {
           <View>
             <Text style={styles.today}>Categories</Text>
             <View style={styles.categoryList}>
-            <SegmentedControlTab
-              values={segmentTitles}
-              selectedIndex={categoryFilter}
-              onTabPress={setCategoryFilter}
-              tabStyle={{ borderColor: '#FEFEFE'}}
-              tabTextStyle={{ color: '#111111', fontFamily: 'Quicksand_400Regular'}}
-              activeTabStyle={{ backgroundColor: '#111111' }}
-              activeTabTextStyle={{ color: '#FEFEFE' }}/>
+              <SegmentedControlTab
+                values={segmentTitles}
+                selectedIndex={categoryFilter}
+                onTabPress={setCategoryFilter}
+                tabStyle={{ borderColor: "#FEFEFE" }}
+                tabTextStyle={{
+                  color: "#111111",
+                  fontFamily: "Quicksand_400Regular",
+                }}
+                activeTabStyle={{ backgroundColor: "#111111" }}
+                activeTabTextStyle={{ color: "#FEFEFE" }}
+              />
             </View>
             {categories.length > 0 ? (
               <View>
                 {categories.map((category) => (
                   <View
-                    key={category.id} style={[
+                    key={category.id}
+                    style={[
                       styles.categoryCard,
                       { backgroundColor: category.color },
                     ]}
@@ -464,8 +502,13 @@ const Dashboard = ({ navigation }: RouterProps) => {
                       <ChangeCategory category={category} />
                     </View>
                     <View style={styles.categoryContent}>
-                      <Text style={styles.categoryName}>{`${category.name}`}</Text>
-                      <Image style={styles.dotStyle} source={require('../components/images2/black circle.png')} />
+                      <Text
+                        style={styles.categoryName}
+                      >{`${category.name}`}</Text>
+                      <Image
+                        style={styles.dotStyle}
+                        source={require("../components/images2/black circle.png")}
+                      />
                     </View>
                   </View>
                 ))}
@@ -477,7 +520,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
         )}
         <View style={styles.container}>
           <TouchableOpacity
-            style={styles.movableButton} 
+            style={styles.movableButton}
             onPress={() => navigation.navigate("Add Task")}
           >
             <Image
@@ -501,6 +544,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 10,
     paddingRight: 10,
+    paddingTop: 50,
   },
   dashboardButtons: {
     flexDirection: "row",
@@ -509,10 +553,10 @@ const styles = StyleSheet.create({
   },
   dashboardView: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 10,
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   dashboardIcon: {
     flex: 2,
@@ -529,11 +573,11 @@ const styles = StyleSheet.create({
     fontSize: 35,
     fontWeight: "bold",
     color: "#111111",
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   todayDashboardText: {
     flex: 9,
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
     fontSize: 20,
   },
   header: {
@@ -547,21 +591,21 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 40,
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   todayDashboard: {
     flex: 1,
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
   },
   taskCounter: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   categoryList: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   icons: {
     height: 20,
@@ -576,12 +620,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     width: "100%",
     height: 160,
-    justifyContent: 'flex-start',
-    alignItems: 'center', 
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
-  movableButton: {
-    
-  },
+  movableButton: {},
   sideButton: {
     flex: 1,
     backgroundColor: "#FBEECC",
@@ -591,19 +633,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     width: "100%",
     height: 160,
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
+    justifyContent: "space-evenly",
+    alignItems: "center",
   },
   highPriorityButtons: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingLeft: 1,
   },
   sidewaysButtons: {
-    flex:1,
-    fontFamily: 'Quicksand_400Regular',
-    transform: [{ rotate: '270deg' }],
+    flex: 1,
+    fontFamily: "Quicksand_400Regular",
+    transform: [{ rotate: "270deg" }],
     fontSize: 8,
   },
   priorityButtonsSpacing: {
@@ -624,7 +666,7 @@ const styles = StyleSheet.create({
   },
   today: {
     fontSize: 30,
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   inactiveViewButton: {
     position: "absolute",
@@ -638,15 +680,15 @@ const styles = StyleSheet.create({
   taskButtonText: {
     color: "#111111",
     fontSize: 20,
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   sidewaysTaskButtonText: {
     color: "#111111",
     fontSize: 20,
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   mainButtonText: {
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   todayCategoryToggle: {
     flex: 1,
@@ -654,8 +696,8 @@ const styles = StyleSheet.create({
     height: 160,
     position: "relative",
     borderRadius: 10,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     shadowColor: "black",
     marginTop: 20,
     elevation: 3,
@@ -674,7 +716,7 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     marginTop: 20,
     elevation: 3,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
@@ -693,7 +735,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 4,
     elevation: 3,
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     borderColor: "black",
     justifyContent: "space-between",
   },
@@ -702,7 +744,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#FEFEFE",
     marginBottom: 4,
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   taskCategoryNameContainer: {
     flexDirection: 'row',
@@ -713,7 +755,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     padding: 16,
   },
-  categoryCard : {
+  categoryCard: {
     backgroundColor: "#FFF",
     borderWidth: 1,
     borderRadius: 10,
@@ -725,10 +767,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     borderColor: "black",
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   smallText: {
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   taskCategoryName: {
     color: "#FEFEFE",
@@ -741,12 +783,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 18,
     color: "#888",
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   taskNameCheckbox: {
     display: "flex",
     flexDirection: "row",
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   checkBox: {
     borderRadius: 20,
@@ -764,15 +806,15 @@ const styles = StyleSheet.create({
     position: "absolute",
     elevation: 3,
   },
-  dotStyle : {
+  dotStyle: {
     width: 30,
     height: 30,
     marginLeft: 24,
   },
   categoryContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
     padding: 16,
   },
   categoryName: {
@@ -781,10 +823,10 @@ const styles = StyleSheet.create({
     color: '#FEFEFE'
   },
   ellipsisContainer: {
-    position: 'relative',
+    position: "relative",
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    justifyContent: "flex-end",
     top: 0,
     right: 0,
     padding: 8,

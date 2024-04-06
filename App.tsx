@@ -29,7 +29,7 @@ function InsideLayout() {
       <InsideStack.Screen name="WelcomeScreen" component={WelcomeScreen} />
       <InsideStack.Screen name="WelcomeBack" component={WelcomeBack} />
     </InsideStack.Navigator>
-  )
+  );
 }
 
 export default function App() {
@@ -42,7 +42,6 @@ export default function App() {
       setUser(user);
       setLoading(false);
     });
-    
     return () => unsubscribe();
   }, [])
 
@@ -68,4 +67,3 @@ export default function App() {
     </MenuProvider>
   );
 }
-
