@@ -248,6 +248,12 @@ const Dashboard = ({ navigation }: RouterProps) => {
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
+  if (!fontsLoaded) {
+    return undefined;
+  } else {
+    SplashScreen.hideAsync();
+  };
+
   return (
     <>
       <ScrollView style={styles.component}>
@@ -429,7 +435,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
                 </View>
               ))
             ) : (
-              <Text>No Tasks Today</Text>
+              <Text></Text>
             )}
           </View>
         ) : (
@@ -479,6 +485,9 @@ const Dashboard = ({ navigation }: RouterProps) => {
               source={require("../components/images2/plus_button.png")}
             />
           </TouchableOpacity>
+        </View>
+        <View style={styles.footerImageContainer}>
+          <Image style={styles.thatsAllForToday} source={require("../components/images2/That's All - Message.png")} />
         </View>
         <View>
           <View>
@@ -705,18 +714,20 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   taskName: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
     color: "#111111",
     marginBottom: 4,
     fontFamily: 'Quicksand_400Regular',
   },
   taskCategoryNameContainer: {
+    flexDirection: 'row',
     borderRadius: 10,
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.9,
     shadowRadius: 5,
+    padding: 16,
   },
   categoryCard : {
     backgroundColor: "#FFF",
@@ -739,6 +750,7 @@ const styles = StyleSheet.create({
     color: "#111111",
     fontFamily: 'Quicksand_400Regular',
     paddingLeft: 43,
+    fontSize: 24,
   },
   placeholderText: {
     textAlign: "center",
@@ -793,5 +805,22 @@ const styles = StyleSheet.create({
     right: 0,
     padding: 8,
     zIndex: 1,
+  },
+  footerImageContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+    paddingBottom: 100,
+    zIndex: -1,
+  },
+  thatsAllForToday: {
+    height: 200,
+    width: 300,
+    maxHeight: 200,
+    maxWidth: 300,
+    borderRadius: 20,
+    zIndex: -1,
   }
 });
