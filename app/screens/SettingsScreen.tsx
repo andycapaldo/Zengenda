@@ -159,21 +159,11 @@ const Settings = ({ navigation }: SettingsProps) => {
           <Text style={styles.itemText}>Pause Account</Text>
           <Switch value={true} onValueChange={() => {}} />
         </View>
-        <View style={styles.logoutContainer}>
-        <TouchableOpacity
-            onPress={() => {
-                FIREBASE_AUTH.signOut().then(() => {
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'WelcomeScreen' }],
-                    });
-                }).catch((error) => {
-                    console.error('Sign out error', error);
-                });
-            }}
-            style={styles.logoutButton}>
-                <Text style={styles.logoutText}>Log Out</Text>
-            </TouchableOpacity>
+        <View style={styles.sectionItemContainer}>
+          <TouchableOpacity style={styles.item}>
+            <Text style={styles.itemText}>Connected Accounts</Text>
+            <Ionicons name="chevron-forward-outline" size={20} color="black" />
+          </TouchableOpacity>
         </View>
         <View style={styles.sectionItemContainer}>
           <TouchableOpacity style={styles.item}>
@@ -193,12 +183,20 @@ const Settings = ({ navigation }: SettingsProps) => {
       </View>
       <View style={styles.logoutContainer}>
         <TouchableOpacity
-          onPress={() => FIREBASE_AUTH.signOut()}
-          style={styles.logoutButton}
-        >
-          <Text style={styles.logoutText}>Log Out</Text>
-        </TouchableOpacity>
-      </View>
+            onPress={() => {
+                FIREBASE_AUTH.signOut().then(() => {
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'WelcomeScreen' }],
+                    });
+                }).catch((error) => {
+                    console.error('Sign out error', error);
+                });
+            }}
+            style={styles.logoutButton}>
+                <Text style={styles.logoutText}>Log Out</Text>
+            </TouchableOpacity>
+        </View>
     </ScrollView>
   );
 };
@@ -274,6 +272,7 @@ const styles = StyleSheet.create({
     footer: {
         alignItems: 'center',
         padding: 20,
+        marginVertical: 10,
     },
     footerText: {
     
