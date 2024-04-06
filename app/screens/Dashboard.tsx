@@ -265,6 +265,12 @@ const Dashboard = ({ navigation }: RouterProps) => {
       headerShown: false,
     });
   });
+    
+  if (!fontsLoaded) {
+    return undefined;
+  } else {
+    SplashScreen.hideAsync();
+  };
 
   return (
     <>
@@ -462,7 +468,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
                 </View>
               ))
             ) : (
-              <Text>No Tasks Today</Text>
+              <Text></Text>
             )}
           </View>
         ) : (
@@ -523,21 +529,8 @@ const Dashboard = ({ navigation }: RouterProps) => {
             />
           </TouchableOpacity>
         </View>
-        <View>
-          <View>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("WelcomeScreen")}
-            >
-              <Text>Welcome Screen</Text>
-            </TouchableOpacity>
-            <View>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("WelcomeBack")}
-              >
-                <Text>Welcome Back Screen</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+        <View style={styles.footerImageContainer}>
+          <Image style={styles.thatsAllForToday} source={require("../components/images2/That's All - Message.png")} />
         </View>
       </ScrollView>
     </>
@@ -747,18 +740,20 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   taskName: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
-    color: "#111111",
+    color: "#FEFEFE",
     marginBottom: 4,
     fontFamily: "Quicksand_400Regular",
   },
   taskCategoryNameContainer: {
+    flexDirection: 'row',
     borderRadius: 10,
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.9,
     shadowRadius: 5,
+    padding: 16,
   },
   categoryCard: {
     backgroundColor: "#FFF",
@@ -778,9 +773,10 @@ const styles = StyleSheet.create({
     fontFamily: "Quicksand_400Regular",
   },
   taskCategoryName: {
-    color: "#111111",
-    fontFamily: "Quicksand_400Regular",
+    color: "#FEFEFE",
+    fontFamily: 'Quicksand_400Regular',
     paddingLeft: 43,
+    fontSize: 24,
   },
   placeholderText: {
     textAlign: "center",
@@ -823,8 +819,8 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     fontSize: 24,
-    fontFamily: "Quicksand_400Regular",
-    color: "#111111",
+    fontFamily: 'Quicksand_400Regular',
+    color: '#FEFEFE'
   },
   ellipsisContainer: {
     position: "relative",
@@ -836,4 +832,21 @@ const styles = StyleSheet.create({
     padding: 8,
     zIndex: 1,
   },
+  footerImageContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+    paddingBottom: 100,
+    zIndex: -1,
+  },
+  thatsAllForToday: {
+    height: 200,
+    width: 300,
+    maxHeight: 200,
+    maxWidth: 300,
+    borderRadius: 20,
+    zIndex: -1,
+  }
 });
