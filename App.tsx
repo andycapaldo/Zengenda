@@ -12,6 +12,7 @@ import SettingsScreen from './app/screens/SettingsScreen';
 import CreateAccount from './app/components/CreateAccount';
 import WelcomeScreen from './app/screens/WelcomeScreen';
 import WelcomeBack from './app/screens/WelcomeBack';
+import LoadingScreen from './app/components/LoadingScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,26 +34,35 @@ function InsideLayout() {
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    onAuthStateChanged(FIREBASE_AUTH, (user) => {
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
       console.log('user', user);
       setUser(user);
+      setLoading(false);
     });
+    
+    return () => unsubscribe();
   }, [])
+
+  if (loading) {
+    return <LoadingScreen />
+  }
 
   return (
     <MenuProvider>
       <NavigationContainer>
         <Stack.Navigator 
-          initialRouteName='Login'
           screenOptions={{ headerShown: false }} 
         >
           {user ? (
-            <Stack.Screen name='Login' component={InsideLayout} options={ { headerShown: false }} />
+            <Stack.Screen name="WelcomeBack" component={WelcomeBack} />
           ) : (
-            <Stack.Screen name='Login' component={Login} options={ { headerShown: false }} />
+            <Stack.Screen name='WelcomeScreen' component={WelcomeScreen} />
           )}
+          <Stack.Screen name='InsideLayout' component={InsideLayout} />
+          <Stack.Screen name='Login' component={Login} />
         </Stack.Navigator>
       </NavigationContainer>
     </MenuProvider>

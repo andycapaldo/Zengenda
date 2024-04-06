@@ -8,11 +8,14 @@ import {
 import * as SplashScreen from 'expo-splash-screen';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import { NavigationProp } from '@react-navigation/native';
+
+interface SettingsProps {
+    navigation: NavigationProp<any, any>;
+}
 
 
-
-
-const Settings = () => {
+const Settings = ({ navigation }: SettingsProps) => {
 
     const [modeState, setModeState] = useState(0);
 
@@ -151,7 +154,18 @@ return (
             <Text style={styles.footerText}>Manshi | Jesse | Andrew | Jordan © 2024</Text>
         </View>
         <View style={styles.logoutContainer}>
-            <TouchableOpacity onPress={() => FIREBASE_AUTH.signOut()} style={styles.logoutButton}>
+        <TouchableOpacity
+            onPress={() => {
+                FIREBASE_AUTH.signOut().then(() => {
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'WelcomeScreen' }],
+                    });
+                }).catch((error) => {
+                    console.error('Sign out error', error);
+                });
+            }}
+            style={styles.logoutButton}>
                 <Text style={styles.logoutText}>Log Out</Text>
             </TouchableOpacity>
         </View>
@@ -232,7 +246,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     footerText: {
-      // ...your styles
+    
     },
     icon: {
         height: 35,

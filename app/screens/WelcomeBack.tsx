@@ -1,12 +1,18 @@
-import { StyleSheet, View, ImageBackground, Image, Pressable, Text } from "react-native";
+import { StyleSheet, View, ImageBackground, Image, Pressable, Text, TouchableOpacity } from "react-native";
 import {
     useFonts,
     Quicksand_400Regular
 } from "@expo-google-fonts/quicksand";
   import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from "react";
+import { NavigationProp } from "@react-navigation/native";
 
-const WelcomeBack = () => {
+interface WelcomeBackProps {
+    navigation: NavigationProp<any, any>;
+}
+
+
+const WelcomeBack = ({ navigation }: WelcomeBackProps) => {
 
     const [fontsLoaded] = useFonts({
         Quicksand_400Regular
@@ -58,15 +64,16 @@ const WelcomeBack = () => {
                     </View>
                 </View>
                 <View style={styles.getStartedContainer}>
-                    <Pressable style={styles.getStartedButton} onPress={() => {}}>
+                    <TouchableOpacity style={styles.getStartedButton} 
+                    onPress={() => navigation.navigate('InsideLayout', { screen: 'Dashboard' })}>
                         <Text style={styles.text}>Get Started</Text>
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>                 
             </View>
             </ImageBackground>
         </View>
     </>
-  )
+    )
 }
 export default WelcomeBack
 
