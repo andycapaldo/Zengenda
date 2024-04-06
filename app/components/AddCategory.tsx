@@ -10,11 +10,8 @@ import {
   StyleSheet,
 } from "react-native";
 import { FIRESTORE_DB } from "../../FirebaseConfig";
-import * as SplashScreen from 'expo-splash-screen';
-import {
-  useFonts,
-  Quicksand_400Regular
-} from "@expo-google-fonts/quicksand";
+import * as SplashScreen from "expo-splash-screen";
+import { useFonts, Quicksand_400Regular } from "@expo-google-fonts/quicksand";
 
 interface AddCategoryProps {
   isVisible: boolean;
@@ -64,29 +61,29 @@ const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
 
   const renderColorOptions = () =>
     options.map((option) => (
-        <TouchableOpacity
-          key={option.label}
-          style={[styles.colorSwatch, { backgroundColor: option.value }]}
-          onPress={() => setCategoryColor(option.value)}
-        />
+      <TouchableOpacity
+        key={option.label}
+        style={[styles.colorSwatch, { backgroundColor: option.value }]}
+        onPress={() => setCategoryColor(option.value)}
+      />
     ));
 
-    const [fontsLoaded] = useFonts({
-      Quicksand_400Regular
-    });
-  
-    useEffect(() => {
-      async function prepare() {
-        await SplashScreen.preventAutoHideAsync();
-      }
-      prepare();
-    }, [])
-  
-    if (!fontsLoaded) {
-      return undefined;
-    } else {
-      SplashScreen.hideAsync();
+  const [fontsLoaded] = useFonts({
+    Quicksand_400Regular,
+  });
+
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
     }
+    prepare();
+  }, []);
+
+  if (!fontsLoaded) {
+    return undefined;
+  } else {
+    SplashScreen.hideAsync();
+  }
 
   return (
     <Modal
@@ -138,7 +135,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   modalView: {
     margin: 20,
@@ -156,19 +153,19 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   textInputBorder: {
-    borderColor: '#111111',
+    borderColor: "#111111",
     borderWidth: 1,
   },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
     fontSize: 15,
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   modalTextInput: {
     marginBottom: 15,
     fontSize: 15,
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   button: {
     backgroundColor: "#E7E7E7",
@@ -180,15 +177,15 @@ const styles = StyleSheet.create({
     color: "#111111",
     fontSize: 15,
     textAlign: "center",
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   colorOptionsContainer: {
-    display: 'flex',
+    display: "flex",
     flexDirection: "row",
-    flexWrap: 'wrap',
+    flexWrap: "wrap",
     justifyContent: "center",
     marginVertical: 15,
-    overflow: 'hidden',    
+    overflow: "hidden",
   },
   colorSwatch: {
     width: 40,
@@ -203,13 +200,13 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     justifyContent: "center",
     alignItems: "center",
-    overflow: 'hidden',
-    display: 'flex',
+    overflow: "hidden",
+    display: "flex",
   },
   categoryExampleText: {
     color: "#FFF",
     fontWeight: "bold",
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
   },
   addButtonContainer: {
     marginTop: 10,

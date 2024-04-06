@@ -1,17 +1,17 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Login from './app/screens/Login';
-import Dashboard from './app/screens/Dashboard';
-import { useEffect, useState } from 'react';
-import { User, onAuthStateChanged } from 'firebase/auth';
-import { FIREBASE_AUTH } from './FirebaseConfig';
-import AddTask from './app/screens/AddTask';
-import CalendarComp from './app/components/CalendarComp';
-import { MenuProvider } from 'react-native-popup-menu';
-import SettingsScreen from './app/screens/SettingsScreen';
-import CreateAccount from './app/components/CreateAccount';
-import WelcomeScreen from './app/screens/WelcomeScreen';
-import WelcomeBack from './app/screens/WelcomeBack';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Login from "./app/screens/Login";
+import Dashboard from "./app/screens/Dashboard";
+import { useEffect, useState } from "react";
+import { User, onAuthStateChanged } from "firebase/auth";
+import { FIREBASE_AUTH } from "./FirebaseConfig";
+import AddTask from "./app/screens/AddTask";
+import CalendarComp from "./app/components/CalendarComp";
+import { MenuProvider } from "react-native-popup-menu";
+import SettingsScreen from "./app/screens/SettingsScreen";
+import CreateAccount from "./app/components/CreateAccount";
+import WelcomeScreen from "./app/screens/WelcomeScreen";
+import WelcomeBack from "./app/screens/WelcomeBack";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,7 +28,7 @@ function InsideLayout() {
       <InsideStack.Screen name="WelcomeScreen" component={WelcomeScreen} />
       <InsideStack.Screen name="WelcomeBack" component={WelcomeBack} />
     </InsideStack.Navigator>
-  )
+  );
 }
 
 export default function App() {
@@ -36,26 +36,33 @@ export default function App() {
 
   useEffect(() => {
     onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      console.log('user', user);
+      console.log("user", user);
       setUser(user);
     });
-  }, [])
+  }, []);
 
   return (
     <MenuProvider>
       <NavigationContainer>
-        <Stack.Navigator 
-          initialRouteName='Login'
-          screenOptions={{ headerShown: false }} 
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{ headerShown: false }}
         >
           {user ? (
-            <Stack.Screen name='Login' component={InsideLayout} options={ { headerShown: false }} />
+            <Stack.Screen
+              name="Login"
+              component={InsideLayout}
+              options={{ headerShown: false }}
+            />
           ) : (
-            <Stack.Screen name='Login' component={Login} options={ { headerShown: false }} />
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
           )}
         </Stack.Navigator>
       </NavigationContainer>
     </MenuProvider>
   );
 }
-
