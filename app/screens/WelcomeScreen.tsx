@@ -5,8 +5,13 @@ import {
   } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from "react";
+import { NavigationProp } from "@react-navigation/native";
 
-const WelcomeScreen = () => {
+interface WelcomeProps {
+    navigation: NavigationProp<any, any>;
+}
+
+const WelcomeScreen = ({ navigation }: WelcomeProps) => {
 
     const [fontsLoaded] = useFonts({
         Quicksand_400Regular
@@ -45,7 +50,8 @@ const WelcomeScreen = () => {
                     />
                 </View>
                 <View style={styles.jumpInButtonContainer}>
-                    <Pressable style={styles.jumpInButton} onPress={() => {}}>
+                    <Pressable style={styles.jumpInButton} 
+                    onPress={() => navigation.navigate('Login')}>
                         <Text style={styles.text}>Jump In</Text>
                     </Pressable>
                 </View>                 

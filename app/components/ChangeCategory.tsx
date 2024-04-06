@@ -55,24 +55,15 @@ export default function ChangeCategory({ category }) {
 
   return (
     <View>
-      <Menu>
-        <MenuTrigger>
-          <Entypo
-            name="dots-three-horizontal"
-            size={20}
-            color="#111111"
-          ></Entypo>
-        </MenuTrigger>
-        <MenuOptions>
-          <MenuOption
-            onSelect={() =>
-              console.log(`Edit button pressed for ${category.name}`)
-            }
-            text="Edit"
-          />
-          <MenuOption onSelect={confirmDelete} text="Delete" />
-        </MenuOptions>
-      </Menu>
+        <Menu>
+            <MenuTrigger>
+                <Entypo name='dots-three-horizontal' size={20} color='#FEFEFE'></Entypo>
+            </MenuTrigger>
+            <MenuOptions>
+                <MenuOption onSelect={() => console.log(`Edit button pressed for ${category.name}`)} text='Edit' />
+                <MenuOption onSelect={confirmDelete} text='Delete' />
+            </MenuOptions>
+        </Menu>
     </View>
   );
 }

@@ -1,37 +1,31 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  ActivityIndicator,
-  Button,
-  KeyboardAvoidingView,
-} from "react-native";
-import { useState } from "react";
-import { FIREBASE_AUTH } from "../../FirebaseConfig";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { View, Text, StyleSheet, TextInput, ActivityIndicator, Button, KeyboardAvoidingView } from 'react-native'
+import { useState } from 'react';
+import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const auth = FIREBASE_AUTH;
+interface LoginProps {
+    navigation: NativeStackNavigationProp<any, any>;
+}
 
-  const signIn = async () => {
-    setLoading(true);
-    try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
-    } catch (error: any) {
-      console.log(error);
-      alert("Sign in failed: " + error.message);
-    } finally {
-      setLoading(false);
+const Login = ({ navigation }: LoginProps) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const auth = FIREBASE_AUTH;
+
+    const signIn = async () => {
+        setLoading(true);
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            navigation.replace('InsideLayout')
+        } catch (error: any) {
+            console.log(error);
+            alert('Sign in failed: ' + error.message)
+        } finally {
+            setLoading(false);
+        }
     }
-  };
 
   const signUp = async () => {
     setLoading(true);

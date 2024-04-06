@@ -1,4 +1,5 @@
 import {
+
   View,
   Text,
   ScrollView,
@@ -10,13 +11,21 @@ import {
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts, Quicksand_400Regular } from "@expo-google-fonts/quicksand";
-import * as SplashScreen from "expo-splash-screen";
-import SegmentedControlTab from "react-native-segmented-control-tab";
-import { FIREBASE_AUTH } from "../../FirebaseConfig";
 
-const Settings = () => {
+import * as SplashScreen from 'expo-splash-screen';
+import SegmentedControlTab from 'react-native-segmented-control-tab';
+import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import { NavigationProp } from '@react-navigation/native';
+
+interface SettingsProps {
+    navigation: NavigationProp<any, any>;
+}
+
+
+const Settings = ({ navigation }: SettingsProps) => {
+
   const [modeState, setModeState] = useState(0);
-
+      
   const [fontsLoaded] = useFonts({
     Quicksand_400Regular,
   });
@@ -182,17 +191,26 @@ const Settings = () => {
       </View>
       <View style={styles.logoutContainer}>
         <TouchableOpacity
-          onPress={() => FIREBASE_AUTH.signOut()}
-          style={styles.logoutButton}
-        >
-          <Text style={styles.logoutText}>Log Out</Text>
-        </TouchableOpacity>
-      </View>
+            onPress={() => {
+                FIREBASE_AUTH.signOut().then(() => {
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'WelcomeScreen' }],
+                    });
+                }).catch((error) => {
+                    console.error('Sign out error', error);
+                });
+            }}
+            style={styles.logoutButton}>
+                <Text style={styles.logoutText}>Log Out</Text>
+            </TouchableOpacity>
+        </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+<<<<<<< HEAD
   container: {
     flex: 1,
     fontFamily: "Quicksand_400Regular",
@@ -298,6 +316,91 @@ const styles = StyleSheet.create({
     fontFamily: "Quicksand_400Regular",
     color: "red",
   },
+=======
+    container: {
+        flex: 1,
+        fontFamily: 'Quicksand_400Regular',
+        paddingLeft: 20,
+        paddingRight: 20,
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+    },
+    headerTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        marginLeft: 10,
+    },
+    sectionItemContainer: {
+        marginTop: 10,
+    },
+    itemSection: {
+        paddingLeft: 20,
+        marginTop: 20,
+    },
+    sectionHeader: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        marginTop: 20,
+    },
+    sectionTitle: {
+        fontSize: 25,
+        fontFamily: 'Quicksand_400Regular',
+        marginLeft: 10,
+    },
+    item: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      // ...your styles
+    },
+    itemText: {
+        fontFamily: 'Quicksand_400Regular',
+    },
+    logoutContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+        paddingBottom: 100,
+    },
+    logoutButton: {
+        backgroundColor: '#983F3F',
+        maxWidth: 300,
+        height: 50,
+        borderRadius: 10,
+        borderColor: '#111111',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    logoutText: {
+        fontFamily: 'Quicksand_400Regular',
+        fontSize: 30,
+        color: '#FEFEFE'
+    },
+    footer: {
+        alignItems: 'center',
+        padding: 20,
+        marginVertical: 10,
+    },
+    footerText: {
+    
+    },
+    icon: {
+        height: 35,
+        width: 35,
+    },
+    deleteAccountText: {
+        fontFamily: 'Quicksand_400Regular',
+        color: 'red',
+    },
+>>>>>>> f0024c12489f54ed10f8bed6e7cfbe0ebbe0102d
 });
 
 export default Settings;
