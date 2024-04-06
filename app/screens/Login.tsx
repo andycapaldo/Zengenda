@@ -26,7 +26,6 @@ const Login = ({ navigation }: LoginProps) => {
             setLoading(false);
         }
     }
-  };
 
   const signUp = async () => {
     setLoading(true);
