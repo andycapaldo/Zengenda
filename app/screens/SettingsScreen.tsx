@@ -1,5 +1,4 @@
 import {
-
   View,
   Text,
   ScrollView,
@@ -8,10 +7,9 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts, Quicksand_400Regular } from "@expo-google-fonts/quicksand";
-
 import * as SplashScreen from 'expo-splash-screen';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
@@ -20,7 +18,6 @@ import { NavigationProp } from '@react-navigation/native';
 interface SettingsProps {
     navigation: NavigationProp<any, any>;
 }
-
 
 const Settings = ({ navigation }: SettingsProps) => {
 
@@ -35,6 +32,12 @@ const Settings = ({ navigation }: SettingsProps) => {
       await SplashScreen.preventAutoHideAsync();
     }
     prepare();
+  }), [];
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
   });
 
   if (!fontsLoaded) {
@@ -46,6 +49,17 @@ const Settings = ({ navigation }: SettingsProps) => {
   return (
     <ScrollView style={styles.container}>
       {/* Profile Section */}
+      <View style={styles.headerContainer}>
+              <View>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Dashboard')}>
+                    <Image style={styles.backButton} source={require('../components/images2/backarrow.png')} />
+                  </TouchableOpacity>
+              </View>
+              <View>
+                <Text style={styles.headerText}>Settings</Text>
+              </View>
+            </View>
       <View style={styles.sectionHeader}>
         <Image
           style={styles.icon}
@@ -217,6 +231,29 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: 'bold',
         marginLeft: 10,
+    },
+    backButton: {
+      flex: 1,
+      height: 40,
+      width: 40,
+    },
+    headerContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      paddingTop: 60,
+      paddingBottom: 10,
+      paddingLeft: 10,
+      alignItems: "center",
+      fontSize: 25,
+      fontFamily: "Quicksand_400Regular",
+    },
+    headerText: {
+      flex: 1,
+      fontSize: 40,
+      fontWeight: "bold",
+      color: "#111111",
+      fontFamily: "Quicksand_400Regular",
+      paddingLeft: 55,
     },
     sectionItemContainer: {
         marginTop: 10,

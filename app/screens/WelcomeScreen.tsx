@@ -4,7 +4,7 @@ import {
     Quicksand_400Regular
   } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { NavigationProp } from "@react-navigation/native";
 
 interface WelcomeProps {
@@ -22,7 +22,7 @@ const WelcomeScreen = ({ navigation }: WelcomeProps) => {
         await SplashScreen.preventAutoHideAsync();
         }
         prepare();
-    });
+    }), [];
     
     if (!fontsLoaded) {
         return undefined;
@@ -30,6 +30,11 @@ const WelcomeScreen = ({ navigation }: WelcomeProps) => {
         SplashScreen.hideAsync();
     };
 
+    useLayoutEffect(() => {
+        navigation.setOptions({
+          headerShown: false,
+        });
+      });
 
   return (
     <>
@@ -72,6 +77,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        paddingTop: 10,
     },
     image: {
         flex: 1,

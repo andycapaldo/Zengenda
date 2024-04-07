@@ -264,15 +264,15 @@ const Dashboard = ({ navigation }: RouterProps) => {
       headerShown: false,
     });
   });
-    
+
   if (!fontsLoaded) {
     return undefined;
   } else {
     SplashScreen.hideAsync();
-  };
+  }
 
   return (
-    <>
+    <View style={styles.container}>
       <ScrollView style={styles.component}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.navigate("Calendar")}>
@@ -518,21 +518,25 @@ const Dashboard = ({ navigation }: RouterProps) => {
           </View>
         )}
         <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.movableButton}
-            onPress={() => navigation.navigate("Add Task")}
-          >
-            <Image
-              style={styles.addTask}
-              source={require("../components/images2/plus_button.png")}
-            />
-          </TouchableOpacity>
+
         </View>
         <View style={styles.footerImageContainer}>
-          <Image style={styles.thatsAllForToday} source={require("../components/images2/That's All - Message.png")} />
+          <Image
+            style={styles.thatsAllForToday}
+            source={require("../components/images2/That's All - Message.png")}
+          />
         </View>
       </ScrollView>
-    </>
+      <TouchableOpacity 
+        style={styles.floatingButton}
+        onPress={() => navigation.navigate("Add Task")}
+      >
+        <Image
+            style={styles.addTask}
+            source={require("../components/images2/plus_button.png")}
+        />
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -541,9 +545,6 @@ export default Dashboard;
 const styles = StyleSheet.create({
   component: {
     flex: 1,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 50,
   },
   dashboardButtons: {
     flexDirection: "row",
@@ -556,6 +557,7 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "center",
     alignItems: "center",
+    paddingTop: 20,
   },
   dashboardIcon: {
     flex: 2,
@@ -622,7 +624,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
   },
-  movableButton: {},
   sideButton: {
     flex: 1,
     backgroundColor: "#FBEECC",
@@ -746,7 +747,7 @@ const styles = StyleSheet.create({
     fontFamily: "Quicksand_400Regular",
   },
   taskCategoryNameContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderRadius: 10,
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
@@ -773,7 +774,7 @@ const styles = StyleSheet.create({
   },
   taskCategoryName: {
     color: "#FEFEFE",
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: "Quicksand_400Regular",
     paddingLeft: 43,
     fontSize: 24,
   },
@@ -799,11 +800,8 @@ const styles = StyleSheet.create({
     width: 85,
   },
   container: {
-    paddingTop: 100,
-    bottom: 10,
-    right: 10,
-    position: "absolute",
-    elevation: 3,
+    flex: 1,
+    paddingTop: 50,
   },
   dotStyle: {
     width: 30,
@@ -818,8 +816,8 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     fontSize: 24,
-    fontFamily: 'Quicksand_400Regular',
-    color: '#FEFEFE'
+    fontFamily: "Quicksand_400Regular",
+    color: "#FEFEFE",
   },
   ellipsisContainer: {
     position: "relative",
@@ -833,9 +831,9 @@ const styles = StyleSheet.create({
   },
   footerImageContainer: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 20,
     paddingBottom: 100,
     zIndex: -1,
@@ -847,5 +845,10 @@ const styles = StyleSheet.create({
     maxWidth: 300,
     borderRadius: 20,
     zIndex: -1,
+  },
+  floatingButton: {
+    position: 'absolute',
+    bottom: 8,
+    right: 20,
   },
 });

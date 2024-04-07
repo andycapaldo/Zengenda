@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
@@ -19,151 +19,6 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useFonts, Quicksand_400Regular } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from "expo-splash-screen";
 import SegmentedControlTab from "react-native-segmented-control-tab";
-
-export const styles = StyleSheet.create({
-  totalView: {
-    backgroundColor: "#FEFEFE",
-  },
-  headerContainer: {
-    paddingTop: 20,
-    paddingBottom: 10,
-    alignItems: "center",
-    fontSize: 25,
-    fontFamily: "Quicksand_400Regular",
-  },
-  headerText: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#111111",
-    fontFamily: "Quicksand_400Regular",
-  },
-  taskNameContainer: {
-    paddingLeft: 15,
-  },
-  taskName: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#111111",
-    fontFamily: "Quicksand_400Regular",
-  },
-  nameInputContainer: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 15,
-    paddingRight: 15,
-  },
-  nameInput: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: "#E8E8E8",
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    fontSize: 16,
-    color: "#333",
-    fontFamily: "Quicksand_400Regular",
-  },
-  descriptionInputContainer: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingHorizontal: 15,
-    backgroundColor: "#FEFEFE",
-  },
-  descriptionInput: {
-    minHeight: 100,
-    borderWidth: 1,
-    borderColor: "#E8E8E8",
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    fontSize: 16,
-    textAlignVertical: "top",
-    color: "#111111",
-    fontFamily: "Quicksand_400Regular",
-  },
-  categoryContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "flex-start",
-    padding: 10,
-  },
-  categoryButton: {
-    borderWidth: 1,
-    borderColor: "#E8E8E8",
-    borderRadius: 20,
-    paddingVertical: 5,
-    paddingHorizontal: 15,
-    marginRight: 10,
-    marginBottom: 10,
-    backgroundColor: "#F0F0F0",
-  },
-  categoryText: {
-    fontSize: 16,
-    fontFamily: "Quicksand_400Regular",
-  },
-  categoryButtonText: {
-    fontFamily: "Quicksand_400Regular",
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingVertical: 10,
-    backgroundColor: "#FEFEFE",
-  },
-  subTaskButton: {
-    backgroundColor: "#E7E7E7",
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  subTaskButtonText: {
-    color: "#111111",
-    fontSize: 13,
-    textAlign: "center",
-    fontFamily: "Quicksand_400Regular",
-  },
-  subTaskInputContainer: {
-    flex: 1,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 15,
-    paddingRight: 15,
-  },
-  subTaskInput: {
-    flex: 5,
-    height: 50,
-    borderWidth: 1,
-    borderColor: "#E8E8E8",
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    fontSize: 16,
-    color: "#333",
-    fontFamily: "Quicksand_400Regular",
-  },
-  taskButton: {
-    backgroundColor: "#111111",
-    borderRadius: 20,
-    paddingVertical: 20,
-    paddingHorizontal: 100,
-  },
-  taskButtonText: {
-    color: "#E8E8E8",
-    fontSize: 20,
-    fontFamily: "Quicksand_400Regular",
-  },
-  removeSubTaskButton: {
-    flex: 1,
-  },
-  occurenceTabsView: {
-    paddingLeft: 15,
-    paddingRight: 15,
-  },
-  occurenceTabs: {
-    padding: 10,
-  },
-  calendarIcon: {
-    height: 35,
-    width: 35,
-  },
-});
 
 interface AddTaskProps {
   navigation: NavigationProp<any, any>;
@@ -260,6 +115,12 @@ const AddTask = ({ navigation, route }: AddTaskProps, { data, onSelect }) => {
     prepare();
   }, []);
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  });
+
   if (!fontsLoaded) {
     return undefined;
   } else {
@@ -272,10 +133,18 @@ const AddTask = ({ navigation, route }: AddTaskProps, { data, onSelect }) => {
         <ScrollView scrollToOverflowEnabled={true}>
           <View style={styles.totalView}>
             <View style={styles.headerContainer}>
-              <Text style={styles.headerText}>Add Task</Text>
+              <View>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Dashboard')}>
+                  <Image style={styles.backButton} source={require('../components/images2/backarrow.png')} />
+                </TouchableOpacity>
+              </View>
+              <View>
+                <Text style={styles.headerText}>Add Task</Text>
+              </View>
             </View>
             <View style={styles.taskNameContainer}>
-              <Text style={styles.taskName}>Name</Text>
+              <Text style={styles.taskName}>Title</Text>
             </View>
             <View style={styles.nameInputContainer}>
               <TextInput
@@ -422,3 +291,161 @@ const AddTask = ({ navigation, route }: AddTaskProps, { data, onSelect }) => {
   );
 };
 export default AddTask;
+
+export const styles = StyleSheet.create({
+  totalView: {
+    flex: 1,
+    backgroundColor: "#FEFEFE",
+  },
+  backButton: {
+    flex: 1,
+    height: 40,
+    width: 40,
+  },
+
+  headerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    paddingTop: 70,
+    paddingBottom: 10,
+    paddingLeft: 10,
+    alignItems: "center",
+    fontSize: 25,
+    fontFamily: "Quicksand_400Regular",
+  },
+  headerText: {
+    flex: 1,
+    fontSize: 40,
+    fontWeight: "bold",
+    color: "#111111",
+    fontFamily: "Quicksand_400Regular",
+    paddingLeft: 65,
+  },
+  taskNameContainer: {
+    paddingTop: 20,
+    paddingLeft: 15,
+  },
+  taskName: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#111111",
+    fontFamily: "Quicksand_400Regular",
+  },
+  nameInputContainer: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
+  nameInput: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    color: "#333",
+    fontFamily: "Quicksand_400Regular",
+  },
+  descriptionInputContainer: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingHorizontal: 15,
+    backgroundColor: "#FEFEFE",
+  },
+  descriptionInput: {
+    minHeight: 100,
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    textAlignVertical: "top",
+    color: "#111111",
+    fontFamily: "Quicksand_400Regular",
+  },
+  categoryContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+    padding: 10,
+  },
+  categoryButton: {
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    marginRight: 10,
+    marginBottom: 10,
+    backgroundColor: "#F0F0F0",
+  },
+  categoryText: {
+    fontSize: 16,
+    fontFamily: "Quicksand_400Regular",
+  },
+  categoryButtonText: {
+    fontFamily: "Quicksand_400Regular",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingVertical: 10,
+    backgroundColor: "#FEFEFE",
+  },
+  subTaskButton: {
+    backgroundColor: "#E7E7E7",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  subTaskButtonText: {
+    color: "#111111",
+    fontSize: 13,
+    textAlign: "center",
+    fontFamily: "Quicksand_400Regular",
+  },
+  subTaskInputContainer: {
+    flex: 1,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
+  subTaskInput: {
+    flex: 5,
+    height: 50,
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    color: "#333",
+    fontFamily: "Quicksand_400Regular",
+  },
+  taskButton: {
+    backgroundColor: "#111111",
+    borderRadius: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 100,
+  },
+  taskButtonText: {
+    color: "#E8E8E8",
+    fontSize: 20,
+    fontFamily: "Quicksand_400Regular",
+  },
+  removeSubTaskButton: {
+    flex: 1,
+  },
+  occurenceTabsView: {
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
+  occurenceTabs: {
+    padding: 10,
+  },
+  calendarIcon: {
+    height: 35,
+    width: 35,
+  },
+});
