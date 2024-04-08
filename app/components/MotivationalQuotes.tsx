@@ -62,6 +62,7 @@ const styles = StyleSheet.create ({
     },
     remember: {
         flex: 0.1,
+        paddingTop: 10,
     },
     inspiration: {
         flex: 0.7,
