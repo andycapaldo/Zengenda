@@ -275,14 +275,14 @@ const Dashboard = ({ navigation }: RouterProps) => {
     <View style={styles.container}>
       <ScrollView style={styles.component}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.navigate("Calendar")}>
+          <TouchableOpacity style={styles.calendarIconView} onPress={() => navigation.navigate("Calendar")}>
             <Image
               style={styles.headerIcons}
               source={require("../components/images2/calendar.png")}
             />
           </TouchableOpacity>
           <Text style={styles.date}>{formattedDate}</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
+          <TouchableOpacity style={styles.gearIconView} onPress={() => navigation.navigate("Settings")}>
             <Image
               style={styles.headerIcons}
               source={require("../components/images2/gear.png")}
@@ -545,6 +545,7 @@ export default Dashboard;
 const styles = StyleSheet.create({
   component: {
     flex: 1,
+    paddingHorizontal: 15,
   },
   dashboardButtons: {
     flexDirection: "row",
@@ -573,6 +574,7 @@ const styles = StyleSheet.create({
     flex: 3,
     fontSize: 35,
     fontWeight: "bold",
+    paddingLeft: 25,
     color: "#111111",
     fontFamily: "Quicksand_400Regular",
   },
@@ -582,16 +584,28 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   header: {
+    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingTop: 20,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   headerIcons: {
-    height: 35,
-    width: 35,
+    flex: 0.1,
+    height: 45,
+    width: 45,
+    paddingTop: 50,
+  },
+  gearIconView: {
+    flex: 1,
+  },
+  calendarIconView: {
+    flex: 1,
   },
   date: {
-    fontSize: 40,
+    fontSize: 45,
     fontFamily: "Quicksand_400Regular",
   },
   todayDashboard: {
@@ -801,7 +815,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 35,
   },
   dotStyle: {
     width: 30,

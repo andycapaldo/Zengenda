@@ -115,6 +115,7 @@ const styles = StyleSheet.create({
   getStartedContainer: {
     flex: 0.4,
     width: 290,
+    paddingTop: 110,
   },
   text: {
     fontSize: 29,
