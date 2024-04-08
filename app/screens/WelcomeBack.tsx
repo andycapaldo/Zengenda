@@ -11,12 +11,14 @@ import { useFonts, Quicksand_400Regular } from "@expo-google-fonts/quicksand";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useLayoutEffect } from "react";
 import { NavigationProp } from "@react-navigation/native";
+import MotivationalQuotes from "../components/MotivationalQuotes";
 
 interface WelcomeBackProps {
   navigation: NavigationProp<any, any>;
 }
 
 const WelcomeBack = ({ navigation }: WelcomeBackProps) => {
+
   const [fontsLoaded] = useFonts({
     Quicksand_400Regular,
   });
@@ -34,6 +36,12 @@ const WelcomeBack = ({ navigation }: WelcomeBackProps) => {
       headerShown: false,
     });
   });
+
+  if (!fontsLoaded) {
+    return undefined;
+} else {
+    SplashScreen.hideAsync();
+};
 
   return (
     <>
@@ -53,25 +61,7 @@ const WelcomeBack = ({ navigation }: WelcomeBackProps) => {
                 source={require("../components/images2/welcomeback.png")}
               />
             </View>
-            <View style={styles.rememberContainerWrapper}>
-              <View style={styles.rememberContainer}>
-                <View style={styles.remember}>
-                  <Image
-                    source={require("../components/images2/remember.png")}
-                  />
-                </View>
-                <View style={styles.inspiration}>
-                  <Image
-                    source={require("../components/images2/inspiration.png")}
-                  />
-                </View>
-                <View style={styles.repeatIcon}>
-                  <Image
-                    source={require("../components/images2/repeaticon.png")}
-                  />
-                </View>
-              </View>
-            </View>
+            <MotivationalQuotes />
             <View style={styles.getStartedContainer}>
               <TouchableOpacity
                 style={styles.getStartedButton}
