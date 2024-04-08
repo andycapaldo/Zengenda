@@ -14,27 +14,27 @@ interface WelcomeProps {
 const WelcomeScreen = ({ navigation }: WelcomeProps) => {
 
     const [fontsLoaded] = useFonts({
-        Quicksand_400Regular
-        });
-
+        Quicksand_400Regular,
+    });
+    
     useEffect(() => {
         async function prepare() {
         await SplashScreen.preventAutoHideAsync();
         }
         prepare();
     }), [];
-    
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+        headerShown: false,
+        });
+    });
+
     if (!fontsLoaded) {
         return undefined;
     } else {
         SplashScreen.hideAsync();
     };
-
-    useLayoutEffect(() => {
-        navigation.setOptions({
-          headerShown: false,
-        });
-      });
 
   return (
     <>
