@@ -57,11 +57,11 @@ const CalendarComp = ({ navigation }: RouterProps) => {
           onDayPress={handleDayPress}
           style={{ height: 650, width: 400 }}
           theme={{
-            backgroundColor: "#111111",
-            calendarBackground: "#111111",
-            textSectionTitleColor: "#FEFEFE",
-            dayTextColor: "#FEFEFE",
-            monthTextColor: "#FEFEFE",
+            backgroundColor: "#FEFEFE",
+            calendarBackground: "#FEFEFE",
+            textSectionTitleColor: "#111111",
+            dayTextColor: "#111111",
+            monthTextColor: "#111111",
             indicatorColor: "black",
             textDayFontFamily: "Quicksand_400Regular",
           }}
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "flex-start",
-    backgroundColor: "#111111",
+    backgroundColor: "#FEFEFE",
   },
   invertedBar: {
     flex: 0.041,
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     flex: 3,
     fontSize: 50,
     fontWeight: "bold",
-    color: "#FEFEFE",
+    color: "#111111",
     fontFamily: "Quicksand_400Regular",
     paddingRight: 80,
     paddingTop: 45,

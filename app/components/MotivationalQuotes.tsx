@@ -29,9 +29,12 @@ return (
             <View style={styles.inspiration}>
                 <Text style={styles.quoteText}>{selectedQuote}</Text>
             </View>
-            <TouchableOpacity onPress={selectQuote}>
+            <TouchableOpacity style={styles.refresh} onPress={selectQuote}>
                 <View style={styles.repeatIcon}>
-                    <Image source={require("../components/images2/repeaticon.png")} />
+                    <Image 
+                        source={require("../components/images2/repeaticon.png")}
+                        style={styles.refresh} 
+                    />
                 </View>
             </TouchableOpacity>
         </View>
@@ -46,8 +49,9 @@ const styles = StyleSheet.create ({
         color: "#FEFEFE",
     },
     rememberContainer: {
+        flex: 1,
         backgroundColor: "rgba(255, 255, 255, 0.7)",
-        justifyContent: "center",
+        justifyContent: 'center',
         alignItems: "center",
     },
     rememberContainerWrapper: {
@@ -57,18 +61,29 @@ const styles = StyleSheet.create ({
         borderRadius: 3,
     },
     remember: {
-        flex: 1,
+        flex: 0.1,
+        paddingTop: 10,
     },
     inspiration: {
-        flex: 5,
-        color: '#111111'
+        flex: 0.7,
+        color: '#111111',
     },
     repeatIcon: {
         flex: 1,
     },
     quoteText : {
+        flex: 1,
         color: '#111111',
         textAlign: 'center',
-        padding: 150,
-    }
+        paddingTop: 70,
+        paddingHorizontal:10,
+        fontFamily: "Quicksand_400Regular",
+        fontSize: 20,
+    },
+    refresh: {
+        flex: 0.2,
+        paddingTop: 40,
+        height: 50,
+        width: 50,
+    },
 });
