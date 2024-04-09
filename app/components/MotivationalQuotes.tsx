@@ -1,6 +1,8 @@
 
 import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { useFonts, Quicksand_400Regular } from "@expo-google-fonts/quicksand";
+
 
 
 
@@ -8,6 +10,10 @@ export default function MotivationalQuotes() {
     const [selectedQuote, setSelectedQuote] = useState('');
 
     const quotes = ['“Fear is what stops you. Courage is what keeps you going.” — Unknown', '“Have the courage to follow your heart and intuition. They somehow know what you truly want to become.” — Steve Jobs', "“Courage is found in unlikely places.” — J.R.R. Tolkien", "“Change is inevitable but personal growth is a choice.” — Bob Proctor", "“I am not what happened to me, I am what I choose to become.” — Carl Jung",]
+
+    const [fontsLoaded] = useFonts({
+        Quicksand_400Regular,
+      });
 
     useEffect(() => {
         selectQuote();
@@ -53,6 +59,8 @@ const styles = StyleSheet.create ({
         backgroundColor: "rgba(255, 255, 255, 0.7)",
         justifyContent: 'center',
         alignItems: "center",
+        borderRadius: 20,
+        width: 390,
     },
     rememberContainerWrapper: {
         flex: 1.8,

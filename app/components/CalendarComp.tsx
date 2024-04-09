@@ -37,7 +37,7 @@ const CalendarComp = ({ navigation }: RouterProps) => {
   return (
     <>
       <View style={styles.invertedBar}>
-      <StatusBar backgroundColor="#FEFEFE" barStyle="dark-content" />
+        <StatusBar backgroundColor="#FEFEFE" barStyle="dark-content" />
       </View>
       <View style={styles.centeredView}>
         <View style={styles.headerContainer}>
@@ -55,7 +55,7 @@ const CalendarComp = ({ navigation }: RouterProps) => {
         </View>
         <Calendar
           onDayPress={handleDayPress}
-          style={{ height: 650, width: 400 }}
+          style={styles.calendar}
           theme={{
             backgroundColor: "#FEFEFE",
             calendarBackground: "#FEFEFE",
@@ -80,7 +80,12 @@ const styles = StyleSheet.create({
   },
   invertedBar: {
     flex: 0.041,
-    backgroundColor: "FEFEFE"
+    backgroundColor: "FEFEFE",
+  },
+  calendar: {
+    height: 650,
+    width: 400,
+    paddingTop: 40,
   },
   backButton: {
     height: 40,

@@ -61,7 +61,9 @@ const WelcomeBack = ({ navigation }: WelcomeBackProps) => {
                 source={require("../components/images2/welcomeback.png")}
               />
             </View>
-            <MotivationalQuotes />
+            <View style={styles.inspirationView}>
+              <MotivationalQuotes />
+            </View>
             <View style={styles.getStartedContainer}>
               <TouchableOpacity
                 style={styles.getStartedButton}
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
   getStartedContainer: {
     flex: 0.4,
     width: 290,
-    paddingTop: 110,
+    paddingTop: 40,
   },
   text: {
     fontSize: 29,
@@ -138,6 +140,10 @@ const styles = StyleSheet.create({
   },
   inspiration: {
     flex: 5,
+  },
+  inspirationView: {
+    flex: 4,
+    paddingTop: 100,
   },
   repeatIcon: {
     flex: 1,
