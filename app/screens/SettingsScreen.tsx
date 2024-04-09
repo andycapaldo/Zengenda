@@ -21,7 +21,13 @@ interface SettingsProps {
 
 const Settings = ({ navigation }: SettingsProps) => {
 
-  const [modeState, setModeState] = useState(0);
+  const [themeState, setThemeState] = useState(0);
+  const [remindersState, setRemindersState] = useState(0);
+  const [soundsState, setSoundsState] = useState(0);
+  const [quoteState, setQuoteState] = useState(0);
+  const [affirmationsState, setAffirmationsState] = useState(0);
+  const [breateState, setBreatheState] = useState(0);
+  const [pauseAccountState, setPauseAccountState] = useState(1);
       
   const [fontsLoaded] = useFonts({
     Quicksand_400Regular,
@@ -99,8 +105,8 @@ const Settings = ({ navigation }: SettingsProps) => {
       <View style={styles.itemSection}>
         <SegmentedControlTab
           values={["Light Mode", "Dark Mode", "Automatic"]}
-          selectedIndex={modeState}
-          onTabPress={setModeState}
+          selectedIndex={themeState}
+          onTabPress={setThemeState}
           tabStyle={{ backgroundColor: "#111111", borderColor: "#111111" }}
           tabTextStyle={{
             color: "#FEFEFE",
@@ -123,7 +129,19 @@ const Settings = ({ navigation }: SettingsProps) => {
       <View style={styles.itemSection}>
         <View style={styles.item}>
           <Text style={styles.itemText}>Task Reminders</Text>
-          <Switch value={true} onValueChange={() => {}} />
+          <SegmentedControlTab
+          values={["On", "Off"]}
+          selectedIndex={remindersState}
+          onTabPress={setRemindersState}
+          tabStyle={{ backgroundColor: "#111111", borderColor: "#111111" }}
+          tabTextStyle={{
+            color: "#FEFEFE",
+            fontFamily: "Quicksand_400Regular",
+          }}
+          activeTabStyle={{ backgroundColor: "#FEFEFE" }}
+          activeTabTextStyle={{ color: "#111111" }}
+          tabsContainerStyle={{ height: 30, width: 100, }}
+        />
         </View>
         <View style={styles.item}>
           <Text style={styles.itemText}>Set Reminder Time</Text>
@@ -131,7 +149,19 @@ const Settings = ({ navigation }: SettingsProps) => {
         </View>
         <View style={styles.item}>
           <Text style={styles.itemText}>App Sounds</Text>
-          <Switch value={true} onValueChange={() => {}} />
+          <SegmentedControlTab
+          values={["On", "Off"]}
+          selectedIndex={soundsState}
+          onTabPress={setSoundsState}
+          tabStyle={{ backgroundColor: "#111111", borderColor: "#111111" }}
+          tabTextStyle={{
+            color: "#FEFEFE",
+            fontFamily: "Quicksand_400Regular",
+          }}
+          activeTabStyle={{ backgroundColor: "#FEFEFE" }}
+          activeTabTextStyle={{ color: "#111111" }}
+          tabsContainerStyle={{ height: 30, width: 100, }}
+        />
         </View>
       </View>
 
@@ -145,19 +175,67 @@ const Settings = ({ navigation }: SettingsProps) => {
       <View style={styles.itemSection}>
         <View style={styles.item}>
           <Text style={styles.itemText}>Daily Motivational Quote</Text>
-          <Switch value={true} onValueChange={() => {}} />
+          <SegmentedControlTab
+          values={["On", "Off"]}
+          selectedIndex={quoteState}
+          onTabPress={setQuoteState}
+          tabStyle={{ backgroundColor: "#111111", borderColor: "#111111" }}
+          tabTextStyle={{
+            color: "#FEFEFE",
+            fontFamily: "Quicksand_400Regular",
+          }}
+          activeTabStyle={{ backgroundColor: "#FEFEFE" }}
+          activeTabTextStyle={{ color: "#111111" }}
+          tabsContainerStyle={{ height: 30, width: 100, }}
+        />
         </View>
         <View style={styles.item}>
           <Text style={styles.itemText}>Positive Affirmations</Text>
-          <Switch value={true} onValueChange={() => {}} />
+          <SegmentedControlTab
+          values={["On", "Off"]}
+          selectedIndex={affirmationsState}
+          onTabPress={setAffirmationsState}
+          tabStyle={{ backgroundColor: "#111111", borderColor: "#111111" }}
+          tabTextStyle={{
+            color: "#FEFEFE",
+            fontFamily: "Quicksand_400Regular",
+          }}
+          activeTabStyle={{ backgroundColor: "#FEFEFE" }}
+          activeTabTextStyle={{ color: "#111111" }}
+          tabsContainerStyle={{ height: 30, width: 100, }}
+        />
         </View>
         <View style={styles.item}>
           <Text style={styles.itemText}>Breathe Reminders</Text>
-          <Switch value={true} onValueChange={() => {}} />
+          <SegmentedControlTab
+          values={["On", "Off"]}
+          selectedIndex={breateState}
+          onTabPress={setBreatheState}
+          tabStyle={{ backgroundColor: "#111111", borderColor: "#111111" }}
+          tabTextStyle={{
+            color: "#FEFEFE",
+            fontFamily: "Quicksand_400Regular",
+          }}
+          activeTabStyle={{ backgroundColor: "#FEFEFE" }}
+          activeTabTextStyle={{ color: "#111111" }}
+          tabsContainerStyle={{ height: 30, width: 100, }}
+        />
         </View>
         <View style={styles.item}>
           <Text style={styles.itemText}>Reward System</Text>
-          <Switch value={true} onValueChange={() => {}} />
+          <SegmentedControlTab
+          values={["Coming Soon"]}
+          selectedIndex={2}
+          tabStyle={{ backgroundColor: "#111111", borderColor: "#111111" }}
+          tabTextStyle={{
+            color: "#FEFEFE",
+            fontFamily: "Quicksand_400Regular",
+          }}
+          activeTabStyle={{ backgroundColor: "#FEFEFE" }}
+          activeTabTextStyle={{ color: "#111111" }}
+          tabsContainerStyle={{ height: 30, width: 100, }}
+          enabled={false}
+        />
         </View>
       </View>
 
@@ -171,7 +249,19 @@ const Settings = ({ navigation }: SettingsProps) => {
       <View style={styles.itemSection}>
         <View style={styles.item}>
           <Text style={styles.itemText}>Pause Account</Text>
-          <Switch value={true} onValueChange={() => {}} />
+          <SegmentedControlTab
+          values={["On", "Off"]}
+          selectedIndex={pauseAccountState}
+          onTabPress={setPauseAccountState}
+          tabStyle={{ backgroundColor: "#111111", borderColor: "#111111" }}
+          tabTextStyle={{
+            color: "#FEFEFE",
+            fontFamily: "Quicksand_400Regular",
+          }}
+          activeTabStyle={{ backgroundColor: "#FEFEFE" }}
+          activeTabTextStyle={{ color: "#111111" }}
+          tabsContainerStyle={{ height: 30, width: 100, }}
+        />
         </View>
         <View style={styles.sectionItemContainer}>
           <TouchableOpacity style={styles.item}>
