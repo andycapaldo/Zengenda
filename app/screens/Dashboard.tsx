@@ -290,10 +290,14 @@ const Dashboard = ({ navigation }: RouterProps) => {
           </TouchableOpacity>
         </View>
         <View style={styles.dashboardView}>
+          <TouchableOpacity
+            onPress={(() => navigation.navigate("WelcomeBack"))}
+          >
           <Image
             style={styles.logo}
             source={require("../components/images2/zengendalogo.png")}
           />
+          </TouchableOpacity>
           <Text style={styles.headerText}>Today is your day, Steve! ☀️</Text>
         </View>
         <View style={styles.todayCategoryToggle}>
@@ -660,7 +664,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: "Quicksand_400Regular",
     transform: [{ rotate: "270deg" }],
-    fontSize: 8,
+    fontSize: 7,
   },
   priorityButtonsSpacing: {
     flex: 1,
