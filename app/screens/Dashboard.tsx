@@ -271,6 +271,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
     SplashScreen.hideAsync();
   }
 
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.component}>
@@ -317,9 +318,14 @@ const Dashboard = ({ navigation }: RouterProps) => {
                     style={styles.dashboardIcon}
                     source={require("../components/images2/tasklist.png")}
                   />
+                  {tasksDueToday === 1 ? (
+                  <Text style={styles.todayDashboardText}>
+                    You've got {tasksDueToday} task due today
+                  </Text>
+                  ) : (
                   <Text style={styles.todayDashboardText}>
                     You've got {tasksDueToday} tasks due today
-                  </Text>
+                  </Text>)}
                 </View>
                 <View style={styles.highPriorityButtons}>
                   <View style={styles.priorityButtonsSpacing}>
