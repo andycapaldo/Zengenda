@@ -141,7 +141,7 @@ const AddTask = ({ navigation, route }: AddTaskProps, { data, onSelect }) => {
               <View>
                 <TouchableOpacity
                   onPress={() => navigation.navigate('Dashboard')}>
-                  <Image style={styles.backButton} source={require('../components/images2/backarrow.png')} />
+                  <Image style={styles.backButton} source={require('../components/images2/backButton.png')} />
                 </TouchableOpacity>
               </View>
               <View>

@@ -45,7 +45,7 @@ const CalendarComp = ({ navigation }: RouterProps) => {
             <TouchableOpacity onPress={() => navigation.navigate("Dashboard")}>
               <Image
                 style={styles.backButton}
-                source={require("../components/images2/backarrow.png")}
+                source={require("../components/images2/backButton.png")}
               />
             </TouchableOpacity>
           </View>

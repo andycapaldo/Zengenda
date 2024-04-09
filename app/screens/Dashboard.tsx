@@ -360,7 +360,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
                 <View style={styles.taskCounter}>
                   <Image
                     style={styles.dashboardIcon}
-                    source={require("../components/images2/categoryicon.png")}
+                    source={require("../components/images2/category_Icon.png")}
                   />
                   <Text style={styles.todayDashboardText}>
                     3 of your categories have tasks due today
@@ -537,7 +537,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
       >
         <Image
             style={styles.addTask}
-            source={require("../components/images2/plus_button.png")}
+            source={require("../components/images2/addTaskButton.png")}
         />
       </TouchableOpacity>
     </View>
