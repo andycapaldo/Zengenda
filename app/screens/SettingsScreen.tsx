@@ -279,7 +279,9 @@ const Settings = ({ navigation }: SettingsProps) => {
 
       {/* Footer with Version and Credits */}
       <View style={styles.footer}>
-        <Text style={styles.footerText}>ZENGENDA</Text>
+        <View style={styles.footerIconContainer}>
+          <Image resizeMethod="resize" style={styles.footerIcon} source={require('../components/images2/zengenda_full_name_logo.png')} />
+        </View>
         <Text style={styles.footerText}>Version COLAB27</Text>
         <Text style={styles.footerText}>
           Manshi | Jesse | Andrew | Jordan © 2024
@@ -403,6 +405,14 @@ const styles = StyleSheet.create({
     },
     footerText: {
     
+    },
+    footerIconContainer: {
+      maxWidth: 200,
+      maxHeight: 100,
+    },
+    footerIcon: {
+      width: 200,
+      height: 50,
     },
     icon: {
         height: 35,
