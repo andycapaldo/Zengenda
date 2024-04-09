@@ -12,13 +12,15 @@ import {
 import { FIRESTORE_DB } from "../../FirebaseConfig";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts, Quicksand_400Regular } from "@expo-google-fonts/quicksand";
+import { Category } from "./CategorySelector";
 
 interface AddCategoryProps {
   isVisible: boolean;
   onClose: () => void;
+  onCategoryAdded: (category: Category) => void;
 }
 
-const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
+const AddCategory = ({ isVisible, onClose, onCategoryAdded }: AddCategoryProps) => {
   const [categoryName, setCategoryName] = useState("");
   const [categoryColor, setCategoryColor] = useState("#01A0B0");
 
@@ -32,12 +34,15 @@ const AddCategory = ({ isVisible, onClose }: AddCategoryProps) => {
       const docRef = doc(collection(FIRESTORE_DB, "categories"));
       const categoryId = docRef.id;
 
-      await setDoc(docRef, {
+      const newCategory = {
         id: categoryId,
         name: categoryName,
         color: categoryColor,
         userId: auth.currentUser!.uid,
-      });
+      };
+
+      await setDoc(docRef, newCategory);
+      onCategoryAdded(newCategory);
       onClose();
       setCategoryName("");
       setCategoryColor("#000000");

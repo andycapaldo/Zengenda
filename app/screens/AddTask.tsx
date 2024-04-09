@@ -28,9 +28,7 @@ interface AddTaskProps {
 const AddTask = ({ navigation, route }: AddTaskProps, { data, onSelect }) => {
   const [taskName, setTaskName] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
-  );
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [dueDate, setDueDate] = useState(new Date().toISOString().slice(0, 10));
   const [occurence, setOccurence] = useState(0);
@@ -59,6 +57,10 @@ const AddTask = ({ navigation, route }: AddTaskProps, { data, onSelect }) => {
     setSubTask(newSubTask);
   };
 
+  const handleCategoryAdded = (newCategory) => {
+    setSelectedCategory(newCategory);
+  };
+
   const handleCategorySelect = (category: Category) => {
     setSelectedCategory(category);
   };
@@ -70,8 +72,11 @@ const AddTask = ({ navigation, route }: AddTaskProps, { data, onSelect }) => {
   };
 
   const taskAdded = async () => {
-    if (!taskName || !taskDescription || !selectedCategory) {
-      alert("Please fill in all fields");
+    if (!taskName) {
+      alert("Please Add a Task Name");
+      return;
+    } else if (!selectedCategory) {
+      alert("Please select a category");
       return;
     }
 
@@ -283,6 +288,7 @@ const AddTask = ({ navigation, route }: AddTaskProps, { data, onSelect }) => {
             <AddCategory
               isVisible={isModalVisible}
               onClose={() => setModalVisible(false)}
+              onCategoryAdded={handleCategoryAdded}
             />
           </View>
         </ScrollView>

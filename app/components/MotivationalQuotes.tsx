@@ -13,7 +13,7 @@ export default function MotivationalQuotes() {
 
     const [fontsLoaded] = useFonts({
         Quicksand_400Regular,
-      });
+    });
 
     useEffect(() => {
         selectQuote();
