@@ -53,7 +53,7 @@ const WelcomeBack = ({ navigation }: WelcomeBackProps) => {
         >
           <View style={styles.page}>
             <View style={styles.zengenda}>
-              <Image source={require("../components/images2/zengenda.png")} />
+              <Image style={styles.headerIcon} source={require("../components/images2/zengenda_full_name_logo.png")} />
             </View>
             <View style={styles.welcomeBackContainer}>
               <Image
@@ -147,5 +147,11 @@ const styles = StyleSheet.create({
   },
   repeatIcon: {
     flex: 1,
+  },
+  headerIcon : {
+    width: '100%',
+    height: undefined,
+    aspectRatio: 10,
+    resizeMode: 'contain',
   },
 });

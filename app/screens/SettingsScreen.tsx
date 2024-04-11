@@ -280,7 +280,7 @@ const Settings = ({ navigation }: SettingsProps) => {
       {/* Footer with Version and Credits */}
       <View style={styles.footer}>
         <View style={styles.footerIconContainer}>
-          <Image resizeMethod="resize" style={styles.footerIcon} source={require('../components/images2/zengenda_full_name_logo.png')} />
+          <Image resizeMode="cover" style={styles.footerIcon} source={require('../components/images2/zengenda_full_name_logo.png')} />
         </View>
         <Text style={styles.footerText}>Version COLAB27</Text>
         <Text style={styles.footerText}>
@@ -370,7 +370,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-      // ...your styles
     },
     itemText: {
         fontFamily: 'Quicksand_400Regular',
@@ -407,12 +406,13 @@ const styles = StyleSheet.create({
     
     },
     footerIconContainer: {
-      maxWidth: 200,
-      maxHeight: 100,
+      marginTop: 30,
     },
     footerIcon: {
-      width: 200,
-      height: 50,
+      width: '100%',
+      height: undefined,
+      aspectRatio: 11,
+      resizeMode: 'contain',
     },
     icon: {
         height: 35,

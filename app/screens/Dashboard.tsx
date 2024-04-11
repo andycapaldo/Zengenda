@@ -296,7 +296,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
           >
           <Image
             style={styles.logo}
-            source={require("../components/images2/zengendalogo.png")}
+            source={require("../components/images2/zengendaLogoIcon.png")}
           />
           </TouchableOpacity>
           <Text style={styles.headerText}>Today is your day, Steve! ☀️</Text>
@@ -579,6 +579,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 80,
     width: 80,
+    borderRadius: 20,
   },
   headerText: {
     flex: 3,
