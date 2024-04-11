@@ -291,6 +291,7 @@ const AddTask = ({ navigation, route }: AddTaskProps, { data, onSelect }) => {
               onCategoryAdded={handleCategoryAdded}
             />
           </View>
+          <View style={{ paddingBottom: 50, backgroundColor: "#FEFEFE" }}></View>
         </ScrollView>
       </KeyboardAwareScrollView>
     </>
@@ -398,6 +399,7 @@ export const styles = StyleSheet.create({
     justifyContent: "space-around",
     paddingVertical: 10,
     backgroundColor: "#FEFEFE",
+    marginTop: 10,
   },
   subTaskButton: {
     backgroundColor: "#E7E7E7",

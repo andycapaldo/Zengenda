@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   StatusBar,
+  SafeAreaView,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { NavigationProp } from "@react-navigation/native";
@@ -37,7 +38,8 @@ const CalendarComp = ({ navigation }: RouterProps) => {
   return (
     <>
       <View style={styles.invertedBar}>
-        <StatusBar backgroundColor="#FEFEFE" barStyle="dark-content" />
+        <StatusBar backgroundColor="#FEFEFE" barStyle="default" />
+        <SafeAreaView style={styles.safeArea}></SafeAreaView>
       </View>
       <View style={styles.centeredView}>
         <View style={styles.headerContainer}>
@@ -111,6 +113,10 @@ const styles = StyleSheet.create({
     fontFamily: "Quicksand_400Regular",
     paddingRight: 80,
     paddingTop: 45,
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#FEFEFE',
   },
 });
 export default CalendarComp;

@@ -282,10 +282,10 @@ const Settings = ({ navigation }: SettingsProps) => {
         <View style={styles.footerIconContainer}>
           <Image resizeMode="cover" style={styles.footerIcon} source={require('../components/images2/zengenda_full_name_logo.png')} />
         </View>
-        <Text style={styles.footerText}>Version COLAB27</Text>
-        <Text style={styles.footerText}>
-          Manshi | Jesse | Andrew | Jordan © 2024
-        </Text>
+        <View style={styles.footerTextContainer}>
+          <Text style={styles.footerText}>Version COLAB27</Text>
+          <Text style={styles.footerText}>  Manshi | Jesse | Andrew | Jordan © 2024</Text>
+        </View>
       </View>
       <View style={styles.logoutContainer}>
         <TouchableOpacity
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 20,
+        marginTop: 10,
         paddingBottom: 100,
     },
     logoutButton: {
@@ -402,8 +402,14 @@ const styles = StyleSheet.create({
         padding: 20,
         marginVertical: 10,
     },
+    footerTextContainer : {
+      flex: 1,
+      flexDirection: 'row',
+      marginTop: 10,
+    },
     footerText: {
-    
+      fontFamily: 'Quicksand_400Regular',
+      fontSize: 11,
     },
     footerIconContainer: {
       marginTop: 30,

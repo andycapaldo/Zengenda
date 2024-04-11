@@ -10,9 +10,10 @@ import {
   UIManager,
   Platform,
   Animated,
+  StatusBar,
 } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import { FIREBASE_AUTH, FIRESTORE_DB, getAuth } from "../../FirebaseConfig";
+import { FIRESTORE_DB, getAuth } from "../../FirebaseConfig";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Checkbox from "expo-checkbox";
 import { Category } from "../components/CategorySelector";
@@ -29,6 +30,7 @@ import * as SplashScreen from "expo-splash-screen";
 import SegmentedControlTab from "react-native-segmented-control-tab";
 import isEqual from "lodash/isEqual";
 import ChangeCategory from "../components/ChangeCategory";
+
 
 if (
   Platform.OS === "android" &&
@@ -274,7 +276,6 @@ const Dashboard = ({ navigation }: RouterProps) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.component}>
         <View style={styles.header}>
           <TouchableOpacity style={styles.calendarIconView} onPress={() => navigation.navigate("Calendar")}>
             <Image
@@ -290,6 +291,7 @@ const Dashboard = ({ navigation }: RouterProps) => {
             />
           </TouchableOpacity>
         </View>
+        <ScrollView style={styles.component}>
         <View style={styles.dashboardView}>
           <TouchableOpacity
             onPress={(() => navigation.navigate("WelcomeBack"))}
@@ -556,6 +558,7 @@ const styles = StyleSheet.create({
   component: {
     flex: 1,
     paddingHorizontal: 15,
+    paddingBottom: 15,
   },
   dashboardButtons: {
     flexDirection: "row",
@@ -595,19 +598,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   header: {
-    flex: 1,
+    height: 60,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   headerIcons: {
-    flex: 0.1,
     height: 45,
     width: 45,
-    paddingTop: 50,
   },
   gearIconView: {
     flex: 1,
@@ -618,6 +617,7 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 45,
     fontFamily: "Quicksand_400Regular",
+    paddingHorizontal: 10,
   },
   todayDashboard: {
     flex: 1,
